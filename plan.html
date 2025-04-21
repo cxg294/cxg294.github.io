@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内蒙古-宁夏5天4晚自驾游规划</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 60px; /* 为顶部导航留出空间 */
+        }
+        
+        /* 页面容器 */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 页面标题 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #4d6aff, #7986cb);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* 快速导航 */
+        .quick-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to right, #3f51b5, #5c6bc0);
+            color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            text-align: center;
+        }
+        
+        .quick-nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .nav-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 15px;
+            white-space: nowrap;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            margin: 2px 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 旅行日程卡片 */
+        .day-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            scroll-margin-top: 70px; /* 为顶部导航栏留出空间 */
+        }
+        
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .day-header {
+            padding: 20px;
+            background: linear-gradient(to right, #5c6bc0, #3f51b5);
+            color: white;
+            font-size: 1.4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .day-content {
+            padding: 20px;
+        }
+        
+        /* 行程项目 */
+        .itinerary-item {
+            display: flex;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .itinerary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .time {
+            min-width: 100px;
+            font-weight: bold;
+            color: #3f51b5;
+        }
+        
+        .details {
+            flex: 1;
+        }
+        
+        .details h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .details p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        /* 费用信息 */
+        .price-tag {
+            display: inline-block;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+            color: #689f38;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin: 5px 0 15px 0;
+        }
+        
+        /* 导航按钮 */
+        .map-nav-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .map-nav-btn:hover {
+            background-color: #388e3c;
+        }
+        
+        /* 注意事项部分 */
+        .notes-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .notes-section h2 {
+            margin-bottom: 20px;
+            color: #3f51b5;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .notes-list {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+        
+        .notes-list li {
+            margin-bottom: 15px;
+        }
+        
+        /* 隐藏费用总览 */
+        .cost-overview {
+            display: none;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .itinerary-item {
+                flex-direction: column;
+            }
+            
+            .time {
+                margin-bottom: 10px;
+            }
+            
+            .day-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .day-header span:first-child {
+                margin-bottom: 5px;
+            }
+            
+            .nav-title {
+                display: none;
+            }
+            
+            .quick-nav-container {
+                justify-content: center;
+            }
+            
+            body {
+                padding-top: 80px;
+            }
+            
+            .day-card {
+                scroll-margin-top: 90px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 快速导航 -->
+    <div class="quick-nav">
+        <div class="quick-nav-container">
+            <div class="nav-title">快速导航：</div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="scrollToElement('day1')">第一天 包头-乌梁素海</button>
+                <button class="nav-btn" onclick="scrollToElement('day2')">第二天 西部梦幻峡谷</button>
+                <button class="nav-btn" onclick="scrollToElement('day3')">第三天 乌海湖-拉僧庙</button>
+                <button class="nav-btn" onclick="scrollToElement('day4')">第四天 西部影视城</button>
+                <button class="nav-btn" onclick="scrollToElement('day5')">第五天 响沙湾</button>
+                <button class="nav-btn" onclick="scrollToElement('day6')">第六天 返程</button>
+                <button class="nav-btn" onclick="scrollToElement('notes')">注意事项</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <header class="header">
+            <h1>内蒙古-宁夏5天4晚自驾游</h1>
+            <p>2023年4月30日 - 5月5日</p>
+        </header>
+        
+        <!-- 费用总览（已隐藏） -->
+        <div class="cost-overview">
+            <h2>门票费用总览</h2>
+            <table class="cost-table">
+                <thead>
+                    <tr>
+                        <th>景点</th>
+                        <th>门票价格</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>乌梁素海</td>
+                        <td>50元/人</td>
+                        <td>淡季（11月-次年3月）30元/人</td>
+                    </tr>
+                    <tr>
+                        <td>西部梦幻峡谷</td>
+                        <td>78元/人</td>
+                        <td>含区间车</td>
+                    </tr>
+                    <tr>
+                        <td>乌海湖</td>
+                        <td>免费</td>
+                        <td>湖边公园区域免费，游船另收费</td>
+                    </tr>
+                    <tr>
+                        <td>拉僧庙</td>
+                        <td>30元/人</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>镇北堡西部影视城</td>
+                        <td>70元/人</td>
+                        <td>观光车另加20元/人</td>
+                    </tr>
+                    <tr>
+                        <td>响沙湾</td>
+                        <td>120元/人</td>
+                        <td>旺季（4月-10月）价格，含沙漠门票。滑沙、骑骆驼等项目另收费</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">注：以上价格为参考价格，实际费用可能因季节、政策变化有所调整，请以景点现场公示为准。</p>
+        </div>
+        
+        <!-- Day 1 -->
+        <div id="day1" class="day-card">
+            <div class="day-header">
+                <span>第一天（4月30日）</span>
+                <span>包头-乌梁素海-巴彦淖尔</span>
+            </div>
+            <div class="day-content">
+                <div class="itinerary-item">
+                    <div class="time">12:05</div>
+                    <div class="details">
+                        <h3>抵达包头站</h3>
+                        <p>火车到达包头站，准备开始行程</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.836636,40.605388', '包头站')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">12:30-13:30</div>
+                    <div class="details">
+                        <h3>午餐</h3>
+                        <p>在火车站附近餐厅享用蒙餐</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">13:30-14:30</div>
+                    <div class="details">
+                        <h3>取租车与准备</h3>
+                        <p>取租车，前往超市购买水和零食</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">14:30-17:00</div>
+                    <div class="details">
+                        <h3>前往乌梁素海</h3>
+                        <p>自驾约138公里，需要2小时20分钟</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('108.909583,40.970040', '乌梁素海')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">17:00-18:00</div>
+                    <div class="details">
+                        <h3>游览乌梁素海</h3>
+                        <p>观鸟、拍照，欣赏湿地风光</p>
+                        <div class="price-tag">门票：50元/人（5月属于旺季）</div>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">18:00-20:30</div>
+                    <div class="details">
+                        <h3>前往巴彦淖尔市区</h3>
+                        <p>自驾约174公里，需要2小时30分钟</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">20:30</div>
+                    <div class="details">
+                        <h3>入住酒店</h3>
+                        <p>全季酒店巴彦淖尔图书大厦店（位于新华西街路南1号）</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('107.419692,40.755035', '全季酒店巴彦淖尔图书大厦店')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">21:00</div>
+                    <div class="details">
+                        <h3>晚餐</h3>
+                        <p>可选择酒店餐厅或附近的蒙式烤羊腿店</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Day 2 -->
+        <div id="day2" class="day-card">
+            <div class="day-header">
+                <span>第二天（5月1日）</span>
+                <span>巴彦淖尔-西部梦幻峡谷-乌海</span>
+            </div>
+            <div class="day-content">
+                <div class="itinerary-item">
+                    <div class="time">08:00-09:00</div>
+                    <div class="details">
+                        <h3>酒店早餐</h3>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">09:00-11:30</div>
+                    <div class="details">
+                        <h3>前往西部梦幻峡谷</h3>
+                        <p>自驾约139公里，需要2小时10分钟</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.217284,40.449904', '西部梦幻峡谷')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">11:30-14:30</div>
+                    <div class="details">
+                        <h3>游览西部梦幻峡谷</h3>
+                        <p>欣赏雅丹地貌，拍照</p>
+                        <div class="price-tag">门票：78元/人（含区间车）</div>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">14:30-15:30</div>
+                    <div class="details">
+                        <h3>午餐</h3>
+                        <p>在峡谷附近或带上的食物野餐</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">15:30-19:00</div>
+                    <div class="details">
+                        <h3>前往乌海市区</h3>
+                        <p>自驾约182公里，需要3小时（途中可在阴山岩画短暂停留）</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">19:00-20:00</div>
+                    <div class="details">
+                        <h3>晚餐</h3>
+                        <p>推荐：乌海当地特色羊肉餐厅</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">20:00</div>
+                    <div class="details">
+                        <h3>入住酒店</h3>
+                        <p>乌海海勃湾区东站桔子水晶酒店（位于金田第三城16号公寓）</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.822800,39.690873', '乌海海勃湾区东站桔子水晶酒店')">导航到这里</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Day 3 -->
+        <div id="day3" class="day-card">
+            <div class="day-header">
+                <span>第三天（5月2日）</span>
+                <span>乌海-乌海湖-拉僧庙-银川</span>
+            </div>
+            <div class="day-content">
+                <div class="itinerary-item">
+                    <div class="time">08:00-09:00</div>
+                    <div class="details">
+                        <h3>酒店早餐</h3>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">09:00-09:30</div>
+                    <div class="details">
+                        <h3>前往乌海湖</h3>
+                        <p>自驾约47公里，需要45分钟</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.772062,39.625102', '乌海湖')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">09:30-11:30</div>
+                    <div class="details">
+                        <h3>游览乌海湖</h3>
+                        <p>观赏湖光山色，可以租船游湖</p>
+                        <div class="price-tag">门票：免费（游船约50-100元/船）</div>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">11:30-12:30</div>
+                    <div class="details">
+                        <h3>午餐</h3>
+                        <p>在乌海湖附近餐厅用餐（推荐品尝当地特色湖鲜）</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">12:30-13:30</div>
+                    <div class="details">
+                        <h3>前往拉僧庙</h3>
+                        <p>自驾约35公里，需要40分钟</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.840946,39.327843', '拉僧庙')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">13:30-15:00</div>
+                    <div class="details">
+                        <h3>游览拉僧庙</h3>
+                        <p>佛教圣地，感受佛教文化氛围</p>
+                        <div class="price-tag">门票：30元/人</div>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">15:00-19:00</div>
+                    <div class="details">
+                        <h3>前往银川</h3>
+                        <p>自驾约164公里，需要3小时</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">19:00-20:00</div>
+                    <div class="details">
+                        <h3>晚餐</h3>
+                        <p>推荐：银川回族特色餐厅，品尝手抓羊肉、灰豆子等</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">20:00</div>
+                    <div class="details">
+                        <h3>入住酒店</h3>
+                        <p>银川镇北府假日酒店（位于镇北堡镇温泉小镇15-16号楼）</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.069170,38.623669', '银川镇北府假日酒店')">导航到这里</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Day 4 -->
+        <div id="day4" class="day-card">
+            <div class="day-header">
+                <span>第四天（5月3日）</span>
+                <span>银川-镇北堡西部影视城-鄂尔多斯</span>
+            </div>
+            <div class="day-content">
+                <div class="itinerary-item">
+                    <div class="time">08:00-09:00</div>
+                    <div class="details">
+                        <h3>酒店早餐</h3>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">09:00-09:15</div>
+                    <div class="details">
+                        <h3>前往镇北堡西部影视城</h3>
+                        <p>自驾约1.5公里，仅需5分钟</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.066024,38.629281', '镇北堡西部影视城')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">09:15-13:00</div>
+                    <div class="details">
+                        <h3>游览镇北堡西部影视城</h3>
+                        <p>参观电影拍摄场景，体验西部风情</p>
+                        <div class="price-tag">门票：70元/人（观光车另加20元/人）</div>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">13:00-14:00</div>
+                    <div class="details">
+                        <h3>午餐</h3>
+                        <p>在影视城内餐厅用餐</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">14:00-19:30</div>
+                    <div class="details">
+                        <h3>前往鄂尔多斯</h3>
+                        <p>自驾约449公里，需要5小时30分钟</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">19:30</div>
+                    <div class="details">
+                        <h3>入住酒店</h3>
+                        <p>鄂尔多斯皇冠假日酒店（位于迎宾路1号）</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.965332,39.830611', '鄂尔多斯皇冠假日酒店')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">20:30</div>
+                    <div class="details">
+                        <h3>晚餐</h3>
+                        <p>酒店餐厅或附近的蒙古特色餐厅</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Day 5 -->
+        <div id="day5" class="day-card">
+            <div class="day-header">
+                <span>第五天（5月4日）</span>
+                <span>鄂尔多斯-响沙湾-包头</span>
+            </div>
+            <div class="day-content">
+                <div class="itinerary-item">
+                    <div class="time">08:00-09:00</div>
+                    <div class="details">
+                        <h3>酒店早餐</h3>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">09:00-11:00</div>
+                    <div class="details">
+                        <h3>前往响沙湾</h3>
+                        <p>自驾约52公里，需要2小时45分钟</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.966840,40.243046', '响沙湾')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">11:00-17:30</div>
+                    <div class="details">
+                        <h3>游览响沙湾</h3>
+                        <p>体验沙漠滑沙、骑骆驼、冲沙等活动</p>
+                        <div class="price-tag">门票：120元/人（基础门票，各项体验另收费）</div>
+                        <p>特色项目参考价格：</p>
+                        <ul style="padding-left: 20px; margin-bottom: 15px;">
+                            <li>沙漠滑沙：40元/人</li>
+                            <li>骆驼骑行：100元/人</li>
+                            <li>沙漠冲浪车：180元/人</li>
+                            <li>沙漠套票：220-380元/人（含多个项目）</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">12:30-13:30</div>
+                    <div class="details">
+                        <h3>午餐</h3>
+                        <p>在景区内餐厅用餐</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">17:30-19:00</div>
+                    <div class="details">
+                        <h3>前往包头</h3>
+                        <p>自驾约51公里，需要50分钟</p>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">19:00</div>
+                    <div class="details">
+                        <h3>入住酒店</h3>
+                        <p>包头茂业万豪酒店（位于钢铁大街31号）</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.837349,40.658225', '包头茂业万豪酒店')">导航到这里</a>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">20:00-21:30</div>
+                    <div class="details">
+                        <h3>晚餐</h3>
+                        <p>酒店内高档餐厅或附近的蒙古火锅</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Day 6 -->
+        <div id="day6" class="day-card">
+            <div class="day-header">
+                <span>第六天（5月5日）</span>
+                <span>包头离开</span>
+            </div>
+            <div class="day-content">
+                <div class="itinerary-item">
+                    <div class="time">07:00-08:30</div>
+                    <div class="details">
+                        <h3>酒店早餐</h3>
+                    </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">根据火车时间</div>
+                    <div class="details">
+                        <h3>返程</h3>
+                        <p>提前1小时到达包头站办理手续</p>
+                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.836636,40.605388', '包头站')">导航到这里</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 注意事项部分 -->
+        <div id="notes" class="notes-section">
+            <h2>旅行注意事项</h2>
+            <ul class="notes-list">
+                <li><strong>餐饮建议：</strong>早餐可在酒店享用；午餐可在景区附近用餐或准备便携食品；晚餐可尝试当地特色美食，如手扒肉、涮羊肉、奶制品等。</li>
+                <li><strong>驾驶建议：</strong>西北地区部分路段较为偏远，建议提前加满油；准备足够的水和零食，部分路段休息站较少；下载离线地图，部分地区信号可能不稳定。</li>
+                <li><strong>景点票务：</strong>建议提前在线预订各景点门票，特别是响沙湾等热门景点；可在美团、携程等平台购买，通常会有一定折扣。</li>
+                <li><strong>装备建议：</strong>带上防晒霜、太阳镜和帽子（西北地区紫外线强）；准备一件薄外套（早晚温差大）；舒适的行走鞋（特别是在沙漠和峡谷地区）。</li>
+                <li><strong>费用预算：</strong>此行程中景点门票总计约350元/人（不含景区内特色体验项目）；住宿约2500-3500元/人（5晚）；餐饮约1000-1500元/人；租车及油费视车型而定，约1500-2500元。</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // 导航函数
+        function navigate(coordinates, destination) {
+            // 检测设备类型
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            var isAndroid = /android/i.test(userAgent);
+            var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+            var isMobile = isAndroid || isIOS;
+            
+            // 用于构建 URL 的坐标
+            var [lng, lat] = coordinates.split(',');
+            
+            // 构建导航 URL
+            var appUrl;
+            var webUrl = `https://uri.amap.com/navigation?to=${lng},${lat},${encodeURIComponent(destination)}&mode=car`;
+            
+            if (isAndroid) {
+                // Android - 高德地图
+                appUrl = `androidamap://navi?sourceApplication=自驾游规划&poiname=${encodeURIComponent(destination)}&lat=${lat}&lon=${lng}&dev=0&style=2`;
+            } else if (isIOS) {
+                // iOS - 高德地图
+                appUrl = `iosamap://navi?sourceApplication=自驾游规划&poiname=${encodeURIComponent(destination)}&lat=${lat}&lon=${lng}&dev=0&style=2`;
+            }
+            
+            if (isMobile) {
+                // 尝试打开应用
+                window.location.href = appUrl;
+                
+                // 如果1.5秒后用户还在当前页面，说明没有安装高德地图，跳转到网页版
+                setTimeout(function() {
+                    if (!document.hidden) {
+                        window.open(webUrl);
+                    }
+                }, 1500);
+            } else {
+                // 电脑端直接打开网页版
+                window.open(webUrl);
+            }
+        }
+        
+        // 页面滚动函数
+        function scrollToElement(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
