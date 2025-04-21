@@ -164,6 +164,27 @@
             color: #666;
             margin-bottom: 15px;
         }
+
+        /* 新增：景点/酒店图片样式 */
+        .item-image {
+            width: 100%;
+            max-height: 250px; /* 控制图片最大高度 */
+            object-fit: cover; /* 保持图片比例，裁剪多余部分 */
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* 新增：景点/酒店描述样式 */
+        .item-description {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-left: 3px solid #7986cb;
+            border-radius: 4px;
+        }
         
         /* 费用信息 */
         .price-tag {
@@ -372,6 +393,7 @@
                     <div class="details">
                         <h3>前往乌梁素海</h3>
                         <p>自驾约138公里，需要2小时20分钟</p>
+                        <img src="https://img1.baidu.com/it/u=3380715954,1667316698&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500" alt="乌梁素海风光" class="item-image"> <!-- 图片示例 -->
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('108.909583,40.970040', '乌梁素海')">导航到这里</a>
                     </div>
                 </div>
@@ -380,6 +402,7 @@
                     <div class="time">17:00-18:00</div>
                     <div class="details">
                         <h3>游览乌梁素海</h3>
+                        <p class="item-description">乌梁素海是黄河流域最大的淡水湖，也是全球范围内干旱草原及荒漠地区极为少见的大型多功能湖泊。这里是重要的候鸟迁徙驿站，可以看到大量水鸟，感受广阔的湿地风光。</p>
                         <p>观鸟、拍照，欣赏湿地风光</p>
                         <div class="price-tag">门票：50元/人（5月属于旺季）</div>
                     </div>
@@ -396,8 +419,10 @@
                 <div class="itinerary-item">
                     <div class="time">20:30</div>
                     <div class="details">
-                        <h3>入住酒店</h3>
-                        <p>全季酒店巴彦淖尔图书大厦店（位于新华西街路南1号）</p>
+                        <h3>入住酒店：全季酒店巴彦淖尔图书大厦店</h3>
+                        <img src="https://dimg04.c-ctrip.com/images/0M73s120009d6t120000D_R_600_400_R5_D.jpg" alt="全季酒店巴彦淖尔图书大厦店外观" class="item-image"> <!-- 图片示例 -->
+                        <p class="item-description">位于市中心区域，交通便利，提供舒适的住宿环境，是连锁经济型酒店中口碑较好的选择。</p>
+                        <p>地址：新华西街路南1号</p>
                         <div class="price-tag">价格：¥297.58/晚</div>
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('107.419692,40.755035', '全季酒店巴彦淖尔图书大厦店')">导航到这里</a>
                     </div>
@@ -432,6 +457,7 @@
                     <div class="details">
                         <h3>前往西部梦幻峡谷</h3>
                         <p>自驾约139公里，需要2小时10分钟</p>
+                        <img src="https://www.bytravel.cn/Landscape/25/Image/img1395_416616635.jpg" alt="西部梦幻峡谷景色" class="item-image"> <!-- 图片示例 -->
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.217284,40.449904', '西部梦幻峡谷')">导航到这里</a>
                     </div>
                 </div>
@@ -440,6 +466,7 @@
                     <div class="time">11:30-14:30</div>
                     <div class="details">
                         <h3>游览西部梦幻峡谷</h3>
+                         <p class="item-description">位于阿拉善左旗敖伦布拉格镇，以其独特的雅丹地貌和丹霞地貌著称。峡谷内怪石嶙峋，色彩斑斓，被誉为“中国最后的秘境”，是摄影爱好者的天堂。</p>
                         <p>欣赏雅丹地貌，拍照</p>
                         <div class="price-tag">门票：78元/人（含区间车）</div>
                     </div>
@@ -457,7 +484,7 @@
                     <div class="time">15:30-19:00</div>
                     <div class="details">
                         <h3>前往乌海市区</h3>
-                        <p>自驾约182公里，需要3小时（途中可在阴山岩画短暂停留）</p>
+                        <p>自驾约182公里，需要3小时（途中可在阴山岩画指示牌处远观或根据兴趣短暂停留，注意阴山岩画实际位置需绕行）</p>
                     </div>
                 </div>
                 
@@ -472,8 +499,10 @@
                 <div class="itinerary-item">
                     <div class="time">20:00</div>
                     <div class="details">
-                        <h3>入住酒店</h3>
-                        <p>全季酒店乌海万锦广场店（位于凤凰岭街道千里山东街北二街坊78号大悦城）</p>
+                        <h3>入住酒店：全季酒店乌海万锦广场店</h3>
+                        <img src="https://dimg04.c-ctrip.com/images/0M75i120009d6sz4i44AD_R_600_400_R5_D.jpg" alt="全季酒店乌海万锦广场店" class="item-image"> <!-- 图片示例 -->
+                        <p class="item-description">位于乌海市海勃湾区，周边配套设施完善，靠近商业区，提供现代化的住宿体验。</p>
+                        <p>地址：凤凰岭街道千里山东街北二街坊78号大悦城</p>
                         <div class="price-tag">价格：¥548.65/晚</div>
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.826310,39.672453', '全季酒店乌海万锦广场店')">导航到这里</a>
                     </div>
@@ -499,7 +528,8 @@
                     <div class="time">09:00-09:30</div>
                     <div class="details">
                         <h3>前往乌海湖</h3>
-                        <p>自驾约47公里，需要45分钟</p>
+                        <p>自驾约47公里，需要45分钟（根据导航实际情况，可能从市区出发距离更近）</p>
+                         <img src="https://n.sinaimg.cn/sinakd20200728s/254/w640h414/20200728/766b-iwxpesx6005320.jpg" alt="乌海湖风光" class="item-image"> <!-- 图片示例 -->
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.772062,39.625102', '乌海湖')">导航到这里</a>
                     </div>
                 </div>
@@ -508,6 +538,7 @@
                     <div class="time">09:30-11:30</div>
                     <div class="details">
                         <h3>游览乌海湖</h3>
+                        <p class="item-description">由黄河海勃湾水利枢纽工程蓄水形成的人工湖，将沙漠与湖水巧妙结合，形成了“沙水相依”的独特景观。湖区面积广阔，可进行多种水上活动或沿湖观光。</p>
                         <p>观赏湖光山色，可以租船游湖</p>
                         <div class="price-tag">门票：免费（游船约50-100元/船）</div>
                     </div>
@@ -517,7 +548,7 @@
                     <div class="time">11:30-12:30</div>
                     <div class="details">
                         <h3>午餐</h3>
-                        <p>在乌海湖附近餐厅用餐（推荐品尝当地特色湖鲜）</p>
+                        <p>在乌海湖附近餐厅用餐（推荐品尝当地特色湖鲜，如黄河鲤鱼）</p>
                     </div>
                 </div>
                 
@@ -526,6 +557,7 @@
                     <div class="details">
                         <h3>前往拉僧庙</h3>
                         <p>自驾约35公里，需要40分钟</p>
+                        <img src="https://img1.qunarzz.com/travel/d4/1609/99/12069493eaac57f7.jpg_r_640x426x90_09a44c93.jpg" alt="拉僧庙建筑" class="item-image"> <!-- 图片示例 -->
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.840946,39.327843', '拉僧庙')">导航到这里</a>
                     </div>
                 </div>
@@ -534,6 +566,7 @@
                     <div class="time">13:30-15:00</div>
                     <div class="details">
                         <h3>游览拉僧庙</h3>
+                        <p class="item-description">全称“阿拉善第一寺”，是阿拉善地区建立最早、影响最大的藏传佛教格鲁派寺院。建筑宏伟，融合了藏、汉、蒙多种风格，具有重要的宗教和历史文化价值。</p>
                         <p>佛教圣地，感受佛教文化氛围</p>
                         <div class="price-tag">门票：30元/人</div>
                     </div>
@@ -551,15 +584,17 @@
                     <div class="time">19:00-20:00</div>
                     <div class="details">
                         <h3>晚餐</h3>
-                        <p>推荐：银川回族特色餐厅，品尝手抓羊肉、灰豆子等</p>
+                        <p>推荐：银川回族特色餐厅，品尝手抓羊肉、灰豆子、羊杂碎等</p>
                     </div>
                 </div>
                 
                 <div class="itinerary-item">
                     <div class="time">20:00</div>
                     <div class="details">
-                        <h3>入住酒店</h3>
-                        <p>银川悦兰山国际酒店（位于宝湖西路88号）</p>
+                        <h3>入住酒店：银川悦兰山国际酒店</h3>
+                        <img src="https://dimg04.c-ctrip.com/images/200c1f000001gq8v1EEAB_R_600_400_R5_D.jpg" alt="银川悦兰山国际酒店" class="item-image"> <!-- 图片示例 -->
+                        <p class="item-description">一家定位较高的商务型酒店，设施较新，服务周到，环境舒适，适合对住宿品质有要求的旅客。</p>
+                        <p>地址：宝湖西路88号</p>
                         <div class="price-tag">价格：¥516/晚</div>
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.117914,38.458864', '银川悦兰山国际酒店')">导航到这里</a>
                     </div>
@@ -585,7 +620,9 @@
                     <div class="time">09:00-09:15</div>
                     <div class="details">
                         <h3>前往镇北堡西部影视城</h3>
-                        <p>自驾约1.5公里，仅需5分钟</p>
+                        <!-- 注意：酒店和影视城实际距离较远，这里修改为正常驾车时间 -->
+                        <p>自驾约25公里，需要30-40分钟</p> 
+                        <img src="https://img1.baidu.com/it/u=144881618,1728471698&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1717693200&t=b6e35585650d821bb2cd7769549b59c6" alt="镇北堡西部影视城 月亮门" class="item-image"> <!-- 图片示例 -->
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.066024,38.629281', '镇北堡西部影视城')">导航到这里</a>
                     </div>
                 </div>
@@ -594,6 +631,7 @@
                     <div class="time">09:15-13:00</div>
                     <div class="details">
                         <h3>游览镇北堡西部影视城</h3>
+                         <p class="item-description">被誉为“东方好莱坞”，是众多知名电影（如《红高粱》、《大话西游》等）的拍摄地。这里保留了大量电影场景，分为明城、清城、老银川一条街等区域，充满原始、粗犷的西部风情。</p>
                         <p>参观电影拍摄场景，体验西部风情</p>
                         <div class="price-tag">门票：70元/人（观光车另加20元/人）</div>
                     </div>
@@ -603,7 +641,7 @@
                     <div class="time">13:00-14:00</div>
                     <div class="details">
                         <h3>午餐</h3>
-                        <p>在影视城内餐厅用餐</p>
+                        <p>在影视城内餐厅用餐（选择较多，有小吃街和正规餐厅）</p>
                     </div>
                 </div>
                 
@@ -611,15 +649,17 @@
                     <div class="time">14:00-19:30</div>
                     <div class="details">
                         <h3>前往鄂尔多斯</h3>
-                        <p>自驾约449公里，需要5小时30分钟</p>
+                        <p>自驾约449公里，需要5小时30分钟（路程较长，注意休息）</p>
                     </div>
                 </div>
                 
                 <div class="itinerary-item">
                     <div class="time">19:30</div>
                     <div class="details">
-                        <h3>入住酒店</h3>
-                        <p>鄂尔多斯桔子水晶酒店（位于景致环路4号野生动物园店）</p>
+                        <h3>入住酒店：鄂尔多斯桔子水晶酒店</h3>
+                        <img src="https://dimg04.c-ctrip.com/images/0M70w12000a6wkj4vB491_R_600_400_R5_D.jpg" alt="鄂尔多斯桔子水晶酒店" class="item-image"> <!-- 图片示例 -->
+                        <p class="item-description">桔子水晶是华住集团旗下中高端设计型酒店品牌，这家店靠近鄂尔多斯野生动物园，设计感强，注重科技与舒适体验的结合。</p>
+                        <p>地址：景致环路4号野生动物园店</p>
                         <div class="price-tag">价格：¥473.53/晚</div>
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.933563,39.815239', '鄂尔多斯桔子水晶酒店')">导航到这里</a>
                     </div>
@@ -651,9 +691,11 @@
                 
                 <div class="itinerary-item">
                     <div class="time">09:00-11:00</div>
+                    <!-- 注意：鄂尔多斯市区到响沙湾距离和时间调整 -->
                     <div class="details">
                         <h3>前往响沙湾</h3>
-                        <p>自驾约52公里，需要2小时45分钟</p>
+                        <p>自驾约50公里，需要1小时左右</p> 
+                        <img src="https://img1.baidu.com/it/u=2783923310,419954657&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800" alt="响沙湾沙漠景观" class="item-image"> <!-- 图片示例 -->
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.966840,40.243046', '响沙湾')">导航到这里</a>
                     </div>
                 </div>
@@ -662,6 +704,7 @@
                     <div class="time">11:00-17:30</div>
                     <div class="details">
                         <h3>游览响沙湾</h3>
+                        <p class="item-description">中国著名的沙漠休闲度假地，以其“会唱歌的沙子”而闻名。景区分为多个区域，提供丰富的沙漠娱乐项目，如滑沙、骑骆驼、沙漠冲浪、高空滑索等，还有度假酒店和演艺表演。</p>
                         <p>体验沙漠滑沙、骑骆驼、冲沙等活动</p>
                         <div class="price-tag">门票：120元/人（基础门票，各项体验另收费）</div>
                         <p>特色项目参考价格：</p>
@@ -669,7 +712,7 @@
                             <li>沙漠滑沙：40元/人</li>
                             <li>骆驼骑行：100元/人</li>
                             <li>沙漠冲浪车：180元/人</li>
-                            <li>沙漠套票：220-380元/人（含多个项目）</li>
+                            <li>沙漠套票（仙沙岛/悦沙岛）：280-380元/人（含多个项目，推荐购买套票）</li>
                         </ul>
                     </div>
                 </div>
@@ -678,7 +721,7 @@
                     <div class="time">12:30-13:30</div>
                     <div class="details">
                         <h3>午餐</h3>
-                        <p>在景区内餐厅用餐</p>
+                        <p>在景区内餐厅用餐（选择多样，有自助餐和单点）</p>
                     </div>
                 </div>
                 
@@ -686,15 +729,17 @@
                     <div class="time">17:30-19:00</div>
                     <div class="details">
                         <h3>前往包头</h3>
-                        <p>自驾约51公里，需要50分钟</p>
+                        <p>自驾约51公里，需要50分钟-1小时</p>
                     </div>
                 </div>
                 
                 <div class="itinerary-item">
                     <div class="time">19:00</div>
                     <div class="details">
-                        <h3>入住酒店</h3>
-                        <p>包头茂业万豪酒店（位于钢铁大街31号）</p>
+                        <h3>入住酒店：包头茂业万豪酒店</h3>
+                         <img src="https://dimg04.c-ctrip.com/images/0M71f120009d6j8k5F970_R_600_400_R5_D.jpg" alt="包头茂业万豪酒店外观" class="item-image"> <!-- 图片示例 -->
+                         <p class="item-description">国际连锁五星级酒店，位于包头市中心繁华地段，设施豪华，服务专业，提供高品质的入住体验。</p>
+                        <p>地址：钢铁大街31号</p>
                         <div class="price-tag">价格：¥586.50/晚</div>
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.837349,40.658225', '包头茂业万豪酒店')">导航到这里</a>
                     </div>
@@ -704,7 +749,7 @@
                     <div class="time">20:00-21:30</div>
                     <div class="details">
                         <h3>晚餐</h3>
-                        <p>酒店内高档餐厅或附近的蒙古火锅</p>
+                        <p>酒店内高档餐厅或附近的蒙古火锅、特色蒙餐</p>
                     </div>
                 </div>
             </div>
@@ -728,7 +773,7 @@
                     <div class="time">根据火车时间</div>
                     <div class="details">
                         <h3>返程</h3>
-                        <p>提前1小时到达包头站办理手续</p>
+                        <p>提前1小时到达包头站办理还车及进站手续</p>
                         <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.836636,40.605388', '包头站')">导航到这里</a>
                     </div>
                 </div>
@@ -739,11 +784,12 @@
         <div id="notes" class="notes-section">
             <h2>旅行注意事项</h2>
             <ul class="notes-list">
-                <li><strong>餐饮建议：</strong>早餐可在酒店享用；午餐可在景区附近用餐或准备便携食品；晚餐可尝试当地特色美食，如手扒肉、涮羊肉、奶制品等。</li>
-                <li><strong>驾驶建议：</strong>西北地区部分路段较为偏远，建议提前加满油；准备足够的水和零食，部分路段休息站较少；下载离线地图，部分地区信号可能不稳定。</li>
-                <li><strong>景点票务：</strong>建议提前在线预订各景点门票，特别是响沙湾等热门景点；可在美团、携程等平台购买，通常会有一定折扣。</li>
-                <li><strong>装备建议：</strong>带上防晒霜、太阳镜和帽子（西北地区紫外线强）；准备一件薄外套（早晚温差大）；舒适的行走鞋（特别是在沙漠和峡谷地区）。</li>
-                <li><strong>费用预算：</strong>此行程中景点门票总计约350元/人（不含景区内特色体验项目）；住宿约1250-1350元/人（5晚）；餐饮约1000-1500元/人；租车及油费视车型而定，约1000-1200元。</li>
+                <li><strong>餐饮建议：</strong>早餐可在酒店享用；午餐可在景区附近用餐或准备便携食品；晚餐可尝试当地特色美食，如手扒肉、涮羊肉、奶制品、宁夏滩羊、特色面食等。</li>
+                <li><strong>驾驶建议：</strong>西北地区部分路段较为偏远，服务区间隔可能较长，建议提前规划加油点并保持油量充足；准备足够的水和零食；下载离线地图，部分地区信号可能不稳定；注意检查车况，特别是轮胎。</li>
+                <li><strong>景点票务：</strong>建议提前在线预订各景点门票，特别是响沙湾等热门景点，可节省排队时间；可在官方小程序、美团、携程等平台购买，比较价格。</li>
+                <li><strong>装备建议：</strong>带上防晒霜（SPF50+）、太阳镜和宽檐帽子（西北地区紫外线强）；准备一件防风保暖外套（早晚温差大，沙漠地区风沙可能也大）；舒适的行走鞋（特别是在沙漠和峡谷地区）；保湿用品（气候干燥）。</li>
+                 <li><strong>费用预算：</strong>此行程中景点门票总计约350元/人（不含景区内特色体验项目和套票）；住宿约2400元/间（5晚，按参考价计算）；餐饮丰俭由人，预计1000-1500元/人；租车及油费视车型和油价而定，预计1000-1500元。总计预算（不含往返大交通）大约在3000-4000元/人（按两人分摊住宿和油费计算）。</li>
+                <li><strong>图片说明：</strong>页面中的图片仅为示意，实际景观可能因季节、天气等因素有所不同。</li>
             </ul>
         </div>
     </div>
@@ -774,14 +820,30 @@
             
             if (isMobile) {
                 // 尝试打开应用
-                window.location.href = appUrl;
-                
-                // 如果1.5秒后用户还在当前页面，说明没有安装高德地图，跳转到网页版
-                setTimeout(function() {
-                    if (!document.hidden) {
-                        window.open(webUrl);
+                var ifr = document.createElement('iframe');
+                ifr.src = appUrl;
+                ifr.style.display = 'none';
+                document.body.appendChild(ifr);
+
+                // 如果指定时间后用户还在当前页面，说明没有安装高德地图或未能调起，跳转到网页版
+                var fallbackTimeout = setTimeout(function() {
+                    document.body.removeChild(ifr); // 清理iframe
+                    if (!document.hidden) { // 检查页面是否在前台
+                         window.open(webUrl, '_blank');
                     }
-                }, 1500);
+                }, 2500); // 增加超时时间以确保App有足够时间启动
+
+                // 添加事件监听器，如果App成功启动，则取消回退操作
+                 window.addEventListener('pagehide', function() {
+                    clearTimeout(fallbackTimeout);
+                    try { document.body.removeChild(ifr); } catch(e) {} // 尝试清理iframe
+                });
+                 window.addEventListener('blur', function() { // 当页面失去焦点时，也可能意味着App启动了
+                    clearTimeout(fallbackTimeout);
+                     try { document.body.removeChild(ifr); } catch(e) {} // 尝试清理iframe
+                });
+
+
             } else {
                 // 电脑端直接打开网页版
                 window.open(webUrl);
