@@ -101,6 +101,120 @@
             background-color: rgba(255, 255, 255, 0.3);
         }
         
+        /* 新增：行程Tab切换 */
+        .itinerary-tabs {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 60px;
+            z-index: 900;
+        }
+        
+        .itinerary-tab {
+            padding: 15px 20px;
+            background: transparent;
+            border: none;
+            color: #666;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            position: relative;
+            white-space: nowrap;
+        }
+        
+        .itinerary-tab.active {
+            color: #3f51b5;
+        }
+        
+        .itinerary-tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 3px;
+            background: #3f51b5;
+            border-radius: 3px;
+        }
+        
+        .itinerary-tab:hover {
+            background-color: rgba(63, 81, 181, 0.05);
+        }
+        
+        .itinerary-content {
+            display: none;
+        }
+        
+        .itinerary-content.active {
+            display: block;
+        }
+        
+        /* 路线地图卡片样式 */
+        .route-map-section {
+            margin: 40px 0;
+            scroll-margin-top: 70px;
+        }
+        
+        .route-map-card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .route-map-title {
+            padding: 12px 15px;
+            background-color: #5c6bc0;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .route-map-container {
+            height: 350px;
+            width: 100%;
+            background-color: #f5f5f5;
+            position: relative;
+        }
+        
+        .route-map-container iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .route-map-info {
+            padding: 12px 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .route-map-distance, .route-map-duration {
+            display: flex;
+            align-items: center;
+        }
+        
+        .route-map-distance:before {
+            content: "⟷";
+            margin-right: 5px;
+            color: #3f51b5;
+        }
+        
+        .route-map-duration:before {
+            content: "⏱";
+            margin-right: 5px;
+            color: #3f51b5;
+        }
+        
         /* 旅行日程卡片 */
         .day-card {
             background-color: white;
@@ -109,7 +223,7 @@
             margin-bottom: 30px;
             overflow: hidden;
             transition: all 0.3s ease;
-            scroll-margin-top: 70px; /* 为顶部导航栏留出空间 */
+            scroll-margin-top: 120px; /* 为顶部导航栏留出空间 */
         }
         
         .day-card:hover {
@@ -330,62 +444,6 @@
                 scroll-margin-top: 90px;
             }
         }
-        
-        /* 新增：路线地图卡片样式 */
-        .route-map-card {
-            margin-bottom: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            background-color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .route-map-title {
-            padding: 12px 15px;
-            background-color: #5c6bc0;
-            color: white;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        
-        .route-map-container {
-            height: 250px;
-            width: 100%;
-            background-color: #f5f5f5;
-            position: relative;
-        }
-        
-        .route-map-container iframe {
-            border: none;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .route-map-info {
-            padding: 12px 15px;
-            border-top: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .route-map-distance, .route-map-duration {
-            display: flex;
-            align-items: center;
-        }
-        
-        .route-map-distance:before {
-            content: "⟷";
-            margin-right: 5px;
-            color: #3f51b5;
-        }
-        
-        .route-map-duration:before {
-            content: "⏱";
-            margin-right: 5px;
-            color: #3f51b5;
-        }
     </style>
 </head>
 <body>
@@ -400,6 +458,7 @@
                 <button class="nav-btn" onclick="scrollToElement('day4')">D4</button>
                 <button class="nav-btn" onclick="scrollToElement('day5')">D5</button>
                 <button class="nav-btn" onclick="scrollToElement('day6')">D6</button>
+                <button class="nav-btn" onclick="scrollToElement('route-map')">地图</button>
                 <button class="nav-btn" onclick="scrollToElement('notes')">注</button>
             </div>
         </div>
@@ -416,557 +475,524 @@
             <!-- ... (内容不变) ... -->
         </div>
         
+        <!-- 行程TAB切换 -->
+        <div class="itinerary-tabs">
+            <button class="itinerary-tab active" data-day="day1">第一天（4月30日）</button>
+            <button class="itinerary-tab" data-day="day2">第二天（5月1日）</button>
+            <button class="itinerary-tab" data-day="day3">第三天（5月2日）</button>
+            <button class="itinerary-tab" data-day="day4">第四天（5月3日）</button>
+            <button class="itinerary-tab" data-day="day5">第四天（5月4日）</button>
+            <button class="itinerary-tab" data-day="day6">第六天（5月5日）</button>
+        </div>
+        
         <!-- Day 1 -->
-        <div id="day1" class="day-card">
-            <div class="day-header">
-                <span>第一天（4月30日）</span>
-                <span>包头-乌梁素海-巴彦淖尔</span>
-            </div>
-            <div class="day-content">
-                <!-- 添加路线地图 -->
-                <div class="route-map-card">
-                    <div class="route-map-title">今日行程路线</div>
-                    <div class="route-map-container">
-                        <iframe src="https://uri.amap.com/marker?markers=109.836636,40.605388,包头站|108.909583,40.970040,乌梁素海|107.419692,40.755035,巴彦淖尔&src=mypage&callnative=1"></iframe>
-                    </div>
-                    <div class="route-map-info">
-                        <div class="route-map-distance">总行程: 约312公里</div>
-                        <div class="route-map-duration">预计驾驶: 4小时50分钟</div>
-                    </div>
+        <div id="day1" class="itinerary-content active">
+            <div class="day-card">
+                <div class="day-header">
+                    <span>第一天（4月30日）</span>
+                    <span>包头-乌梁素海-巴彦淖尔</span>
                 </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">12:05</div>
-                    <div class="details">
-                        <h3>抵达包头站</h3>
-                        <p>火车到达包头站，准备开始行程。</p>
-                        <h4>出发准备 (今日重点：取车 & 乌梁素海)</h4>
-                        <ul class="prep-list">
-                            <li>检查并带齐身份证、驾驶证、租车订单。</li>
-                            <li>准备好导航设备或手机支架，检查离线地图。</li>
-                            <li>购买足够饮用水和一些方便零食。</li>
-                            <li>带上太阳镜、帽子，为乌梁素海做防晒准备。</li>
-                            <li>检查相机/手机电量和存储空间。</li>
-                        </ul>
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.836636,40.605388', '包头站')">导航到这里</a>
+                <div class="day-content">
+                    <div class="itinerary-item">
+                        <div class="time">12:05</div>
+                        <div class="details">
+                            <h3>抵达包头站</h3>
+                            <p>火车到达包头站，准备开始行程。</p>
+                            <h4>出发准备 (今日重点：取车 & 乌梁素海)</h4>
+                            <ul class="prep-list">
+                                <li>检查并带齐身份证、驾驶证、租车订单。</li>
+                                <li>准备好导航设备或手机支架，检查离线地图。</li>
+                                <li>购买足够饮用水和一些方便零食。</li>
+                                <li>带上太阳镜、帽子，为乌梁素海做防晒准备。</li>
+                                <li>检查相机/手机电量和存储空间。</li>
+                            </ul>
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.836636,40.605388', '包头站')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">12:30-13:30</div>
-                    <div class="details">
-                        <h3>午餐</h3>
-                        <p>在火车站附近餐厅享用蒙餐</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">12:30-13:30</div>
+                        <div class="details">
+                            <h3>午餐</h3>
+                            <p>在火车站附近餐厅享用蒙餐</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">13:30-14:30</div>
-                    <div class="details">
-                        <h3>取租车与准备</h3>
-                        <p>取租车，检查车辆状况（外观、油量、备胎等），熟悉车辆操作。前往超市购买水和零食。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">13:30-14:30</div>
+                        <div class="details">
+                            <h3>取租车与准备</h3>
+                            <p>取租车，检查车辆状况（外观、油量、备胎等），熟悉车辆操作。前往超市购买水和零食。</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">14:30-17:00</div>
-                    <div class="details">
-                        <h3>前往乌梁素海</h3>
-                        <p>自驾约138公里，需要2小时20分钟</p>
-                        <img src="https://img1.baidu.com/it/u=3380715954,1667316698&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500" alt="乌梁素海风光" class="item-image">
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('108.909583,40.970040', '乌梁素海')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">14:30-17:00</div>
+                        <div class="details">
+                            <h3>前往乌梁素海</h3>
+                            <p>自驾约138公里，需要2小时20分钟</p>
+                            <img src="https://img1.baidu.com/it/u=3380715954,1667316698&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500" alt="乌梁素海风光" class="item-image">
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('108.909583,40.970040', '乌梁素海')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">17:00-18:00</div>
-                    <div class="details">
-                        <h3>游览乌梁素海</h3>
-                        <p class="item-description">乌梁素海是黄河流域最大的淡水湖，也是全球范围内干旱草原及荒漠地区极为少见的大型多功能湖泊。这里是重要的候鸟迁徙驿站，可以看到大量水鸟，感受广阔的湿地风光。</p>
-                        <p>观鸟、拍照，欣赏湿地风光</p>
-                        <div class="price-tag">门票：50元/人（5月属于旺季）</div>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">17:00-18:00</div>
+                        <div class="details">
+                            <h3>游览乌梁素海</h3>
+                            <p class="item-description">乌梁素海是黄河流域最大的淡水湖，也是全球范围内干旱草原及荒漠地区极为少见的大型多功能湖泊。这里是重要的候鸟迁徙驿站，可以看到大量水鸟，感受广阔的湿地风光。</p>
+                            <p>观鸟、拍照，欣赏湿地风光</p>
+                            <div class="price-tag">门票：50元/人（5月属于旺季）</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">18:00-20:30</div>
-                    <div class="details">
-                        <h3>前往巴彦淖尔市区</h3>
-                        <p>自驾约174公里，需要2小时30分钟。注意夜间驾驶安全。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">18:00-20:30</div>
+                        <div class="details">
+                            <h3>前往巴彦淖尔市区</h3>
+                            <p>自驾约174公里，需要2小时30分钟。注意夜间驾驶安全。</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">20:30</div>
-                    <div class="details">
-                        <h3>入住酒店：全季酒店巴彦淖尔图书大厦店</h3>
-                        <img src="https://dimg04.c-ctrip.com/images/0M73s120009d6t120000D_R_600_400_R5_D.jpg" alt="全季酒店巴彦淖尔图书大厦店外观" class="item-image">
-                        <p class="item-description">位于市中心区域，交通便利，提供舒适的住宿环境，是连锁经济型酒店中口碑较好的选择。</p>
-                        <p>地址：新华西街路南1号</p>
-                        <div class="price-tag">价格：¥297.58/晚</div>
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('107.419692,40.755035', '全季酒店巴彦淖尔图书大厦店')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">20:30</div>
+                        <div class="details">
+                            <h3>入住酒店：全季酒店巴彦淖尔图书大厦店</h3>
+                            <img src="https://dimg04.c-ctrip.com/images/0M73s120009d6t120000D_R_600_400_R5_D.jpg" alt="全季酒店巴彦淖尔图书大厦店外观" class="item-image">
+                            <p class="item-description">位于市中心区域，交通便利，提供舒适的住宿环境，是连锁经济型酒店中口碑较好的选择。</p>
+                            <p>地址：新华西街路南1号</p>
+                            <div class="price-tag">价格：¥297.58/晚</div>
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('107.419692,40.755035', '全季酒店巴彦淖尔图书大厦店')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">21:00</div>
-                    <div class="details">
-                        <h3>晚餐</h3>
-                        <p>可选择酒店餐厅或附近的蒙式烤羊腿店</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">21:00</div>
+                        <div class="details">
+                            <h3>晚餐</h3>
+                            <p>可选择酒店餐厅或附近的蒙式烤羊腿店</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Day 2 -->
-        <div id="day2" class="day-card">
-            <div class="day-header">
-                <span>第二天（5月1日）</span>
-                <span>巴彦淖尔-西部梦幻峡谷-乌海</span>
-            </div>
-            <div class="day-content">
-                <!-- 添加路线地图 -->
-                <div class="route-map-card">
-                    <div class="route-map-title">今日行程路线</div>
-                    <div class="route-map-container">
-                        <iframe src="https://uri.amap.com/marker?markers=107.419692,40.755035,巴彦淖尔|106.217284,40.449904,西部梦幻峡谷|106.826310,39.672453,乌海&src=mypage&callnative=1"></iframe>
-                    </div>
-                    <div class="route-map-info">
-                        <div class="route-map-distance">总行程: 约321公里</div>
-                        <div class="route-map-duration">预计驾驶: 5小时10分钟</div>
-                    </div>
+        <div id="day2" class="itinerary-content">
+            <div class="day-card">
+                <div class="day-header">
+                    <span>第二天（5月1日）</span>
+                    <span>巴彦淖尔-西部梦幻峡谷-乌海</span>
                 </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">08:00-09:00</div>
-                    <div class="details">
-                        <h3>酒店早餐 & 出发准备</h3>
-                        <h4>出发准备 (今日重点：梦幻峡谷 & 驾驶)</h4>
-                        <ul class="prep-list">
-                            <li>穿戴舒适的徒步鞋或运动鞋，适合峡谷内行走。</li>
-                            <li>涂抹高倍数防晒霜，戴好帽子、太阳镜。</li>
-                            <li>可准备头巾或薄围巾，防风沙及防晒。</li>
-                            <li>带足饮用水（峡谷内补充不便）及能量零食。</li>
-                            <li>确保手机、相机、充电宝电量充足。</li>
-                            <li>检查车辆油量，今日路程较长。</li>
-                        </ul>
+                <div class="day-content">
+                    <div class="itinerary-item">
+                        <div class="time">08:00-09:00</div>
+                        <div class="details">
+                            <h3>酒店早餐 & 出发准备</h3>
+                            <h4>出发准备 (今日重点：梦幻峡谷 & 驾驶)</h4>
+                            <ul class="prep-list">
+                                <li>穿戴舒适的徒步鞋或运动鞋，适合峡谷内行走。</li>
+                                <li>涂抹高倍数防晒霜，戴好帽子、太阳镜。</li>
+                                <li>可准备头巾或薄围巾，防风沙及防晒。</li>
+                                <li>带足饮用水（峡谷内补充不便）及能量零食。</li>
+                                <li>确保手机、相机、充电宝电量充足。</li>
+                                <li>检查车辆油量，今日路程较长。</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">09:00-11:30</div>
-                    <div class="details">
-                        <h3>前往西部梦幻峡谷</h3>
-                        <p>自驾约139公里，需要2小时10分钟</p>
-                        <img src="https://www.bytravel.cn/Landscape/25/Image/img1395_416616635.jpg" alt="西部梦幻峡谷景色" class="item-image">
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.217284,40.449904', '西部梦幻峡谷')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">09:00-11:30</div>
+                        <div class="details">
+                            <h3>前往西部梦幻峡谷</h3>
+                            <p>自驾约139公里，需要2小时10分钟</p>
+                            <img src="https://www.bytravel.cn/Landscape/25/Image/img1395_416616635.jpg" alt="西部梦幻峡谷景色" class="item-image">
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.217284,40.449904', '西部梦幻峡谷')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">11:30-14:30</div>
-                    <div class="details">
-                        <h3>游览西部梦幻峡谷</h3>
-                         <p class="item-description">位于阿拉善左旗敖伦布拉格镇，以其独特的雅丹地貌和丹霞地貌著称。峡谷内怪石嶙峋，色彩斑斓，被誉为"中国最后的秘境"，是摄影爱好者的天堂。</p>
-                        <p>欣赏雅丹地貌，拍照。峡谷内需要乘坐区间车并步行游览。</p>
-                        <div class="price-tag">门票：78元/人（含区间车）</div>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">11:30-14:30</div>
+                        <div class="details">
+                            <h3>游览西部梦幻峡谷</h3>
+                             <p class="item-description">位于阿拉善左旗敖伦布拉格镇，以其独特的雅丹地貌和丹霞地貌著称。峡谷内怪石嶙峋，色彩斑斓，被誉为"中国最后的秘境"，是摄影爱好者的天堂。</p>
+                            <p>欣赏雅丹地貌，拍照。峡谷内需要乘坐区间车并步行游览。</p>
+                            <div class="price-tag">门票：78元/人（含区间车）</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">14:30-15:30</div>
-                    <div class="details">
-                        <h3>午餐</h3>
-                        <p>在峡谷出口附近简餐或食用自带食物野餐。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">14:30-15:30</div>
+                        <div class="details">
+                            <h3>午餐</h3>
+                            <p>在峡谷出口附近简餐或食用自带食物野餐。</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">15:30-19:00</div>
-                    <div class="details">
-                        <h3>前往乌海市区</h3>
-                        <p>自驾约182公里，需要3小时（途中可在阴山岩画指示牌处远观或根据兴趣短暂停留，注意阴山岩画实际位置需绕行，时间可能更长）。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">15:30-19:00</div>
+                        <div class="details">
+                            <h3>前往乌海市区</h3>
+                            <p>自驾约182公里，需要3小时（途中可在阴山岩画指示牌处远观或根据兴趣短暂停留，注意阴山岩画实际位置需绕行，时间可能更长）。</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">19:00-20:00</div>
-                    <div class="details">
-                        <h3>晚餐</h3>
-                        <p>推荐：乌海当地特色羊肉餐厅，如手扒肉、烤羊排等。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">19:00-20:00</div>
+                        <div class="details">
+                            <h3>晚餐</h3>
+                            <p>推荐：乌海当地特色羊肉餐厅，如手扒肉、烤羊排等。</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">20:00</div>
-                    <div class="details">
-                        <h3>入住酒店：全季酒店乌海万锦广场店</h3>
-                        <img src="https://dimg04.c-ctrip.com/images/0M75i120009d6sz4i44AD_R_600_400_R5_D.jpg" alt="全季酒店乌海万锦广场店" class="item-image">
-                        <p class="item-description">位于乌海市海勃湾区，周边配套设施完善，靠近商业区，提供现代化的住宿体验。</p>
-                        <p>地址：凤凰岭街道千里山东街北二街坊78号大悦城</p>
-                        <div class="price-tag">价格：¥548.65/晚</div>
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.826310,39.672453', '全季酒店乌海万锦广场店')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">20:00</div>
+                        <div class="details">
+                            <h3>入住酒店：全季酒店乌海万锦广场店</h3>
+                            <img src="https://dimg04.c-ctrip.com/images/0M75i120009d6sz4i44AD_R_600_400_R5_D.jpg" alt="全季酒店乌海万锦广场店" class="item-image">
+                            <p class="item-description">位于乌海市海勃湾区，周边配套设施完善，靠近商业区，提供现代化的住宿体验。</p>
+                            <p>地址：凤凰岭街道千里山东街北二街坊78号大悦城</p>
+                            <div class="price-tag">价格：¥548.65/晚</div>
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.826310,39.672453', '全季酒店乌海万锦广场店')">导航到这里</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Day 3 -->
-        <div id="day3" class="day-card">
-            <div class="day-header">
-                <span>第三天（5月2日）</span>
-                <span>乌海-乌海湖-拉僧庙-银川</span>
-            </div>
-            <div class="day-content">
-                <!-- 添加路线地图 -->
-                <div class="route-map-card">
-                    <div class="route-map-title">今日行程路线</div>
-                    <div class="route-map-container">
-                        <iframe src="https://uri.amap.com/marker?markers=106.826310,39.672453,乌海|106.772062,39.625102,乌海湖|106.840946,39.327843,拉僧庙|106.117914,38.458864,银川&src=mypage&callnative=1"></iframe>
-                    </div>
-                    <div class="route-map-info">
-                        <div class="route-map-distance">总行程: 约246公里</div>
-                        <div class="route-map-duration">预计驾驶: 4小时25分钟</div>
-                    </div>
+        <div id="day3" class="itinerary-content">
+            <div class="day-card">
+                <div class="day-header">
+                    <span>第三天（5月2日）</span>
+                    <span>乌海-乌海湖-拉僧庙-银川</span>
                 </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">08:00-09:00</div>
-                    <div class="details">
-                        <h3>酒店早餐 & 出发准备</h3>
-                        <h4>出发准备 (今日重点：乌海湖 & 拉僧庙 & 跨省驾驶)</h4>
-                        <ul class="prep-list">
-                             <li>检查防晒用品（湖边紫外线较强）。</li>
-                             <li>携带饮用水和少量零食。</li>
-                             <li>拉僧庙为宗教场所，建议穿着得体（避免过于暴露）。</li>
-                             <li>确认手机导航及电量，准备跨省进入宁夏。</li>
-                             <li>检查车辆油量，准备下午的长途驾驶。</li>
-                             <li>带好相机，记录湖光山色与寺庙建筑。</li>
-                        </ul>
+                <div class="day-content">
+                    <div class="itinerary-item">
+                        <div class="time">08:00-09:00</div>
+                        <div class="details">
+                            <h3>酒店早餐 & 出发准备</h3>
+                            <h4>出发准备 (今日重点：乌海湖 & 拉僧庙 & 跨省驾驶)</h4>
+                            <ul class="prep-list">
+                                 <li>检查防晒用品（湖边紫外线较强）。</li>
+                                 <li>携带饮用水和少量零食。</li>
+                                 <li>拉僧庙为宗教场所，建议穿着得体（避免过于暴露）。</li>
+                                 <li>确认手机导航及电量，准备跨省进入宁夏。</li>
+                                 <li>检查车辆油量，准备下午的长途驾驶。</li>
+                                 <li>带好相机，记录湖光山色与寺庙建筑。</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">09:00-09:30</div>
-                    <div class="details">
-                        <h3>前往乌海湖</h3>
-                        <p>自驾约15-20公里（从万锦广场店出发），需要30分钟左右。</p>
-                         <img src="https://n.sinaimg.cn/sinakd20200728s/254/w640h414/20200728/766b-iwxpesx6005320.jpg" alt="乌海湖风光" class="item-image">
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.772062,39.625102', '乌海湖')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">09:00-09:30</div>
+                        <div class="details">
+                            <h3>前往乌海湖</h3>
+                            <p>自驾约15-20公里（从万锦广场店出发），需要30分钟左右。</p>
+                             <img src="https://n.sinaimg.cn/sinakd20200728s/254/w640h414/20200728/766b-iwxpesx6005320.jpg" alt="乌海湖风光" class="item-image">
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.772062,39.625102', '乌海湖')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">09:30-11:30</div>
-                    <div class="details">
-                        <h3>游览乌海湖</h3>
-                        <p class="item-description">由黄河海勃湾水利枢纽工程蓄水形成的人工湖，将沙漠与湖水巧妙结合，形成了"沙水相依"的独特景观。湖区面积广阔，可进行多种水上活动或沿湖观光。</p>
-                        <p>观赏湖光山色，拍照。可选择性乘坐游船（另付费）。</p>
-                        <div class="price-tag">门票：免费（游船约50-100元/船）</div>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">09:30-11:30</div>
+                        <div class="details">
+                            <h3>游览乌海湖</h3>
+                            <p class="item-description">由黄河海勃湾水利枢纽工程蓄水形成的人工湖，将沙漠与湖水巧妙结合，形成了"沙水相依"的独特景观。湖区面积广阔，可进行多种水上活动或沿湖观光。</p>
+                            <p>观赏湖光山色，拍照。可选择性乘坐游船（另付费）。</p>
+                            <div class="price-tag">门票：免费（游船约50-100元/船）</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">11:30-12:30</div>
-                    <div class="details">
-                        <h3>午餐</h3>
-                        <p>在乌海湖附近餐厅用餐（推荐品尝当地特色湖鲜，如黄河鲤鱼）</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">11:30-12:30</div>
+                        <div class="details">
+                            <h3>午餐</h3>
+                            <p>在乌海湖附近餐厅用餐（推荐品尝当地特色湖鲜，如黄河鲤鱼）</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">12:30-13:30</div>
-                    <div class="details">
-                        <h3>前往拉僧庙</h3>
-                        <p>自驾约35公里，需要40分钟</p>
-                        <img src="https://img1.qunarzz.com/travel/d4/1609/99/12069493eaac57f7.jpg_r_640x426x90_09a44c93.jpg" alt="拉僧庙建筑" class="item-image">
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.840946,39.327843', '拉僧庙')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">12:30-13:30</div>
+                        <div class="details">
+                            <h3>前往拉僧庙</h3>
+                            <p>自驾约35公里，需要40分钟</p>
+                            <img src="https://img1.qunarzz.com/travel/d4/1609/99/12069493eaac57f7.jpg_r_640x426x90_09a44c93.jpg" alt="拉僧庙建筑" class="item-image">
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.840946,39.327843', '拉僧庙')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">13:30-15:00</div>
-                    <div class="details">
-                        <h3>游览拉僧庙</h3>
-                        <p class="item-description">全称"阿拉善第一寺"，是阿拉善地区建立最早、影响最大的藏传佛教格鲁派寺院。建筑宏伟，融合了藏、汉、蒙多种风格，具有重要的宗教和历史文化价值。</p>
-                        <p>参观寺庙建筑，感受佛教文化氛围。注意保持安静肃穆。</p>
-                        <div class="price-tag">门票：30元/人</div>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">13:30-15:00</div>
+                        <div class="details">
+                            <h3>游览拉僧庙</h3>
+                            <p class="item-description">全称"阿拉善第一寺"，是阿拉善地区建立最早、影响最大的藏传佛教格鲁派寺院。建筑宏伟，融合了藏、汉、蒙多种风格，具有重要的宗教和历史文化价值。</p>
+                            <p>参观寺庙建筑，感受佛教文化氛围。注意保持安静肃穆。</p>
+                            <div class="price-tag">门票：30元/人</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">15:00-19:00</div>
-                    <div class="details">
-                        <h3>前往银川</h3>
-                        <p>自驾约164公里，需要3小时。进入宁夏境内。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">15:00-19:00</div>
+                        <div class="details">
+                            <h3>前往银川</h3>
+                            <p>自驾约164公里，需要3小时。进入宁夏境内。</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">19:00-20:00</div>
-                    <div class="details">
-                        <h3>晚餐</h3>
-                        <p>推荐：银川回族特色餐厅，品尝手抓羊肉、灰豆子、羊杂碎、特色面食等。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">19:00-20:00</div>
+                        <div class="details">
+                            <h3>晚餐</h3>
+                            <p>推荐：银川回族特色餐厅，品尝手抓羊肉、灰豆子、羊杂碎、特色面食等。</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">20:00</div>
-                    <div class="details">
-                        <h3>入住酒店：银川悦兰山国际酒店</h3>
-                        <img src="https://dimg04.c-ctrip.com/images/200c1f000001gq8v1EEAB_R_600_400_R5_D.jpg" alt="银川悦兰山国际酒店" class="item-image">
-                        <p class="item-description">一家定位较高的商务型酒店，设施较新，服务周到，环境舒适，适合对住宿品质有要求的旅客。</p>
-                        <p>地址：宝湖西路88号</p>
-                        <div class="price-tag">价格：¥516/晚</div>
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.117914,38.458864', '银川悦兰山国际酒店')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">20:00</div>
+                        <div class="details">
+                            <h3>入住酒店：银川悦兰山国际酒店</h3>
+                            <img src="https://dimg04.c-ctrip.com/images/200c1f000001gq8v1EEAB_R_600_400_R5_D.jpg" alt="银川悦兰山国际酒店" class="item-image">
+                            <p class="item-description">一家定位较高的商务型酒店，设施较新，服务周到，环境舒适，适合对住宿品质有要求的旅客。</p>
+                            <p>地址：宝湖西路88号</p>
+                            <div class="price-tag">价格：¥516/晚</div>
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.117914,38.458864', '银川悦兰山国际酒店')">导航到这里</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Day 4 -->
-        <div id="day4" class="day-card">
-            <div class="day-header">
-                <span>第四天（5月3日）</span>
-                <span>银川-镇北堡西部影视城-鄂尔多斯</span>
-            </div>
-            <div class="day-content">
-                <!-- 添加路线地图 -->
-                <div class="route-map-card">
-                    <div class="route-map-title">今日行程路线</div>
-                    <div class="route-map-container">
-                        <iframe src="https://uri.amap.com/marker?markers=106.117914,38.458864,银川|106.066024,38.629281,镇北堡西部影视城|109.933563,39.815239,鄂尔多斯&src=mypage&callnative=1"></iframe>
-                    </div>
-                    <div class="route-map-info">
-                        <div class="route-map-distance">总行程: 约474公里</div>
-                        <div class="route-map-duration">预计驾驶: 6小时</div>
-                    </div>
+        <div id="day4" class="itinerary-content">
+            <div class="day-card">
+                <div class="day-header">
+                    <span>第四天（5月3日）</span>
+                    <span>银川-镇北堡西部影视城-鄂尔多斯</span>
                 </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">08:00-09:00</div>
-                    <div class="details">
-                        <h3>酒店早餐 & 出发准备</h3>
-                         <h4>出发准备 (今日重点：影视城游览 & 超长途驾驶)</h4>
-                        <ul class="prep-list">
-                             <li>穿着极其舒适的鞋子，影视城内步行量大。</li>
-                             <li>备好防晒霜、太阳镜、帽子，大部分区域为室外。</li>
-                             <li>带足饮用水和零食（尤其是为下午的长途驾驶准备）。</li>
-                             <li>确保手机、相机、充电宝满电，准备好离线地图。</li>
-                             <li>检查车辆油量，今日驾驶距离超过400公里，务必加满油。</li>
-                             <li>带好身份证件和门票（或预订信息）。</li>
-                             <li>考虑准备一些提神物品或娱乐音频应对长途驾驶。</li>
-                        </ul>
+                <div class="day-content">
+                    <div class="itinerary-item">
+                        <div class="time">08:00-09:00</div>
+                        <div class="details">
+                            <h3>酒店早餐 & 出发准备</h3>
+                             <h4>出发准备 (今日重点：影视城游览 & 超长途驾驶)</h4>
+                            <ul class="prep-list">
+                                 <li>穿着极其舒适的鞋子，影视城内步行量大。</li>
+                                 <li>备好防晒霜、太阳镜、帽子，大部分区域为室外。</li>
+                                 <li>带足饮用水和零食（尤其是为下午的长途驾驶准备）。</li>
+                                 <li>确保手机、相机、充电宝满电，准备好离线地图。</li>
+                                 <li>检查车辆油量，今日驾驶距离超过400公里，务必加满油。</li>
+                                 <li>带好身份证件和门票（或预订信息）。</li>
+                                 <li>考虑准备一些提神物品或娱乐音频应对长途驾驶。</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">09:00-09:30</div> <!-- 时间调整为30分钟 -->
-                    <div class="details">
-                        <h3>前往镇北堡西部影视城</h3>
-                        <p>自驾约25公里，需要30-40分钟</p> 
-                        <img src="https://img1.baidu.com/it/u=144881618,1728471698&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1717693200&t=b6e35585650d821bb2cd7769549b59c6" alt="镇北堡西部影视城 月亮门" class="item-image">
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.066024,38.629281', '镇北堡西部影视城')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">09:00-09:30</div> <!-- 时间调整为30分钟 -->
+                        <div class="details">
+                            <h3>前往镇北堡西部影视城</h3>
+                            <p>自驾约25公里，需要30-40分钟</p> 
+                            <img src="https://img1.baidu.com/it/u=144881618,1728471698&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1717693200&t=b6e35585650d821bb2cd7769549b59c6" alt="镇北堡西部影视城 月亮门" class="item-image">
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.066024,38.629281', '镇北堡西部影视城')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">09:30-13:00</div> <!-- 时间调整 -->
-                    <div class="details">
-                        <h3>游览镇北堡西部影视城</h3>
-                         <p class="item-description">被誉为"东方好莱坞"，是众多知名电影（如《红高粱》、《大话西游》等）的拍摄地。这里保留了大量电影场景，分为明城、清城、老银川一条街等区域，充满原始、粗犷的西部风情。</p>
-                        <p>参观电影拍摄场景，体验西部风情。建议购买观光车票节省体力。</p>
-                        <div class="price-tag">门票：70元/人（观光车另加20元/人）</div>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">09:30-13:00</div> <!-- 时间调整 -->
+                        <div class="details">
+                            <h3>游览镇北堡西部影视城</h3>
+                             <p class="item-description">被誉为"东方好莱坞"，是众多知名电影（如《红高粱》、《大话西游》等）的拍摄地。这里保留了大量电影场景，分为明城、清城、老银川一条街等区域，充满原始、粗犷的西部风情。</p>
+                            <p>参观电影拍摄场景，体验西部风情。建议购买观光车票节省体力。</p>
+                            <div class="price-tag">门票：70元/人（观光车另加20元/人）</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">13:00-14:00</div>
-                    <div class="details">
-                        <h3>午餐</h3>
-                        <p>在影视城内餐厅用餐（选择较多，有小吃街和正规餐厅）</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">13:00-14:00</div>
+                        <div class="details">
+                            <h3>午餐</h3>
+                            <p>在影视城内餐厅用餐（选择较多，有小吃街和正规餐厅）</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">14:00-19:30</div>
-                    <div class="details">
-                        <h3>前往鄂尔多斯</h3>
-                        <p>自驾约449公里，需要5小时30分钟（路程漫长，请务必中途在服务区休息，注意驾驶安全，避免疲劳驾驶）。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">14:00-19:30</div>
+                        <div class="details">
+                            <h3>前往鄂尔多斯</h3>
+                            <p>自驾约449公里，需要5小时30分钟（路程漫长，请务必中途在服务区休息，注意驾驶安全，避免疲劳驾驶）。</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">19:30</div>
-                    <div class="details">
-                        <h3>入住酒店：鄂尔多斯桔子水晶酒店</h3>
-                        <img src="https://dimg04.c-ctrip.com/images/0M70w12000a6wkj4vB491_R_600_400_R5_D.jpg" alt="鄂尔多斯桔子水晶酒店" class="item-image">
-                        <p class="item-description">桔子水晶是华住集团旗下中高端设计型酒店品牌，这家店靠近鄂尔多斯野生动物园，设计感强，注重科技与舒适体验的结合。</p>
-                        <p>地址：景致环路4号野生动物园店</p>
-                        <div class="price-tag">价格：¥473.53/晚</div>
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.933563,39.815239', '鄂尔多斯桔子水晶酒店')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">19:30</div>
+                        <div class="details">
+                            <h3>入住酒店：鄂尔多斯桔子水晶酒店</h3>
+                            <img src="https://dimg04.c-ctrip.com/images/0M70w12000a6wkj4vB491_R_600_400_R5_D.jpg" alt="鄂尔多斯桔子水晶酒店" class="item-image">
+                            <p class="item-description">桔子水晶是华住集团旗下中高端设计型酒店品牌，这家店靠近鄂尔多斯野生动物园，设计感强，注重科技与舒适体验的结合。</p>
+                            <p>地址：景致环路4号野生动物园店</p>
+                            <div class="price-tag">价格：¥473.53/晚</div>
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.933563,39.815239', '鄂尔多斯桔子水晶酒店')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">20:30</div>
-                    <div class="details">
-                        <h3>晚餐</h3>
-                        <p>可在酒店餐厅或附近寻找蒙古特色餐厅。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">20:30</div>
+                        <div class="details">
+                            <h3>晚餐</h3>
+                            <p>可在酒店餐厅或附近寻找蒙古特色餐厅。</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Day 5 -->
-        <div id="day5" class="day-card">
-            <div class="day-header">
-                <span>第五天（5月4日）</span>
-                <span>鄂尔多斯-响沙湾-包头</span>
-            </div>
-            <div class="day-content">
-                <!-- 添加路线地图 -->
-                <div class="route-map-card">
-                    <div class="route-map-title">今日行程路线</div>
-                    <div class="route-map-container">
-                        <iframe src="https://uri.amap.com/marker?markers=109.933563,39.815239,鄂尔多斯|109.966840,40.243046,响沙湾|109.837349,40.658225,包头&src=mypage&callnative=1"></iframe>
-                    </div>
-                    <div class="route-map-info">
-                        <div class="route-map-distance">总行程: 约103公里</div>
-                        <div class="route-map-duration">预计驾驶: 1小时45分钟</div>
-                    </div>
+        <div id="day5" class="itinerary-content">
+            <div class="day-card">
+                <div class="day-header">
+                    <span>第五天（5月4日）</span>
+                    <span>鄂尔多斯-响沙湾-包头</span>
                 </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">08:00-09:00</div>
-                    <div class="details">
-                        <h3>酒店早餐 & 出发准备</h3>
-                        <h4>出发准备 (今日重点：响沙湾沙漠全体验)</h4>
-                        <ul class="prep-list">
-                             <li>**最高级别防晒！** 高倍数防晒霜（身体裸露部位都要涂）、宽檐帽、太阳镜、最好有防晒面罩/脖套。</li>
-                             <li>穿轻便透气的长袖长裤（防晒防沙）。</li>
-                             <li>舒适的鞋子（可考虑在景区租用沙袜或穿旧运动鞋）。</li>
-                             <li>带上头巾或围巾，风沙较大时可保护口鼻。</li>
-                             <li>大量饮用水！沙漠中极易脱水。可带功能饮料补充电解质。</li>
-                             <li>高能量零食。</li>
-                             <li>保护好相机和手机，用密封袋或防沙套。</li>
-                             <li>备好门票/套票（建议提前购买套票）。</li>
-                             <li>少量现金，用于购买小零食或租用物品。</li>
-                        </ul>
+                <div class="day-content">
+                    <div class="itinerary-item">
+                        <div class="time">08:00-09:00</div>
+                        <div class="details">
+                            <h3>酒店早餐 & 出发准备</h3>
+                            <h4>出发准备 (今日重点：响沙湾沙漠全体验)</h4>
+                            <ul class="prep-list">
+                                 <li>**最高级别防晒！** 高倍数防晒霜（身体裸露部位都要涂）、宽檐帽、太阳镜、最好有防晒面罩/脖套。</li>
+                                 <li>穿轻便透气的长袖长裤（防晒防沙）。</li>
+                                 <li>舒适的鞋子（可考虑在景区租用沙袜或穿旧运动鞋）。</li>
+                                 <li>带上头巾或围巾，风沙较大时可保护口鼻。</li>
+                                 <li>大量饮用水！沙漠中极易脱水。可带功能饮料补充电解质。</li>
+                                 <li>高能量零食。</li>
+                                 <li>保护好相机和手机，用密封袋或防沙套。</li>
+                                 <li>备好门票/套票（建议提前购买套票）。</li>
+                                 <li>少量现金，用于购买小零食或租用物品。</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">09:00-10:00</div> <!-- 时间调整为1小时 -->
-                    <div class="details">
-                        <h3>前往响沙湾</h3>
-                        <p>自驾约50公里，需要1小时左右</p> 
-                        <img src="https://img1.baidu.com/it/u=2783923310,419954657&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800" alt="响沙湾沙漠景观" class="item-image">
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.966840,40.243046', '响沙湾')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">09:00-10:00</div> <!-- 时间调整为1小时 -->
+                        <div class="details">
+                            <h3>前往响沙湾</h3>
+                            <p>自驾约50公里，需要1小时左右</p> 
+                            <img src="https://img1.baidu.com/it/u=2783923310,419954657&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800" alt="响沙湾沙漠景观" class="item-image">
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.966840,40.243046', '响沙湾')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">10:00-17:30</div> <!-- 时间调整 -->
-                    <div class="details">
-                        <h3>游览响沙湾</h3>
-                        <p class="item-description">中国著名的沙漠休闲度假地，以其"会唱歌的沙子"而闻名。景区分为多个区域（如仙沙岛、悦沙岛），提供丰富的沙漠娱乐项目，如滑沙、骑骆驼、沙漠冲浪、高空滑索等，还有度假酒店和演艺表演。</p>
-                        <p>根据购买的套票内容，尽情体验沙漠活动。注意各项活动的安全须知。</p>
-                        <div class="price-tag">门票：120元/人（基础门票，强烈建议购买含项目的套票）</div>
-                        <p>特色项目参考价格（包含在套票内更划算）：</p>
-                        <ul style="padding-left: 20px; margin-bottom: 15px;">
-                            <li>仙沙岛/悦沙岛休闲套票：约280-380元/人</li>
-                        </ul>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">10:00-17:30</div> <!-- 时间调整 -->
+                        <div class="details">
+                            <h3>游览响沙湾</h3>
+                            <p class="item-description">中国著名的沙漠休闲度假地，以其"会唱歌的沙子"而闻名。景区分为多个区域（如仙沙岛、悦沙岛），提供丰富的沙漠娱乐项目，如滑沙、骑骆驼、沙漠冲浪、高空滑索等，还有度假酒店和演艺表演。</p>
+                            <p>根据购买的套票内容，尽情体验沙漠活动。注意各项活动的安全须知。</p>
+                            <div class="price-tag">门票：120元/人（基础门票，强烈建议购买含项目的套票）</div>
+                            <p>特色项目参考价格（包含在套票内更划算）：</p>
+                            <ul style="padding-left: 20px; margin-bottom: 15px;">
+                                <li>仙沙岛/悦沙岛休闲套票：约280-380元/人</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">12:30-13:30</div>
-                    <div class="details">
-                        <h3>午餐</h3>
-                        <p>在景区内餐厅用餐（选择多样，有自助餐和单点，包含在部分高级套票中）</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">12:30-13:30</div>
+                        <div class="details">
+                            <h3>午餐</h3>
+                            <p>在景区内餐厅用餐（选择多样，有自助餐和单点，包含在部分高级套票中）</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">17:30-18:30</div> <!-- 时间调整 -->
-                    <div class="details">
-                        <h3>前往包头</h3>
-                        <p>自驾约51公里，需要1小时左右</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">17:30-18:30</div> <!-- 时间调整 -->
+                        <div class="details">
+                            <h3>前往包头</h3>
+                            <p>自驾约51公里，需要1小时左右</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">18:30</div> <!-- 时间调整 -->
-                    <div class="details">
-                        <h3>入住酒店：包头茂业万豪酒店</h3>
-                         <img src="https://dimg04.c-ctrip.com/images/0M71f120009d6j8k5F970_R_600_400_R5_D.jpg" alt="包头茂业万豪酒店外观" class="item-image">
-                         <p class="item-description">国际连锁五星级酒店，位于包头市中心繁华地段，设施豪华，服务专业，提供高品质的入住体验。</p>
-                        <p>地址：钢铁大街31号</p>
-                        <div class="price-tag">价格：¥586.50/晚</div>
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.837349,40.658225', '包头茂业万豪酒店')">导航到这里</a>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">18:30</div> <!-- 时间调整 -->
+                        <div class="details">
+                            <h3>入住酒店：包头茂业万豪酒店</h3>
+                             <img src="https://dimg04.c-ctrip.com/images/0M71f120009d6j8k5F970_R_600_400_R5_D.jpg" alt="包头茂业万豪酒店外观" class="item-image">
+                             <p class="item-description">国际连锁五星级酒店，位于包头市中心繁华地段，设施豪华，服务专业，提供高品质的入住体验。</p>
+                            <p>地址：钢铁大街31号</p>
+                            <div class="price-tag">价格：¥586.50/晚</div>
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.837349,40.658225', '包头茂业万豪酒店')">导航到这里</a>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">20:00-21:30</div>
-                    <div class="details">
-                        <h3>晚餐</h3>
-                        <p>可在酒店内高档餐厅用餐，或前往附近品尝包头特色的蒙古火锅、烧麦等。</p>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">20:00-21:30</div>
+                        <div class="details">
+                            <h3>晚餐</h3>
+                            <p>可在酒店内高档餐厅用餐，或前往附近品尝包头特色的蒙古火锅、烧麦等。</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Day 6 -->
-        <div id="day6" class="day-card">
-            <div class="day-header">
-                <span>第六天（5月5日）</span>
-                <span>包头离开</span>
+        <div id="day6" class="itinerary-content">
+            <div class="day-card">
+                <div class="day-header">
+                    <span>第六天（5月5日）</span>
+                    <span>包头离开</span>
+                </div>
+                <div class="day-content">
+                    <div class="itinerary-item">
+                        <div class="time">07:00-08:30</div>
+                        <div class="details">
+                            <h3>酒店早餐 & 返程准备</h3>
+                            <h4>出发准备 (今日重点：整理 & 还车 & 赶火车)</h4>
+                            <ul class="prep-list">
+                                <li>整理并打包所有行李，检查是否有遗漏物品在酒店房间。</li>
+                                <li>确认火车发车时间、车次及检票口信息。</li>
+                                <li>规划好前往火车站的时间，考虑还车手续所需时间，至少提前1.5小时从酒店出发。</li>
+                                <li>准备好身份证件和火车票。</li>
+                                <li>与租车公司确认还车地点和流程，检查车辆油量是否符合还车要求。</li>
+                                <li>确保手机电量充足，方便联系和查询信息。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="itinerary-item">
+                        <div class="time">根据火车时间</div>
+                        <div class="details">
+                            <h3>办理退房 & 前往还车点/火车站</h3>
+                            <p>办理酒店退房手续。根据与租车公司约定的地点和时间，办理还车手续（通常在火车站附近有还车点）。之后前往包头站候车。</p>
+                            <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.836636,40.605388', '包头站')">导航到这里</a>
+                        </div>
+                    </div>
+                     <div class="itinerary-item">
+                        <div class="time">13：45</div>
+                        <div class="details">
+                            <h3>火车返程</h3>
+                            <p>乘坐火车返程，结束愉快的内蒙古-宁夏自驾之旅。</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="day-content">
-                <!-- 添加路线地图 -->
-                <div class="route-map-card">
-                    <div class="route-map-title">今日行程路线</div>
-                    <div class="route-map-container">
-                        <iframe src="https://uri.amap.com/marker?markers=109.837349,40.658225,包头茂业万豪酒店|109.836636,40.605388,包头站&src=mypage&callnative=1"></iframe>
-                    </div>
-                    <div class="route-map-info">
-                        <div class="route-map-distance">总行程: 约5公里</div>
-                        <div class="route-map-duration">预计驾驶: 15分钟</div>
-                    </div>
+        </div>
+        
+        <!-- 路线地图部分 -->
+        <div id="route-map" class="route-map-section">
+            <h2 style="margin-bottom: 20px; color: #3f51b5; font-size: 1.5rem;">行程路线地图</h2>
+            <div class="route-map-card">
+                <div class="route-map-title">
+                    <span id="map-day-title">第一天（4月30日）：包头-乌梁素海-巴彦淖尔</span>
                 </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">07:00-08:30</div>
-                    <div class="details">
-                        <h3>酒店早餐 & 返程准备</h3>
-                        <h4>出发准备 (今日重点：整理 & 还车 & 赶火车)</h4>
-                        <ul class="prep-list">
-                            <li>整理并打包所有行李，检查是否有遗漏物品在酒店房间。</li>
-                            <li>确认火车发车时间、车次及检票口信息。</li>
-                            <li>规划好前往火车站的时间，考虑还车手续所需时间，至少提前1.5小时从酒店出发。</li>
-                            <li>准备好身份证件和火车票。</li>
-                            <li>与租车公司确认还车地点和流程，检查车辆油量是否符合还车要求。</li>
-                            <li>确保手机电量充足，方便联系和查询信息。</li>
-                        </ul>
-                    </div>
+                <div class="route-map-container">
+                    <iframe id="route-map-iframe" src="https://uri.amap.com/route?origin=109.836636,40.605388&destination=107.419692,40.755035&waypoints=108.909583,40.970040&strategy=2&mode=driving&src=mypage&callnative=0"></iframe>
                 </div>
-                
-                <div class="itinerary-item">
-                    <div class="time">根据火车时间</div>
-                    <div class="details">
-                        <h3>办理退房 & 前往还车点/火车站</h3>
-                        <p>办理酒店退房手续。根据与租车公司约定的地点和时间，办理还车手续（通常在火车站附近有还车点）。之后前往包头站候车。</p>
-                        <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.836636,40.605388', '包头站')">导航到这里</a>
-                    </div>
-                </div>
-                 <div class="itinerary-item">
-                    <div class="time">火车出发</div>
-                    <div class="details">
-                        <h3>离开包头</h3>
-                        <p>乘坐火车返程，结束愉快的内蒙古-宁夏自驾之旅。</p>
-                    </div>
+                <div class="route-map-info">
+                    <div class="route-map-distance" id="route-distance">总行程: 约312公里</div>
+                    <div class="route-map-duration" id="route-duration">预计驾驶: 4小时50分钟</div>
                 </div>
             </div>
         </div>
@@ -985,6 +1011,125 @@
     </div>
     
     <script>
+        // TAB切换和地图更新功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 路线数据
+            const routeData = {
+                day1: {
+                    title: "第一天（4月30日）：包头-乌梁素海-巴彦淖尔",
+                    mapUrl: "https://uri.amap.com/route?origin=109.836636,40.605388&destination=107.419692,40.755035&waypoints=108.909583,40.970040&strategy=2&mode=driving&src=mypage&callnative=0",
+                    distance: "约312公里",
+                    duration: "4小时50分钟"
+                },
+                day2: {
+                    title: "第二天（5月1日）：巴彦淖尔-西部梦幻峡谷-乌海",
+                    mapUrl: "https://uri.amap.com/route?origin=107.419692,40.755035&destination=106.826310,39.672453&waypoints=106.217284,40.449904&strategy=2&mode=driving&src=mypage&callnative=0",
+                    distance: "约321公里",
+                    duration: "5小时10分钟"
+                },
+                day3: {
+                    title: "第三天（5月2日）：乌海-乌海湖-拉僧庙-银川",
+                    mapUrl: "https://uri.amap.com/route?origin=106.826310,39.672453&destination=106.117914,38.458864&waypoints=106.772062,39.625102|106.840946,39.327843&strategy=2&mode=driving&src=mypage&callnative=0",
+                    distance: "约246公里",
+                    duration: "4小时25分钟"
+                },
+                day4: {
+                    title: "第四天（5月3日）：银川-镇北堡西部影视城-鄂尔多斯",
+                    mapUrl: "https://uri.amap.com/route?origin=106.117914,38.458864&destination=109.933563,39.815239&waypoints=106.066024,38.629281&strategy=2&mode=driving&src=mypage&callnative=0",
+                    distance: "约474公里",
+                    duration: "6小时"
+                },
+                day5: {
+                    title: "第五天（5月4日）：鄂尔多斯-响沙湾-包头",
+                    mapUrl: "https://uri.amap.com/route?origin=109.933563,39.815239&destination=109.837349,40.658225&waypoints=109.966840,40.243046&strategy=2&mode=driving&src=mypage&callnative=0",
+                    distance: "约103公里",
+                    duration: "1小时45分钟"
+                },
+                day6: {
+                    title: "第六天（5月5日）：包头酒店-火车站",
+                    mapUrl: "https://uri.amap.com/route?origin=109.837349,40.658225&destination=109.836636,40.605388&strategy=2&mode=driving&src=mypage&callnative=0",
+                    distance: "约5公里",
+                    duration: "15分钟"
+                }
+            };
+            
+            // 获取所有Tab按钮和内容区域
+            const tabs = document.querySelectorAll('.itinerary-tab');
+            const contents = document.querySelectorAll('.itinerary-content');
+            
+            // 地图元素
+            const mapIframe = document.getElementById('route-map-iframe');
+            const mapTitle = document.getElementById('map-day-title');
+            const mapDistance = document.getElementById('route-distance');
+            const mapDuration = document.getElementById('route-duration');
+            
+            // 切换Tab函数
+            function switchTab(dayId) {
+                // 隐藏所有内容
+                contents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // 移除所有Tab激活状态
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // 激活当前Tab
+                document.getElementById(dayId).classList.add('active');
+                document.querySelector(`.itinerary-tab[data-day="${dayId}"]`).classList.add('active');
+                
+                // 更新地图
+                updateMap(dayId);
+                
+                // 滚动到页面顶部
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // 更新地图函数
+            function updateMap(dayId) {
+                const data = routeData[dayId];
+                
+                // 如果数据存在则更新地图
+                if (data) {
+                    mapTitle.textContent = data.title;
+                    mapIframe.src = data.mapUrl;
+                    mapDistance.textContent = `总行程: ${data.distance}`;
+                    mapDuration.textContent = `预计驾驶: ${data.duration}`;
+                    
+                    // 滚动到地图位置
+                    setTimeout(() => {
+                        document.getElementById('route-map').scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+                }
+            }
+            
+            // 为所有Tab按钮添加点击事件
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const dayId = tab.getAttribute('data-day');
+                    switchTab(dayId);
+                });
+            });
+            
+            // 修改原来的scrollToElement函数以适应新结构
+            window.scrollToElement = function(id) {
+                // 如果是天数，则切换到对应Tab
+                if (id.startsWith('day') && id.length === 4) {
+                    switchTab(id);
+                } else {
+                    // 否则滚动到元素
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            };
+        });
+        
         // 导航函数
         function navigate(coordinates, destination) {
             // 检测设备类型
@@ -1064,14 +1209,6 @@
             } else {
                 // 电脑端直接打开网页版
                 window.open(webUrl);
-            }
-        }
-        
-        // 页面滚动函数
-        function scrollToElement(id) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
             }
         }
     </script>
