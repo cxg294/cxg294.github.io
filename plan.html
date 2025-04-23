@@ -101,59 +101,6 @@
             background-color: rgba(255, 255, 255, 0.3);
         }
         
-        /* 新增：行程Tab切换 */
-        .itinerary-tabs {
-            display: flex;
-            overflow-x: auto;
-            margin-bottom: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 60px;
-            z-index: 900;
-        }
-        
-        .itinerary-tab {
-            padding: 15px 20px;
-            background: transparent;
-            border: none;
-            color: #666;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex-shrink: 0;
-            position: relative;
-            white-space: nowrap;
-        }
-        
-        .itinerary-tab.active {
-            color: #3f51b5;
-        }
-        
-        .itinerary-tab.active:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 20%;
-            right: 20%;
-            height: 3px;
-            background: #3f51b5;
-            border-radius: 3px;
-        }
-        
-        .itinerary-tab:hover {
-            background-color: rgba(63, 81, 181, 0.05);
-        }
-        
-        .itinerary-content {
-            display: none;
-        }
-        
-        .itinerary-content.active {
-            display: block;
-        }
-        
         /* 路线地图卡片样式 */
         .route-map-section {
             margin: 40px 0;
@@ -475,16 +422,6 @@
             <!-- ... (内容不变) ... -->
         </div>
         
-        <!-- 行程TAB切换 -->
-        <div class="itinerary-tabs">
-            <button class="itinerary-tab active" data-day="day1">第一天（4月30日）</button>
-            <button class="itinerary-tab" data-day="day2">第二天（5月1日）</button>
-            <button class="itinerary-tab" data-day="day3">第三天（5月2日）</button>
-            <button class="itinerary-tab" data-day="day4">第四天（5月3日）</button>
-            <button class="itinerary-tab" data-day="day5">第四天（5月4日）</button>
-            <button class="itinerary-tab" data-day="day6">第六天（5月5日）</button>
-        </div>
-        
         <!-- Day 1 -->
         <div id="day1" class="itinerary-content active">
             <div class="day-card">
@@ -606,7 +543,7 @@
                         <div class="details">
                             <h3>前往西部梦幻峡谷</h3>
                             <p>自驾约139公里，需要2小时10分钟</p>
-                            <img src="https://www.bytravel.cn/Landscape/25/Image/img1395_416616635.jpg" alt="西部梦幻峡谷景色" class="item-image">
+                            <img src="https://dimg04.c-ctrip.com/images/0103612000f6qoryo8AE0_D_521_391.jpg" alt="西部梦幻峡谷景色" class="item-image">
                             <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.217284,40.449904', '西部梦幻峡谷')">导航到这里</a>
                         </div>
                     </div>
@@ -649,7 +586,7 @@
                         <div class="time">20:00</div>
                         <div class="details">
                             <h3>入住酒店：全季酒店乌海万锦广场店</h3>
-                            <img src="https://dimg04.c-ctrip.com/images/0M75i120009d6sz4i44AD_R_600_400_R5_D.jpg" alt="全季酒店乌海万锦广场店" class="item-image">
+                            <img src="https://dimg04.c-ctrip.com/images/0200812000gtdc3t557B7_W_1080_808_R5_D.jpg" alt="全季酒店乌海万锦广场店" class="item-image">
                             <p class="item-description">位于乌海市海勃湾区，周边配套设施完善，靠近商业区，提供现代化的住宿体验。</p>
                             <p>地址：凤凰岭街道千里山东街北二街坊78号大悦城</p>
                             <div class="price-tag">价格：¥548.65/晚</div>
@@ -1017,44 +954,43 @@
             const routeData = {
                 day1: {
                     title: "第一天（4月30日）：包头-乌梁素海-巴彦淖尔",
-                    mapUrl: "https://uri.amap.com/route?origin=109.836636,40.605388&destination=107.419692,40.755035&waypoints=108.909583,40.970040&strategy=2&mode=driving&src=mypage&callnative=0",
+                    mapUrl: "https://uri.amap.com/driving?origin=109.836636,40.605388&destination=107.419692,40.755035&waypoints=108.909583,40.970040&policy=2&src=mypage&callnative=0",
                     distance: "约312公里",
                     duration: "4小时50分钟"
                 },
                 day2: {
                     title: "第二天（5月1日）：巴彦淖尔-西部梦幻峡谷-乌海",
-                    mapUrl: "https://uri.amap.com/route?origin=107.419692,40.755035&destination=106.826310,39.672453&waypoints=106.217284,40.449904&strategy=2&mode=driving&src=mypage&callnative=0",
+                    mapUrl: "https://uri.amap.com/driving?origin=107.419692,40.755035&destination=106.826310,39.672453&waypoints=106.217284,40.449904&policy=2&src=mypage&callnative=0",
                     distance: "约321公里",
                     duration: "5小时10分钟"
                 },
                 day3: {
                     title: "第三天（5月2日）：乌海-乌海湖-拉僧庙-银川",
-                    mapUrl: "https://uri.amap.com/route?origin=106.826310,39.672453&destination=106.117914,38.458864&waypoints=106.772062,39.625102|106.840946,39.327843&strategy=2&mode=driving&src=mypage&callnative=0",
+                    mapUrl: "https://uri.amap.com/driving?origin=106.826310,39.672453&destination=106.117914,38.458864&waypoints=106.772062,39.625102|106.840946,39.327843&policy=2&src=mypage&callnative=0",
                     distance: "约246公里",
                     duration: "4小时25分钟"
                 },
                 day4: {
                     title: "第四天（5月3日）：银川-镇北堡西部影视城-鄂尔多斯",
-                    mapUrl: "https://uri.amap.com/route?origin=106.117914,38.458864&destination=109.933563,39.815239&waypoints=106.066024,38.629281&strategy=2&mode=driving&src=mypage&callnative=0",
+                    mapUrl: "https://uri.amap.com/driving?origin=106.117914,38.458864&destination=109.933563,39.815239&waypoints=106.066024,38.629281&policy=2&src=mypage&callnative=0",
                     distance: "约474公里",
                     duration: "6小时"
                 },
                 day5: {
                     title: "第五天（5月4日）：鄂尔多斯-响沙湾-包头",
-                    mapUrl: "https://uri.amap.com/route?origin=109.933563,39.815239&destination=109.837349,40.658225&waypoints=109.966840,40.243046&strategy=2&mode=driving&src=mypage&callnative=0",
+                    mapUrl: "https://uri.amap.com/driving?origin=109.933563,39.815239&destination=109.837349,40.658225&waypoints=109.966840,40.243046&policy=2&src=mypage&callnative=0",
                     distance: "约103公里",
                     duration: "1小时45分钟"
                 },
                 day6: {
                     title: "第六天（5月5日）：包头酒店-火车站",
-                    mapUrl: "https://uri.amap.com/route?origin=109.837349,40.658225&destination=109.836636,40.605388&strategy=2&mode=driving&src=mypage&callnative=0",
+                    mapUrl: "https://uri.amap.com/driving?origin=109.837349,40.658225&destination=109.836636,40.605388&policy=2&src=mypage&callnative=0",
                     distance: "约5公里",
                     duration: "15分钟"
                 }
             };
             
-            // 获取所有Tab按钮和内容区域
-            const tabs = document.querySelectorAll('.itinerary-tab');
+            // 获取所有内容区域
             const contents = document.querySelectorAll('.itinerary-content');
             
             // 地图元素
@@ -1063,30 +999,21 @@
             const mapDistance = document.getElementById('route-distance');
             const mapDuration = document.getElementById('route-duration');
             
-            // 切换Tab函数
+            // 切换Tab函数，修改为仅切换内容
             function switchTab(dayId) {
                 // 隐藏所有内容
                 contents.forEach(content => {
                     content.classList.remove('active');
                 });
                 
-                // 移除所有Tab激活状态
-                tabs.forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                
-                // 激活当前Tab
+                // 激活当前Tab内容
                 document.getElementById(dayId).classList.add('active');
-                document.querySelector(`.itinerary-tab[data-day="${dayId}"]`).classList.add('active');
                 
                 // 更新地图
                 updateMap(dayId);
                 
-                // 滚动到页面顶部
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                // 滚动到该日内容顶部
+                document.getElementById(dayId).scrollIntoView({ behavior: 'smooth' });
             }
             
             // 更新地图函数
@@ -1099,27 +1026,22 @@
                     mapIframe.src = data.mapUrl;
                     mapDistance.textContent = `总行程: ${data.distance}`;
                     mapDuration.textContent = `预计驾驶: ${data.duration}`;
-                    
-                    // 滚动到地图位置
-                    setTimeout(() => {
-                        document.getElementById('route-map').scrollIntoView({ behavior: 'smooth' });
-                    }, 300);
                 }
             }
             
-            // 为所有Tab按钮添加点击事件
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const dayId = tab.getAttribute('data-day');
-                    switchTab(dayId);
-                });
-            });
+            // 初始化页面时加载第一天的地图
+            updateMap('day1');
             
-            // 修改原来的scrollToElement函数以适应新结构
+            // 修改scrollToElement函数
             window.scrollToElement = function(id) {
-                // 如果是天数，则切换到对应Tab
+                // 如果是天数，则切换到对应内容并更新地图
                 if (id.startsWith('day') && id.length === 4) {
                     switchTab(id);
+                } else if (id === 'route-map') {
+                    // 如果是地图部分，直接滚动并确保当前活动天的地图显示
+                    const activeDay = document.querySelector('.itinerary-content.active').id;
+                    updateMap(activeDay);
+                    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
                 } else {
                     // 否则滚动到元素
                     const element = document.getElementById(id);
