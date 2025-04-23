@@ -330,6 +330,62 @@
                 scroll-margin-top: 90px;
             }
         }
+        
+        /* 新增：路线地图卡片样式 */
+        .route-map-card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .route-map-title {
+            padding: 12px 15px;
+            background-color: #5c6bc0;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .route-map-container {
+            height: 250px;
+            width: 100%;
+            background-color: #f5f5f5;
+            position: relative;
+        }
+        
+        .route-map-container iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .route-map-info {
+            padding: 12px 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .route-map-distance, .route-map-duration {
+            display: flex;
+            align-items: center;
+        }
+        
+        .route-map-distance:before {
+            content: "⟷";
+            margin-right: 5px;
+            color: #3f51b5;
+        }
+        
+        .route-map-duration:before {
+            content: "⏱";
+            margin-right: 5px;
+            color: #3f51b5;
+        }
     </style>
 </head>
 <body>
@@ -367,6 +423,18 @@
                 <span>包头-乌梁素海-巴彦淖尔</span>
             </div>
             <div class="day-content">
+                <!-- 添加路线地图 -->
+                <div class="route-map-card">
+                    <div class="route-map-title">今日行程路线</div>
+                    <div class="route-map-container">
+                        <iframe src="https://uri.amap.com/marker?markers=109.836636,40.605388,包头站|108.909583,40.970040,乌梁素海|107.419692,40.755035,巴彦淖尔&src=mypage&callnative=1"></iframe>
+                    </div>
+                    <div class="route-map-info">
+                        <div class="route-map-distance">总行程: 约312公里</div>
+                        <div class="route-map-duration">预计驾驶: 4小时50分钟</div>
+                    </div>
+                </div>
+                
                 <div class="itinerary-item">
                     <div class="time">12:05</div>
                     <div class="details">
@@ -457,6 +525,18 @@
                 <span>巴彦淖尔-西部梦幻峡谷-乌海</span>
             </div>
             <div class="day-content">
+                <!-- 添加路线地图 -->
+                <div class="route-map-card">
+                    <div class="route-map-title">今日行程路线</div>
+                    <div class="route-map-container">
+                        <iframe src="https://uri.amap.com/marker?markers=107.419692,40.755035,巴彦淖尔|106.217284,40.449904,西部梦幻峡谷|106.826310,39.672453,乌海&src=mypage&callnative=1"></iframe>
+                    </div>
+                    <div class="route-map-info">
+                        <div class="route-map-distance">总行程: 约321公里</div>
+                        <div class="route-map-duration">预计驾驶: 5小时10分钟</div>
+                    </div>
+                </div>
+                
                 <div class="itinerary-item">
                     <div class="time">08:00-09:00</div>
                     <div class="details">
@@ -487,7 +567,7 @@
                     <div class="time">11:30-14:30</div>
                     <div class="details">
                         <h3>游览西部梦幻峡谷</h3>
-                         <p class="item-description">位于阿拉善左旗敖伦布拉格镇，以其独特的雅丹地貌和丹霞地貌著称。峡谷内怪石嶙峋，色彩斑斓，被誉为“中国最后的秘境”，是摄影爱好者的天堂。</p>
+                         <p class="item-description">位于阿拉善左旗敖伦布拉格镇，以其独特的雅丹地貌和丹霞地貌著称。峡谷内怪石嶙峋，色彩斑斓，被誉为"中国最后的秘境"，是摄影爱好者的天堂。</p>
                         <p>欣赏雅丹地貌，拍照。峡谷内需要乘坐区间车并步行游览。</p>
                         <div class="price-tag">门票：78元/人（含区间车）</div>
                     </div>
@@ -538,6 +618,18 @@
                 <span>乌海-乌海湖-拉僧庙-银川</span>
             </div>
             <div class="day-content">
+                <!-- 添加路线地图 -->
+                <div class="route-map-card">
+                    <div class="route-map-title">今日行程路线</div>
+                    <div class="route-map-container">
+                        <iframe src="https://uri.amap.com/marker?markers=106.826310,39.672453,乌海|106.772062,39.625102,乌海湖|106.840946,39.327843,拉僧庙|106.117914,38.458864,银川&src=mypage&callnative=1"></iframe>
+                    </div>
+                    <div class="route-map-info">
+                        <div class="route-map-distance">总行程: 约246公里</div>
+                        <div class="route-map-duration">预计驾驶: 4小时25分钟</div>
+                    </div>
+                </div>
+                
                 <div class="itinerary-item">
                     <div class="time">08:00-09:00</div>
                     <div class="details">
@@ -568,7 +660,7 @@
                     <div class="time">09:30-11:30</div>
                     <div class="details">
                         <h3>游览乌海湖</h3>
-                        <p class="item-description">由黄河海勃湾水利枢纽工程蓄水形成的人工湖，将沙漠与湖水巧妙结合，形成了“沙水相依”的独特景观。湖区面积广阔，可进行多种水上活动或沿湖观光。</p>
+                        <p class="item-description">由黄河海勃湾水利枢纽工程蓄水形成的人工湖，将沙漠与湖水巧妙结合，形成了"沙水相依"的独特景观。湖区面积广阔，可进行多种水上活动或沿湖观光。</p>
                         <p>观赏湖光山色，拍照。可选择性乘坐游船（另付费）。</p>
                         <div class="price-tag">门票：免费（游船约50-100元/船）</div>
                     </div>
@@ -596,7 +688,7 @@
                     <div class="time">13:30-15:00</div>
                     <div class="details">
                         <h3>游览拉僧庙</h3>
-                        <p class="item-description">全称“阿拉善第一寺”，是阿拉善地区建立最早、影响最大的藏传佛教格鲁派寺院。建筑宏伟，融合了藏、汉、蒙多种风格，具有重要的宗教和历史文化价值。</p>
+                        <p class="item-description">全称"阿拉善第一寺"，是阿拉善地区建立最早、影响最大的藏传佛教格鲁派寺院。建筑宏伟，融合了藏、汉、蒙多种风格，具有重要的宗教和历史文化价值。</p>
                         <p>参观寺庙建筑，感受佛教文化氛围。注意保持安静肃穆。</p>
                         <div class="price-tag">门票：30元/人</div>
                     </div>
@@ -639,6 +731,18 @@
                 <span>银川-镇北堡西部影视城-鄂尔多斯</span>
             </div>
             <div class="day-content">
+                <!-- 添加路线地图 -->
+                <div class="route-map-card">
+                    <div class="route-map-title">今日行程路线</div>
+                    <div class="route-map-container">
+                        <iframe src="https://uri.amap.com/marker?markers=106.117914,38.458864,银川|106.066024,38.629281,镇北堡西部影视城|109.933563,39.815239,鄂尔多斯&src=mypage&callnative=1"></iframe>
+                    </div>
+                    <div class="route-map-info">
+                        <div class="route-map-distance">总行程: 约474公里</div>
+                        <div class="route-map-duration">预计驾驶: 6小时</div>
+                    </div>
+                </div>
+                
                 <div class="itinerary-item">
                     <div class="time">08:00-09:00</div>
                     <div class="details">
@@ -670,7 +774,7 @@
                     <div class="time">09:30-13:00</div> <!-- 时间调整 -->
                     <div class="details">
                         <h3>游览镇北堡西部影视城</h3>
-                         <p class="item-description">被誉为“东方好莱坞”，是众多知名电影（如《红高粱》、《大话西游》等）的拍摄地。这里保留了大量电影场景，分为明城、清城、老银川一条街等区域，充满原始、粗犷的西部风情。</p>
+                         <p class="item-description">被誉为"东方好莱坞"，是众多知名电影（如《红高粱》、《大话西游》等）的拍摄地。这里保留了大量电影场景，分为明城、清城、老银川一条街等区域，充满原始、粗犷的西部风情。</p>
                         <p>参观电影拍摄场景，体验西部风情。建议购买观光车票节省体力。</p>
                         <div class="price-tag">门票：70元/人（观光车另加20元/人）</div>
                     </div>
@@ -721,6 +825,18 @@
                 <span>鄂尔多斯-响沙湾-包头</span>
             </div>
             <div class="day-content">
+                <!-- 添加路线地图 -->
+                <div class="route-map-card">
+                    <div class="route-map-title">今日行程路线</div>
+                    <div class="route-map-container">
+                        <iframe src="https://uri.amap.com/marker?markers=109.933563,39.815239,鄂尔多斯|109.966840,40.243046,响沙湾|109.837349,40.658225,包头&src=mypage&callnative=1"></iframe>
+                    </div>
+                    <div class="route-map-info">
+                        <div class="route-map-distance">总行程: 约103公里</div>
+                        <div class="route-map-duration">预计驾驶: 1小时45分钟</div>
+                    </div>
+                </div>
+                
                 <div class="itinerary-item">
                     <div class="time">08:00-09:00</div>
                     <div class="details">
@@ -754,7 +870,7 @@
                     <div class="time">10:00-17:30</div> <!-- 时间调整 -->
                     <div class="details">
                         <h3>游览响沙湾</h3>
-                        <p class="item-description">中国著名的沙漠休闲度假地，以其“会唱歌的沙子”而闻名。景区分为多个区域（如仙沙岛、悦沙岛），提供丰富的沙漠娱乐项目，如滑沙、骑骆驼、沙漠冲浪、高空滑索等，还有度假酒店和演艺表演。</p>
+                        <p class="item-description">中国著名的沙漠休闲度假地，以其"会唱歌的沙子"而闻名。景区分为多个区域（如仙沙岛、悦沙岛），提供丰富的沙漠娱乐项目，如滑沙、骑骆驼、沙漠冲浪、高空滑索等，还有度假酒店和演艺表演。</p>
                         <p>根据购买的套票内容，尽情体验沙漠活动。注意各项活动的安全须知。</p>
                         <div class="price-tag">门票：120元/人（基础门票，强烈建议购买含项目的套票）</div>
                         <p>特色项目参考价格（包含在套票内更划算）：</p>
@@ -809,6 +925,18 @@
                 <span>包头离开</span>
             </div>
             <div class="day-content">
+                <!-- 添加路线地图 -->
+                <div class="route-map-card">
+                    <div class="route-map-title">今日行程路线</div>
+                    <div class="route-map-container">
+                        <iframe src="https://uri.amap.com/marker?markers=109.837349,40.658225,包头茂业万豪酒店|109.836636,40.605388,包头站&src=mypage&callnative=1"></iframe>
+                    </div>
+                    <div class="route-map-info">
+                        <div class="route-map-distance">总行程: 约5公里</div>
+                        <div class="route-map-duration">预计驾驶: 15分钟</div>
+                    </div>
+                </div>
+                
                 <div class="itinerary-item">
                     <div class="time">07:00-08:30</div>
                     <div class="details">
@@ -857,8 +985,7 @@
     </div>
     
     <script>
-        // ... (JS 函数不变) ...
-         // 导航函数
+        // 导航函数
         function navigate(coordinates, destination) {
             // 检测设备类型
             var userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -869,44 +996,71 @@
             // 用于构建 URL 的坐标
             var [lng, lat] = coordinates.split(',');
             
-            // 构建导航 URL
-            var appUrl;
+            // 构建高德导航 URL
+            var amapUrl;
+            // 构建百度导航 URL (百度地图坐标系与高德不同，需要转换，但这里使用近似值)
+            var baiduUrl;
+            // 构建网页版导航 URL
             var webUrl = `https://uri.amap.com/navigation?to=${lng},${lat},${encodeURIComponent(destination)}&mode=car`;
             
             if (isAndroid) {
                 // Android - 高德地图
-                appUrl = `androidamap://navi?sourceApplication=自驾游规划&poiname=${encodeURIComponent(destination)}&lat=${lat}&lon=${lng}&dev=0&style=2`;
+                amapUrl = `androidamap://navi?sourceApplication=自驾游规划&poiname=${encodeURIComponent(destination)}&lat=${lat}&lon=${lng}&dev=0&style=2`;
+                // Android - 百度地图
+                baiduUrl = `bdapp://map/direction?destination=latlng:${lat},${lng}|name:${encodeURIComponent(destination)}&mode=driving&coord_type=gcj02`;
             } else if (isIOS) {
                 // iOS - 高德地图
-                appUrl = `iosamap://navi?sourceApplication=自驾游规划&poiname=${encodeURIComponent(destination)}&lat=${lat}&lon=${lng}&dev=0&style=2`;
+                amapUrl = `iosamap://navi?sourceApplication=自驾游规划&poiname=${encodeURIComponent(destination)}&lat=${lat}&lon=${lng}&dev=0&style=2`;
+                // iOS - 百度地图
+                baiduUrl = `baidumap://map/direction?destination=latlng:${lat},${lng}|name:${encodeURIComponent(destination)}&mode=driving&coord_type=gcj02`;
             }
             
             if (isMobile) {
-                // 尝试打开应用
+                // 使用iframe方式打开应用，避免页面跳转
                 var ifr = document.createElement('iframe');
-                ifr.src = appUrl;
                 ifr.style.display = 'none';
                 document.body.appendChild(ifr);
-
-                // 如果指定时间后用户还在当前页面，说明没有安装高德地图或未能调起，跳转到网页版
-                var fallbackTimeout = setTimeout(function() {
-                    try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
-                    if (!document.hidden) { // 检查页面是否在前台
-                         window.open(webUrl, '_blank');
+                
+                // 先尝试打开高德地图
+                ifr.src = amapUrl;
+                
+                // 如果1.5秒后用户还在当前页面，尝试打开百度地图
+                var baiduTimeout = setTimeout(function() {
+                    if (!document.hidden) {
+                        ifr.src = baiduUrl;
+                        
+                        // 如果再过1.5秒用户仍在页面，说明没有安装导航应用，跳转到网页版
+                        var webTimeout = setTimeout(function() {
+                            if (!document.hidden) {
+                                window.open(webUrl, '_blank');
+                            }
+                            try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
+                        }, 1500);
+                        
+                        // 如果百度地图被成功打开，清除网页版超时
+                        window.addEventListener('blur', function onBlur() {
+                            clearTimeout(webTimeout);
+                            window.removeEventListener('blur', onBlur);
+                            try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
+                        });
+                    } else {
+                        try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
                     }
-                }, 2500); // 增加超时时间以确保App有足够时间启动
-
-                // 添加事件监听器，如果App成功启动，则取消回退操作
-                 window.addEventListener('pagehide', function() {
-                    clearTimeout(fallbackTimeout);
-                    try { document.body.removeChild(ifr); } catch(e) {} // 尝试清理iframe
+                }, 1500);
+                
+                // 如果高德地图被成功打开，清除百度地图超时
+                window.addEventListener('blur', function onBlur() {
+                    clearTimeout(baiduTimeout);
+                    window.removeEventListener('blur', onBlur);
+                    try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
                 });
-                 window.addEventListener('blur', function() { // 当页面失去焦点时，也可能意味着App启动了
-                    clearTimeout(fallbackTimeout);
-                     try { document.body.removeChild(ifr); } catch(e) {} // 尝试清理iframe
+                
+                // 页面隐藏时（可能是应用启动了），清除所有超时和清理iframe
+                window.addEventListener('pagehide', function onHide() {
+                    clearTimeout(baiduTimeout);
+                    window.removeEventListener('pagehide', onHide);
+                    try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
                 });
-
-
             } else {
                 // 电脑端直接打开网页版
                 window.open(webUrl);
