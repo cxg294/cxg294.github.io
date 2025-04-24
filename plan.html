@@ -399,13 +399,13 @@
         <div class="quick-nav-container">
             <div class="nav-title">快速导航：</div>
             <div class="nav-buttons">
+                <button class="nav-btn" onclick="scrollToElement('day0')">D0</button>
                 <button class="nav-btn" onclick="scrollToElement('day1')">D1</button>
                 <button class="nav-btn" onclick="scrollToElement('day2')">D2</button>
                 <button class="nav-btn" onclick="scrollToElement('day3')">D3</button>
                 <button class="nav-btn" onclick="scrollToElement('day4')">D4</button>
                 <button class="nav-btn" onclick="scrollToElement('day5')">D5</button>
                 <button class="nav-btn" onclick="scrollToElement('day6')">D6</button>
-                <button class="nav-btn" onclick="scrollToElement('notes')">注</button>
             </div>
         </div>
     </div>
@@ -419,6 +419,43 @@
         <!-- 费用总览（已隐藏） -->
         <div class="cost-overview">
             <!-- ... (内容不变) ... -->
+        </div>
+        
+        <!-- Day 0: 行前准备 -->
+        <div id="day0" class="itinerary-content">
+            <div class="day-card">
+                <div class="day-header">
+                    <span>行前准备（D0）</span>
+                    <span>出发前的检查与提示</span>
+                </div>
+                <div class="day-content">
+                    <div class="itinerary-item">
+                        <div class="details">
+                            <h4><i class="fas fa-box-open"></i> 物资准备 (出门前务必检查)</h4>
+                            <ul class="prep-list">
+                                <li>**证件：** 身份证、驾驶证。</li>
+                                <li>**设备：** 手机及充电器、充电宝、相机及备用电池/存储卡、车载手机支架、自拍杆/云台。</li>
+                                <li>**衣物：** 普通衣物参考北京气温但温差更大，舒适的鞋子（徒步、防沙）、太阳镜、帽子、防风防沙头巾/围巾、防晒服。</li>
+                                <li>**日用：** 防晒霜（SPF50+）、纸巾/湿纸巾、随行挎包、两用伞、泳裤泳镜（酒店用）。</li>
+                                <li>**药品：** 布洛芬、肠胃药、创可贴，其余现用现买</li>
+                                <li>**食品：** 高能量零食（巧克力等）</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="itinerary-item">
+                        <div class="details">
+                            <h4><i class="fas fa-lightbulb"></i> 旅前Tips</h4>
+                            <ul style="list-style-type: disc; padding-left: 20px; color: #666;">
+                                <li style="margin-bottom: 8px;">**酒店早餐：** 行程中的所有酒店，全程带早餐，包括两个五星级。</li>
+                                <li style="margin-bottom: 8px;">**酒店设施：** 第三天和第五天的五星酒店带泳池和超大健身房，且有拍照景观。</li>
+                                <li style="margin-bottom: 8px;">**旅途驿站：** 有超长驾驶行程，需要轮换司机并在服务区休息。</li>
+                                <li style="margin-bottom: 8px;">**门票预订：** 以下景点需要提前购票：西部梦幻峡谷、镇北堡西部影城、响沙湾。</li>
+                                <li style="margin-bottom: 8px;">**去程午餐：** 首日午餐需要在火车上解决，下车直奔租车。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Day 1 -->
@@ -436,7 +473,7 @@
                             <p>火车到达包头站，准备开始行程。</p>
                             <h4>出发准备 (今日重点：取车 & 乌梁素海)</h4>
                             <ul class="prep-list">
-                                <li>检查并带齐身份证、驾驶证、租车订单。</li>
+                                <li>检查并带齐身份证、驾驶证。</li>
                                 <li>准备好导航设备或手机支架，检查离线地图。</li>
                                 <li>购买足够饮用水和一些方便零食。</li>
                                 <li>带上太阳镜、帽子，为乌梁素海做防晒准备。</li>
@@ -446,24 +483,17 @@
                         </div>
                     </div>
                     
+                    
                     <div class="itinerary-item">
                         <div class="time">12:30-13:30</div>
                         <div class="details">
-                            <h3>午餐</h3>
-                            <p>在火车站附近餐厅享用蒙餐</p>
-                        </div>
-                    </div>
-                    
-                    <div class="itinerary-item">
-                        <div class="time">13:30-14:30</div>
-                        <div class="details">
                             <h3>取租车与准备</h3>
-                            <p>取租车，检查车辆状况（外观、油量、备胎等），熟悉车辆操作。前往超市购买水和零食。</p>
+                            <p>取租车。前往超市购买水和零食。</p>
                         </div>
                     </div>
                     
                     <div class="itinerary-item">
-                        <div class="time">14:30-17:00</div>
+                        <div class="time">13:30-16:00</div>
                         <div class="details">
                             <h3>前往乌梁素海</h3>
                             <p>自驾约138公里，需要2小时20分钟</p>
@@ -473,27 +503,19 @@
                     </div>
                     
                     <div class="itinerary-item">
-                        <div class="time">17:00-18:00</div>
+                        <div class="time">16:00-17:00</div>
                         <div class="details">
                             <h3>游览乌梁素海</h3>
                             <p class="item-description">乌梁素海是黄河流域最大的淡水湖，也是全球范围内干旱草原及荒漠地区极为少见的大型多功能湖泊。这里是重要的候鸟迁徙驿站，可以看到大量水鸟，感受广阔的湿地风光。</p>
                             <p>观鸟、拍照，欣赏湿地风光</p>
-                            <div class="price-tag">门票：50元/人（5月属于旺季）</div>
+                            <div class="price-tag">门票：50元/人</div>
                         </div>
                     </div>
                     
                     <div class="itinerary-item">
-                        <div class="time">18:00-20:30</div>
+                        <div class="time">17:00-19:30</div>
                         <div class="details">
-                            <h3>前往巴彦淖尔市区</h3>
-                            <p>自驾约174公里，需要2小时30分钟。注意夜间驾驶安全。</p>
-                        </div>
-                    </div>
-                    
-                    <div class="itinerary-item">
-                        <div class="time">20:30</div>
-                        <div class="details">
-                            <h3>入住酒店：全季酒店巴彦淖尔图书大厦店（3星⭐⭐⭐）</h3>
+                            <h3>前往巴彦淖尔市区，入住全季酒店巴彦淖尔图书大厦店（3星⭐⭐⭐）</h3>
                             <img src="pic/02.jpg" alt="全季酒店巴彦淖尔图书大厦店外观" class="item-image">
                             <p class="item-description">位于市中心区域，交通便利，提供舒适的住宿环境，华住会旗下三星舒适型酒店。</p>
                             <p>地址：新华西街路南1号</p>
@@ -503,7 +525,7 @@
                     </div>
                     
                     <div class="itinerary-item">
-                        <div class="time">21:00</div>
+                        <div class="time">20:00</div>
                         <div class="details">
                             <h3>晚餐</h3>
                             <p>可选择酒店餐厅或附近的蒙式烤羊腿店</p>
@@ -527,11 +549,10 @@
                             <h3>酒店早餐 & 出发准备</h3>
                             <h4>出发准备 (今日重点：梦幻峡谷 & 驾驶)</h4>
                             <ul class="prep-list">
-                                <li>穿戴舒适的徒步鞋或运动鞋，适合峡谷内行走。</li>
+                                <li>今日需要穿戴舒适的徒步鞋或运动鞋，适合峡谷内行走。</li>
                                 <li>涂抹高倍数防晒霜，戴好帽子、太阳镜。</li>
                                 <li>可准备头巾或薄围巾，防风沙及防晒。</li>
-                                <li>带足饮用水（峡谷内补充不便）及能量零食。</li>
-                                <li>确保手机、相机、充电宝电量充足。</li>
+                                <li>带足饮用水（峡谷内补充不便）及能量零食，以及**快捷午餐**。</li>
                                 <li>检查车辆油量，今日路程较长。</li>
                             </ul>
                         </div>
@@ -558,7 +579,7 @@
                     </div>
                     
                     <div class="itinerary-item">
-                        <div class="time">14:30-15:30</div>
+                        <div class="time">14:30-15:00</div>
                         <div class="details">
                             <h3>午餐</h3>
                             <p>在峡谷出口附近简餐或食用自带食物野餐。</p>
@@ -566,7 +587,7 @@
                     </div>
                     
                     <div class="itinerary-item">
-                        <div class="time">15:30-19:00</div>
+                        <div class="time">15:00-18:00</div>
                         <div class="details">
                             <h3>前往乌海市区</h3>
                             <p>自驾约182公里，需要3小时（途中可在阴山岩画指示牌处远观或根据兴趣短暂停留，注意阴山岩画实际位置需绕行，时间可能更长）。</p>
@@ -574,7 +595,7 @@
                     </div>
                     
                     <div class="itinerary-item">
-                        <div class="time">19:00-20:00</div>
+                        <div class="time">18:30-20:00</div>
                         <div class="details">
                             <h3>晚餐</h3>
                             <p>推荐：乌海当地特色羊肉餐厅，如手扒肉、烤羊排等。</p>
@@ -610,11 +631,7 @@
                             <h3>酒店早餐 & 出发准备</h3>
                             <h4>出发准备 (今日重点：乌海湖 & 拉僧庙 & 跨省驾驶)</h4>
                             <ul class="prep-list">
-                                 <li>检查防晒用品（湖边紫外线较强）。</li>
-                                 <li>携带饮用水和少量零食。</li>
-                                 <li>拉僧庙为宗教场所，建议穿着得体（避免过于暴露）。</li>
-                                 <li>确认手机导航及电量，准备跨省进入宁夏。</li>
-                                 <li>检查车辆油量，准备下午的长途驾驶。</li>
+                                 <li>防晒、少量零食。</li>
                                  <li>带好相机，记录湖光山色与寺庙建筑。</li>
                             </ul>
                         </div>
@@ -699,8 +716,8 @@
             </div>
         </div>
         
-        <!-- Day 4 -->
-        <div id="day4" class="itinerary-content">
+         <!-- Day 4 -->
+         <div id="day4" class="itinerary-content">
             <div class="day-card">
                 <div class="day-header">
                     <span>第四天（5月3日）</span>
@@ -714,11 +731,9 @@
                              <h4>出发准备 (今日重点：影视城游览 & 超长途驾驶)</h4>
                             <ul class="prep-list">
                                  <li>穿着极其舒适的鞋子，影视城内步行量大。</li>
-                                 <li>备好防晒霜、太阳镜、帽子，大部分区域为室外。</li>
-                                 <li>带足饮用水和零食（尤其是为下午的长途驾驶准备）。</li>
+                                 <li>备好防晒霜、太阳镜、帽子，带足饮用水和零食（尤其是为下午的长途驾驶准备）。</li>
                                  <li>确保手机、相机、充电宝满电，准备好离线地图。</li>
                                  <li>检查车辆油量，今日驾驶距离超过400公里，务必加满油。</li>
-                                 <li>带好身份证件和门票（或预订信息）。</li>
                                  <li>考虑准备一些提神物品或娱乐音频应对长途驾驶。</li>
                             </ul>
                         </div>
@@ -782,7 +797,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Day 5 -->
         <div id="day5" class="itinerary-content">
             <div class="day-card">
@@ -829,7 +844,7 @@
                             <div class="price-tag">门票：120元/人（基础门票，强烈建议购买含项目的套票）</div>
                             <p>特色项目参考价格（包含在套票内更划算）：</p>
                             <ul style="padding-left: 20px; margin-bottom: 15px;">
-                                <li>仙沙岛/悦沙岛休闲套票：约280-380元/人</li>
+                                <li>仙沙岛（玩沙）/悦沙岛（玩水）休闲套票：约280-380元/人</li>
                             </ul>
                         </div>
                     </div>
@@ -887,10 +902,7 @@
                             <h3>酒店早餐 & 返程准备</h3>
                             <h4>出发准备 (今日重点：整理 & 还车 & 赶火车)</h4>
                             <ul class="prep-list">
-                                <li>整理并打包所有行李，检查是否有遗漏物品在酒店房间。</li>
-                                <li>确认火车发车时间、车次及检票口信息。</li>
-                                <li>规划好前往火车站的时间，考虑还车手续所需时间，至少提前1.5小时从酒店出发。</li>
-                                <li>准备好身份证件和火车票。</li>
+                                <li>整理并打包所有行李，检查是否有遗漏物品在酒店房间，办理退房。</li>
                                 <li>与租车公司确认还车地点和流程，检查车辆油量是否符合还车要求。</li>
                                 <li>确保手机电量充足，方便联系和查询信息。</li>
                             </ul>
@@ -898,35 +910,18 @@
                     </div>
                     
                     <div class="itinerary-item">
-                        <div class="time">根据火车时间</div>
+                        <div class="time">13:45</div>
                         <div class="details">
-                            <h3>办理退房 & 前往还车点/火车站</h3>
-                            <p>办理酒店退房手续。根据与租车公司约定的地点和时间，办理还车手续（通常在火车站附近有还车点）。之后前往包头站候车。</p>
+                            <h3>乘坐火车离开</h3>
+                            <p>乘坐火车返程，结束愉快的内蒙古-宁夏自驾之旅。</p>
                             <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.836636,40.605388', '包头站')">导航到这里</a>
                         </div>
                     </div>
-                     <div class="itinerary-item">
-                        <div class="time">13：45</div>
-                        <div class="details">
-                            <h3>火车返程</h3>
-                            <p>乘坐火车返程，结束愉快的内蒙古-宁夏自驾之旅。</p>
-                        </div>
-                    </div>
+                     
                 </div>
             </div>
         </div>
         
-        <!-- 注意事项部分 -->
-        <div id="notes" class="notes-section">
-            <h2>旅行注意事项</h2>
-            <ul class="notes-list">
-                <li><strong>餐饮建议：</strong>早餐可在酒店享用；午餐可在景区附近用餐或准备便携食品；晚餐可尝试当地特色美食，如手扒肉、涮羊肉、奶制品、宁夏滩羊、特色面食等。</li>
-                <li><strong>驾驶建议：</strong>西北地区部分路段较为偏远，服务区间隔可能较长，建议提前规划加油点并保持油量充足；准备足够的水和零食；下载离线地图，部分地区信号可能不稳定；注意检查车况，特别是轮胎。</li>
-                <li><strong>景点票务：</strong>建议提前在线预订各景点门票，特别是响沙湾等热门景点，可节省排队时间；可在官方小程序、美团、携程等平台购买，比较价格。</li>
-                <li><strong>装备建议：</strong>带上防晒霜（SPF50+）、太阳镜和宽檐帽子（西北地区紫外线强）；准备一件防风保暖外套（早晚温差大，沙漠地区风沙可能也大）；舒适的行走鞋（特别是在沙漠和峡谷地区）；保湿用品（气候干燥）。</li>
-                 <li><strong>费用预算：</strong>此行程中景点门票总计约350元/人（不含景区内特色体验项目和套票）；住宿约1200元/间（5晚，按参考价计算）；餐饮丰俭由人，预计1000-1500元/人；租车及油费视车型和油价而定，预计1000-1500元。总计预算（不含往返大交通）大约在3000-4000元/人。</li>
-            </ul>
-        </div>
     </div>
     
     <script>
@@ -951,99 +946,199 @@
             
             // 修改scrollToElement函数
             window.scrollToElement = function(id) {
-                // 如果是天数，则切换到对应内容
-                if (id.startsWith('day') && id.length === 4) {
+                // 如果是天数 (day0, day1, day2...)，则切换到对应内容
+                if (id.startsWith('day')) { 
                     switchTab(id);
                 } else {
-                    // 否则滚动到元素
+                    // 否则滚动到元素 (例如 'notes')
                     const element = document.getElementById(id);
                     if (element) {
                         element.scrollIntoView({ behavior: 'smooth' });
                     }
                 }
             };
-        });
-        
-        // 导航函数
-        function navigate(coordinates, destination) {
-            // 检测设备类型
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            var isAndroid = /android/i.test(userAgent);
-            var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-            var isMobile = isAndroid || isIOS;
-            
-            // 用于构建 URL 的坐标
-            var [lng, lat] = coordinates.split(',');
-            
-            // 构建高德导航 URL
-            var amapUrl;
-            // 构建百度导航 URL (百度地图坐标系与高德不同，需要转换，但这里使用近似值)
-            var baiduUrl;
-            // 构建网页版导航 URL
-            var webUrl = `https://uri.amap.com/navigation?to=${lng},${lat},${encodeURIComponent(destination)}&mode=car`;
-            
-            if (isAndroid) {
-                // Android - 高德地图
-                amapUrl = `androidamap://navi?sourceApplication=自驾游规划&poiname=${encodeURIComponent(destination)}&lat=${lat}&lon=${lng}&dev=0&style=2`;
-                // Android - 百度地图
-                baiduUrl = `bdapp://map/direction?destination=latlng:${lat},${lng}|name:${encodeURIComponent(destination)}&mode=driving&coord_type=gcj02`;
-            } else if (isIOS) {
-                // iOS - 高德地图
-                amapUrl = `iosamap://navi?sourceApplication=自驾游规划&poiname=${encodeURIComponent(destination)}&lat=${lat}&lon=${lng}&dev=0&style=2`;
-                // iOS - 百度地图
-                baiduUrl = `baidumap://map/direction?destination=latlng:${lat},${lng}|name:${encodeURIComponent(destination)}&mode=driving&coord_type=gcj02`;
-            }
-            
-            if (isMobile) {
-                // 使用iframe方式打开应用，避免页面跳转
-                var ifr = document.createElement('iframe');
-                ifr.style.display = 'none';
-                document.body.appendChild(ifr);
-                
-                // 先尝试打开高德地图
-                ifr.src = amapUrl;
-                
-                // 如果1.5秒后用户还在当前页面，尝试打开百度地图
-                var baiduTimeout = setTimeout(function() {
-                    if (!document.hidden) {
-                        ifr.src = baiduUrl;
-                        
-                        // 如果再过1.5秒用户仍在页面，说明没有安装导航应用，跳转到网页版
-                        var webTimeout = setTimeout(function() {
-                            if (!document.hidden) {
-                                window.open(webUrl, '_blank');
+
+            // 图片延迟加载功能
+            if ('IntersectionObserver' in window) {
+                const imgObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        // 当图片进入视口时
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            const src = img.getAttribute('data-src');
+                            
+                            // 如果有data-src属性，将其设置为src
+                            if (src) {
+                                img.src = src;
+                                img.removeAttribute('data-src');
+                                
+                                // 图片加载完成后的回调
+                                img.onload = function() {
+                                    img.classList.add('loaded');
+                                };
                             }
-                            try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
-                        }, 1500);
-                        
-                        // 如果百度地图被成功打开，清除网页版超时
-                        window.addEventListener('blur', function onBlur() {
-                            clearTimeout(webTimeout);
-                            window.removeEventListener('blur', onBlur);
-                            try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
-                        });
-                    } else {
-                        try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
-                    }
-                }, 1500);
-                
-                // 如果高德地图被成功打开，清除百度地图超时
-                window.addEventListener('blur', function onBlur() {
-                    clearTimeout(baiduTimeout);
-                    window.removeEventListener('blur', onBlur);
-                    try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
+                            // 图片已加载，不再需要观察
+                            observer.unobserve(img);
+                        }
+                    });
+                }, {
+                    root: null,
+                    rootMargin: '100px 0px',
+                    threshold: 0.1
                 });
                 
-                // 页面隐藏时（可能是应用启动了），清除所有超时和清理iframe
-                window.addEventListener('pagehide', function onHide() {
-                    clearTimeout(baiduTimeout);
-                    window.removeEventListener('pagehide', onHide);
-                    try { document.body.removeChild(ifr); } catch(e) {} // 清理iframe
+                // 获取所有需要延迟加载的图片
+                const lazyImages = document.querySelectorAll('.item-image');
+                
+                // 开始观察所有图片
+                lazyImages.forEach(img => {
+                    if (img.src) {
+                        // 保存原始URL到data-src
+                        img.setAttribute('data-src', img.src);
+                        // 设置占位符
+                        img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"%3E%3Crect width="300" height="200" fill="%23cccccc"/%3E%3C/svg%3E';
+                    }
+                    imgObserver.observe(img);
                 });
             } else {
-                // 电脑端直接打开网页版
-                window.open(webUrl);
+                // 降级处理：不支持Intersection Observer的浏览器
+                function lazyLoadFallback() {
+                    const lazyImages = document.querySelectorAll('.item-image[data-src]');
+                    lazyImages.forEach(img => {
+                        if (isInViewport(img)) {
+                            img.src = img.getAttribute('data-src');
+                            img.removeAttribute('data-src');
+                            img.classList.add('loaded');
+                        }
+                    });
+                }
+                
+                // 检查元素是否在视口中
+                function isInViewport(element) {
+                    const rect = element.getBoundingClientRect();
+                    return (
+                        rect.top >= -100 &&
+                        rect.left >= 0 &&
+                        rect.bottom <= (window.innerHeight + 100) &&
+                        rect.right <= window.innerWidth
+                    );
+                }
+                
+                // 初始化所有图片
+                const lazyImages = document.querySelectorAll('.item-image');
+                lazyImages.forEach(img => {
+                    if (img.src) {
+                        img.setAttribute('data-src', img.src);
+                        img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200"%3E%3Crect width="300" height="200" fill="%23cccccc"/%3E%3C/svg%3E';
+                    }
+                });
+                
+                // 初始检查和滚动事件监听
+                window.addEventListener('scroll', lazyLoadFallback);
+                window.addEventListener('resize', lazyLoadFallback);
+                window.addEventListener('orientationchange', lazyLoadFallback);
+                lazyLoadFallback();
             }
+
+            // 添加CSS样式：图片加载过渡效果
+            const style = document.createElement('style');
+            style.textContent = `
+                .item-image {
+                    opacity: 0;
+                    transition: opacity 0.3s ease-in-out;
+                }
+                .item-image.loaded {
+                    opacity: 1;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
+        // 优化的导航函数
+        function navigate(coordinates, destination) {
+            const [lng, lat] = coordinates.split(',');
+            const encodedDest = encodeURIComponent(destination);
+            
+            // 检测设备类型
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isAndroid = /android/i.test(userAgent);
+            const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+            const isMobile = isAndroid || isIOS;
+            
+            // 准备不同平台的URL
+            const urls = {
+                amap: {
+                    android: `androidamap://navi?sourceApplication=自驾游规划&poiname=${encodedDest}&lat=${lat}&lon=${lng}&dev=0&style=2`,
+                    ios: `iosamap://navi?sourceApplication=自驾游规划&poiname=${encodedDest}&lat=${lat}&lon=${lng}&dev=0&style=2`,
+                    web: `https://uri.amap.com/navigation?to=${lng},${lat},${encodedDest}&mode=car`
+                },
+                baidu: {
+                    android: `bdapp://map/direction?destination=latlng:${lat},${lng}|name:${encodedDest}&mode=driving&coord_type=gcj02`,
+                    ios: `baidumap://map/direction?destination=latlng:${lat},${lng}|name:${encodedDest}&mode=driving&coord_type=gcj02`,
+                    web: `https://api.map.baidu.com/direction?destination=latlng:${lat},${lng}|name:${encodedDest}&mode=driving&coord_type=gcj02&output=html`
+                }
+            };
+            
+            // 构建当前设备的URL
+            const amapUrl = isAndroid ? urls.amap.android : (isIOS ? urls.amap.ios : urls.amap.web);
+            const baiduUrl = isAndroid ? urls.baidu.android : (isIOS ? urls.baidu.ios : urls.baidu.web);
+            const webUrl = urls.amap.web; // 默认使用高德地图网页版
+            
+            // 非移动设备直接打开网页版
+            if (!isMobile) {
+                window.open(webUrl, '_blank');
+                return;
+            }
+            
+            // 创建一个隐藏的iframe用于打开应用
+            const openApp = (url) => {
+                const ifr = document.createElement('iframe');
+                ifr.style.display = 'none';
+                document.body.appendChild(ifr);
+                ifr.src = url;
+                
+                // 3秒后移除iframe
+                setTimeout(() => {
+                    try { document.body.removeChild(ifr); } catch(e) {}
+                }, 3000);
+                
+                return ifr;
+            };
+            
+            // 先尝试打开高德地图
+            const amapIframe = openApp(amapUrl);
+            
+            // 1.5秒后检测高德是否成功打开，如果没打开则尝试百度地图
+            const baiduTimeout = setTimeout(() => {
+                if (!document.hidden) { // 页面仍可见，说明高德没有打开
+                    const baiduIframe = openApp(baiduUrl);
+                    
+                    // 再过1.5秒检测百度是否成功打开，如果没打开则使用网页版
+                    const webTimeout = setTimeout(() => {
+                        if (!document.hidden) {
+                            window.open(webUrl, '_blank');
+                        }
+                    }, 1500);
+                    
+                    // 如果百度地图被成功打开，清除网页版超时
+                    window.addEventListener('blur', function onBaiduBlur() {
+                        clearTimeout(webTimeout);
+                        window.removeEventListener('blur', onBaiduBlur);
+                    });
+                }
+            }, 1500);
+            
+            // 如果高德地图被成功打开，清除百度地图超时
+            window.addEventListener('blur', function onAmapBlur() {
+                clearTimeout(baiduTimeout);
+                window.removeEventListener('blur', onAmapBlur);
+            });
+            
+            // 当页面隐藏时（应用可能已启动），清理超时
+            window.addEventListener('pagehide', function onHide() {
+                clearTimeout(baiduTimeout);
+                window.removeEventListener('pagehide', onHide);
+            }, {once: true});
         }
     </script>
 </body>
