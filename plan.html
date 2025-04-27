@@ -308,18 +308,17 @@
         /* 导航按钮 */
         .map-nav-btn {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: #4caf50;
+            background-color: #1976d2;
             color: white;
+            padding: 3px 8px;
+            margin-top: 5px;
+            border-radius: 4px;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            margin-top: 10px;
+            font-size: 0.8em;
         }
         
         .map-nav-btn:hover {
-            background-color: #388e3c;
+            background-color: #1565c0;
         }
         
         /* 注意事项部分 */
@@ -460,39 +459,38 @@
         
         <!-- Day 1 -->
         <div id="day1" class="itinerary-content active">
-            <div class="day-card">
-                <div class="day-header">
-                    <span>第一天（4月30日）</span>
-                    <span>包头-乌梁素海-巴彦淖尔</span>
-                </div>
-                <div class="day-content">
-                    <div class="itinerary-item">
-                        <div class="time">12:05</div>
-                        <div class="details">
-                            <h3>抵达包头站</h3>
-                            <p>火车到达包头站，准备开始行程。</p>
+        <div class="day-card">
+            <div class="day-header">
+                <span>第一天（4月30日）</span>
+                <span>包头-乌梁素海-巴彦淖尔</span>
+            </div>
+            <div class="day-content">
+                <div class="itinerary-item">
+                    <div class="time">12:05</div>
+                    <div class="details">
+                        <h3>抵达包头站</h3>
+                            <p>火车到达包头站，<strong style="color: #e53935;">时间紧张</strong>，建议午餐在火车上解决。</p>
                             <h4>出发准备 (今日重点：取车 & 乌梁素海)</h4>
                             <ul class="prep-list">
                                 <li>检查并带齐身份证、驾驶证。</li>
                                 <li>准备好导航设备或手机支架，检查离线地图。</li>
-                                <li>购买足够饮用水和一些方便零食。</li>
-                                <li>带上太阳镜、帽子，为乌梁素海做防晒准备。</li>
-                                <li>检查相机/手机电量和存储空间。</li>
                             </ul>
                             <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('109.836636,40.605388', '包头站')">导航到这里</a>
-                        </div>
                     </div>
-                    
-                    
-                    <div class="itinerary-item">
-                        <div class="time">12:30-13:30</div>
-                        <div class="details">
-                            <h3>取租车与准备</h3>
-                            <p>取租车。前往超市购买水和零食。</p>
-                        </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">12:30-13:30</div>
+                    <div class="details">
+                        <h3>取租车与准备</h3>
+                            <p>取租车，<strong>快速</strong>检查车辆状况（油量、备胎等）。前往超市购买所需物资，然后立即出发前往乌梁素海。</p>
+                            <div style="background-color: #fff3e0; border-left: 4px solid #ff9800; padding: 10px; margin: 10px 0; border-radius: 4px;">
+                                <p style="margin: 0; font-size: 0.9rem;"><strong>提示：</strong>第一天时间较紧，建议简单补充能量后直接前往景点，尽量早到乌梁素海有更多游览时间。</p>
+                            </div>
                     </div>
-                    
-                    <div class="itinerary-item">
+                </div>
+                
+                <div class="itinerary-item">
                         <div class="time">13:30-16:00</div>
                         <div class="details">
                             <h3>前往乌梁素海</h3>
@@ -528,8 +526,22 @@
                         <div class="time">20:00</div>
                         <div class="details">
                             <h3>晚餐</h3>
-                            <p>可选择酒店餐厅或附近的蒙式烤羊腿店</p>
-                        </div>
+                            <p>推荐以下蒙餐选择：</p>
+                            <ul style="list-style-type: none; padding-left: 5px; margin-bottom: 15px;">
+                                <li style="margin-bottom: 15px;">
+                                    <strong style="color: #4caf50;">① 十二毡房蒙餐·蒙古包</strong><br>
+                                    地址：五一街文博中心对面（江南华府东区西门）<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">特色菜：干蹦羊架、血肉肠双拼、羊肉汤莜面、炒米奶皮卷</span>
+                                </li>
+                                <li>
+                                    <strong style="color: #4caf50;">② 众品香老菜馆（临河店）</strong><br>
+                                    地址：庆丰街美丽园美丽洋房115号门店<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">特色菜：花肉排骨烩酸菜、土豆泥莜面、妈妈香炒肉</span>
+                                </li>
+                            </ul>
+            
+                    </div>
+                </div>
                     </div>
                 </div>
             </div>
@@ -551,9 +563,7 @@
                             <ul class="prep-list">
                                 <li>今日需要穿戴舒适的徒步鞋或运动鞋，适合峡谷内行走。</li>
                                 <li>涂抹高倍数防晒霜，戴好帽子、太阳镜。</li>
-                                <li>可准备头巾或薄围巾，防风沙及防晒。</li>
                                 <li>带足饮用水（峡谷内补充不便）及能量零食，以及**快捷午餐**。</li>
-                                <li>检查车辆油量，今日路程较长。</li>
                             </ul>
                         </div>
                     </div>
@@ -596,15 +606,38 @@
                     
                     <div class="itinerary-item">
                         <div class="time">18:30-20:00</div>
-                        <div class="details">
-                            <h3>晚餐</h3>
-                            <p>推荐：乌海当地特色羊肉餐厅，如手扒肉、烤羊排等。</p>
-                        </div>
+                    <div class="details">
+                        <h3>晚餐</h3>
+                            <p>推荐以下乌海特色餐厅：</p>
+                            <ul style="list-style-type: none; padding-left: 5px; margin-bottom: 15px;">
+                                <li style="margin-bottom: 15px;">
+                                    <strong style="color: #4caf50;">① 亚克西烧烤</strong><br>
+                                    地址：人民南路30号新天地商业街<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">特色菜：烤羊肉串、烤金针菇、烤腰子、烤火腿肠、烤鱼豆腐
+                                        </span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.819411,39.662674', '亚克西烧烤')">导航到这里</a>
+                                </li>
+                                <li style="margin-bottom: 15px;">
+                                    <strong style="color: #4caf50;">② 聚福牛九烤肉
+                                    </strong><br>
+                                    地址：和平东街银海新都北门对面13-5号<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">特色菜：黄河鲤鱼、沙湖虾、羊杂汤、河套莜面</span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.826751,39.686469', '聚福牛九烤肉')">导航到这里</a>
+                                </li>
+                                <li>
+                                    <strong style="color: #4caf50;">③ 锡盟奶食店</strong><br>
+                                    地址：巴音赛东街立得优选超市对面<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">准备薯条，面包逗海鸥</span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.721544,39.498696', '锡盟奶食店')">导航到这里</a>
+                                </li>
+                            </ul>
+                
                     </div>
-                    
-                    <div class="itinerary-item">
-                        <div class="time">20:00</div>
-                        <div class="details">
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">20:00</div>
+                    <div class="details">
                             <h3>入住酒店：全季酒店乌海万锦广场店（3星⭐⭐⭐）</h3>
                             <img src="pic/04.jpg" alt="全季酒店乌海万锦广场店" class="item-image">
                             <p class="item-description">位于乌海市海勃湾区，周边配套设施完善，靠近商业区，提供现代化的住宿体验。</p>
@@ -653,22 +686,30 @@
                             <h3>游览乌海湖</h3>
                             <p class="item-description">由黄河海勃湾水利枢纽工程蓄水形成的人工湖，将沙漠与湖水巧妙结合，形成了"沙水相依"的独特景观。湖区面积广阔，可进行多种水上活动或沿湖观光。</p>
                             <p>观赏湖光山色，拍照。可选择性乘坐游船（另付费）。</p>
-                            <div class="price-tag">门票：免费（游船约50-100元/船）</div>
-                        </div>
+                        <div class="price-tag">门票：免费（游船约50-100元/船）</div>
                     </div>
-                    
-                    <div class="itinerary-item">
-                        <div class="time">11:30-12:30</div>
-                        <div class="details">
-                            <h3>午餐</h3>
-                            <p>在乌海湖附近餐厅用餐（推荐品尝当地特色湖鲜，如黄河鲤鱼）</p>
-                        </div>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">11:30-12:30</div>
+                    <div class="details">
+                        <h3>午餐</h3>
+                            <p>在乌海湖附近推荐以下餐厅：</p>
+                            <ul style="list-style-type: none; padding-left: 5px; margin-bottom: 15px;">
+                                <li style="margin-bottom: 15px;">
+                                    <strong style="color: #ff7043;">苏德蒙火锅（滨海店）</strong><br>
+                                    地址：德顺祥庭东南1门旁<br>
+                                    <span style="background-color: #fff3e0; padding: 2px 5px; border-radius: 3px;">特色菜：蒙式火锅、手把肉、涮羊肉</span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.796406,39.672416', '苏德蒙火锅')">导航到这里</a>
+                                </li>
+                            </ul>
                     </div>
-                    
-                    <div class="itinerary-item">
-                        <div class="time">12:30-13:30</div>
-                        <div class="details">
-                            <h3>前往拉僧庙</h3>
+                </div>
+                
+                <div class="itinerary-item">
+                    <div class="time">12:30-13:30</div>
+                    <div class="details">
+                        <h3>前往拉僧庙</h3>
                             <p>自驾约49公里，需要50分钟</p>
                             <img src="pic/06.jpg" alt="拉僧庙建筑" class="item-image">
                             <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.840946,39.327843', '拉僧庙')">导航到这里</a>
@@ -700,12 +741,46 @@
                     
                     <div class="itinerary-item">
                         <div class="time">18:00-20:00</div>
-                        <div class="details">
-                            <h3>晚餐</h3>
-                            <p>推荐：银川回族特色餐厅，品尝手抓羊肉、灰豆子、羊杂碎、特色面食等。</p>
-                        </div>
+                    <div class="details">
+                        <h3>晚餐</h3>
+                            <p>推荐以下银川回族特色餐厅：</p>
+                            <ul style="list-style-type: none; padding-left: 5px; margin-bottom: 15px;">
+                                <li style="margin-bottom: 15px;">
+                                    <strong style="color: #4caf50;">① 北颂冰煮羊</strong><br>
+                                    地址：银川万达中心2号商铺111-112室<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">农夫山泉冰锅，真的是没有什么膻味 而且特别嫩</span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.220245,38.488648', '北颂冰煮羊')">导航到这里</a>
+                                </li>
+                                <li style="margin-bottom: 15px;">
+                                    <strong style="color: #4caf50;">② 红柳枝滩羊烧烤</strong><br>
+                                    地址：文苑西巷14号（敬德夜市）<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">红柳枝烤羊羔肉串，（要点羊羔肉串不点羊肉串），只撒盐的羊肉串，盐池达西玛奶皮子，凉拌枸杞苗（红柳枝凉菜），烫面油香，酸汤小揪面，还有盖碗茶一定要喝
+                                    </span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.267221,38.447263', '红柳枝滩羊烧烤')">导航到这里</a>
+                                </li>
+                                <li style="margin-bottom: 15px;">
+                                    <strong style="color: #4caf50;">③ 兰放放甜胚子奶茶</strong><br>
+                                    地址：茂源巷与光明东路交叉口东北120米<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">糖度放低</span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.351587,38.558629', '兰放放甜胚子奶茶')">导航到这里</a>
+                                </li>
+                                <li style="margin-bottom: 15px;">
+                                    <strong style="color: #4caf50;">④ 马虎面馆</strong><br>
+                                    地址：福州南街409号六中正对面<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">巨无霸小公鸡拌面</span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.190163,38.473942', '马虎面馆')">导航到这里</a>
+                                </li>
+                                <li>
+                                    <strong style="color: #4caf50;">⑤ 红果果辣乎糊糊</strong><br>
+                                    地址：悠阅城B148（或尹家渠北街82-2号）<br>
+                                    <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">串串香 毛肚蟹肉牛肉蔬菜火锅丸子</span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.240554,38.427436', '红果果辣乎糊糊')">导航到这里</a>
+                                </li>
+                            </ul>
+                            
                     </div>
-                    
+                </div>
+                
                 </div>
             </div>
         </div>
@@ -724,9 +799,6 @@
                             <h3>酒店早餐 & 出发准备</h3>
                              <h4>出发准备 (今日重点：影视城游览 & 超长途驾驶)</h4>
                             <ul class="prep-list">
-                                 <li>穿着极其舒适的鞋子，影视城内步行量大。</li>
-                                 <li>备好防晒霜、太阳镜、帽子，带足饮用水和零食（尤其是为下午的长途驾驶准备）。</li>
-                                 <li>确保手机、相机、充电宝满电，准备好离线地图。</li>
                                  <li>检查车辆油量，今日驾驶距离超过400公里，务必加满油。</li>
                                  <li>考虑准备一些提神物品或娱乐音频应对长途驾驶。</li>
                             </ul>
@@ -785,7 +857,17 @@
                         <div class="time">20:30</div>
                         <div class="details">
                             <h3>晚餐</h3>
-                            <p>可在酒店餐厅或附近寻找蒙古特色餐厅。</p>
+                            <li style="margin-bottom: 15px;">
+                                <strong style="color: #4caf50;">① 老梁外炖菜</strong><br>
+                                地址：<br>
+                                <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">-</span>
+                                <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.220245,38.488648', '北颂冰煮羊')">导航到这里</a>
+                            </li><li style="margin-bottom: 15px;">
+                                <strong style="color: #4caf50;">② 福顶顶停电烩菜馆</strong><br>
+                                地址：<br>
+                                <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">烩酸菜鸡蛋泡泡炖牛排</span>
+                                <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.220245,38.488648', '北颂冰煮羊')">导航到这里</a>
+                            </li>
                         </div>
                     </div>
                 </div>
@@ -807,14 +889,7 @@
                             <h4>出发准备 (今日重点：响沙湾沙漠全体验)</h4>
                             <ul class="prep-list">
                                  <li>**最高级别防晒！** 高倍数防晒霜（身体裸露部位都要涂）、宽檐帽、太阳镜、最好有防晒面罩/脖套。</li>
-                                 <li>穿轻便透气的长袖长裤（防晒防沙）。</li>
-                                 <li>舒适的鞋子（可考虑在景区租用沙袜或穿旧运动鞋）。</li>
-                                 <li>带上头巾或围巾，风沙较大时可保护口鼻。</li>
-                                 <li>大量饮用水！沙漠中极易脱水。可带功能饮料补充电解质。</li>
-                                 <li>高能量零食。</li>
-                                 <li>保护好相机和手机，用密封袋或防沙套。</li>
-                                 <li>备好门票/套票（建议提前购买套票）。</li>
-                                 <li>少量现金，用于购买小零食或租用物品。</li>
+                                 <li>穿轻便透气的长袖长裤（防晒防沙）；舒适的鞋子（可考虑在景区租用沙袜或穿旧运动鞋）。</li>
                             </ul>
                         </div>
                     </div>
@@ -875,7 +950,33 @@
                         <div class="time">20:00-21:30</div>
                         <div class="details">
                             <h3>晚餐</h3>
-                            <p>可在酒店内高档餐厅用餐，或前往附近品尝包头特色的蒙古火锅、烧麦等。</p>
+                            <li style="margin-bottom: 15px;">
+                                <strong style="color: #4caf50;">① 锡蒙手扒肉</strong><br>
+                                地址：<br>
+                                <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">-</span>
+                                <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.220245,38.488648', '北颂冰煮羊')">导航到这里</a>
+                            </li><li style="margin-bottom: 15px;">
+                                <strong style="color: #4caf50;">② 八村居蒙面</strong><br>
+                                地址：<br>
+                                <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">烩酸菜鸡蛋泡泡炖牛排</span>
+                                <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.220245,38.488648', '北颂冰煮羊')">导航到这里</a>
+                            </li><li style="margin-bottom: 15px;">
+                                <strong style="color: #4caf50;">③ 金彩堂小吃 </strong><br>
+                                地址：昆区钢铁大街12号街坊锡华世纪花园玫瑰苑R13号底店<br>
+                                <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">-</span>
+                                <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.220245,38.488648', '北颂冰煮羊')">导航到这里</a>
+                            </li><li style="margin-bottom: 15px;">
+                                <strong style="color: #4caf50;">④ 蒙小痴奶质小吃</strong><br>
+                                地址：蒙小痴小羊排·内蒙菜 - 钢铁大街八一公园东侧1号<br>
+                                <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">烩酸菜鸡蛋泡泡炖牛排</span>
+                                <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.220245,38.488648', '北颂冰煮羊')">导航到这里</a>
+                            </li>
+                            </li><li style="margin-bottom: 15px;">
+                                <strong style="color: #4caf50;">④ 快乐小羊</strong><br>
+                                地址：丹青苑南门西80米<br>
+                                <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">烩酸菜鸡蛋泡泡炖牛排</span>
+                                <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('106.220245,38.488648', '北颂冰煮羊')">导航到这里</a>
+                            </li>
                         </div>
                     </div>
                 </div>
