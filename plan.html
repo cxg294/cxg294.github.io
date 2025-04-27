@@ -529,11 +529,13 @@
                                     <strong style="color: #4caf50;">① 十二毡房蒙餐·蒙古包</strong><br>
                                     地址：五一街文博中心对面（江南华府东区西门）<br>
                                     <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">特色菜：干蹦羊架、血肉肠双拼、羊肉汤莜面、炒米奶皮卷</span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('107.421365,40.754893', '十二毡房蒙餐')">导航到这里</a>
                                 </li>
                                 <li>
                                     <strong style="color: #4caf50;">② 众品香老菜馆（临河店）</strong><br>
                                     地址：庆丰街美丽园美丽洋房115号门店<br>
                                     <span style="background-color: #f1f8e9; padding: 2px 5px; border-radius: 3px;">特色菜：花肉排骨烩酸菜、土豆泥莜面、妈妈香炒肉</span>
+                                    <a href="javascript:void(0)" class="map-nav-btn" onclick="navigate('107.413953,40.745627', '旺龙众品香老菜馆')">导航到这里</a>
                                 </li>
                             </ul>
             
@@ -1188,7 +1190,31 @@
                 return;
             }
             
-            // 创建一个隐藏的iframe用于打开应用
+            // iOS特殊处理：直接尝试打开地图应用
+            if (isIOS) {
+                // 先尝试高德地图
+                window.location.href = amapUrl;
+                
+                // 为了避免app未安装时页面不跳转，设置一个延时跳转到网页版或百度地图
+                const fallbackTimeout = setTimeout(function() {
+                    // 尝试百度地图
+                    window.location.href = baiduUrl;
+                    
+                    // 再设一个延时跳转到网页版
+                    const webFallbackTimeout = setTimeout(function() {
+                        window.location.href = webUrl;
+                    }, 2000);
+                    
+                    // 储存timeout id，以便可能的清除
+                    window.webFallbackTimeoutId = webFallbackTimeout;
+                }, 2000);
+                
+                // 储存timeout id，以便可能的清除
+                window.fallbackTimeoutId = fallbackTimeout;
+                return;
+            }
+            
+            // Android处理：尝试使用iframe打开应用
             const openApp = (url) => {
                 const ifr = document.createElement('iframe');
                 ifr.style.display = 'none';
