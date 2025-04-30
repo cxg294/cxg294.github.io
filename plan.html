@@ -186,10 +186,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer; /* 添加手型光标 */
+        }
+
+        /* 新增：折叠指示符 */
+        .fold-indicator {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            transform: rotate(0deg); /* 默认朝下 */
+        }
+        .day-card.expanded .fold-indicator {
+             transform: rotate(-180deg); /* 展开时朝上 */
         }
         
         .day-content {
             padding: 20px;
+            display: none; /* 默认隐藏内容 */
+            border-top: 1px solid #eee; /* 添加分隔线 */
+        }
+
+        /* 新增：展开时显示内容 */
+        .day-card.expanded .day-content {
+            display: block;
         }
         
         /* 行程项目 */
@@ -421,7 +439,7 @@
             <div class="day-card">
                 <div class="day-header">
                     <span>行前准备（D0）</span>
-                    <span>出发前的检查与提示</span>
+                    <span class="fold-indicator">▼</span> <!-- 新增：折叠指示符 -->
                 </div>
                 <div class="day-content">
                     <div class="itinerary-item">
@@ -454,11 +472,11 @@
         </div>
         
         <!-- Day 1 -->
-        <div id="day1" class="itinerary-content active">
+        <div id="day1" class="itinerary-content">
         <div class="day-card">
             <div class="day-header">
                 <span>第一天（4月30日）</span>
-                <span>包头-乌梁素海-巴彦淖尔</span>
+                <span class="fold-indicator">▼</span> <!-- 新增：折叠指示符 -->
             </div>
             <div class="day-content">
                 <div class="itinerary-item">
@@ -547,7 +565,7 @@
             <div class="day-card">
                 <div class="day-header">
                     <span>第二天（5月1日）</span>
-                    <span>巴彦淖尔-西部梦幻峡谷-乌海</span>
+                    <span class="fold-indicator">▼</span> <!-- 新增：折叠指示符 -->
                 </div>
                 <div class="day-content">
                     <div class="itinerary-item">
@@ -650,7 +668,7 @@
             <div class="day-card">
                 <div class="day-header">
                     <span>第三天（5月2日）</span>
-                    <span>乌海-乌海湖-拉僧庙-银川</span>
+                    <span class="fold-indicator">▼</span> <!-- 新增：折叠指示符 -->
                 </div>
                 <div class="day-content">
                     <div class="itinerary-item">
@@ -785,7 +803,7 @@
             <div class="day-card">
                 <div class="day-header">
                     <span>第四天（5月3日）</span>
-                    <span>银川-镇北堡西部影视城-鄂尔多斯</span>
+                    <span class="fold-indicator">▼</span> <!-- 新增：折叠指示符 -->
                 </div>
                 <div class="day-content">
                     <div class="itinerary-item">
@@ -874,7 +892,7 @@
             <div class="day-card">
                 <div class="day-header">
                     <span>第五天（5月4日）</span>
-                    <span>鄂尔多斯-响沙湾-包头</span>
+                    <span class="fold-indicator">▼</span> <!-- 新增：折叠指示符 -->
                 </div>
                 <div class="day-content">
                     <div class="itinerary-item">
@@ -989,7 +1007,7 @@
             <div class="day-card">
                 <div class="day-header">
                     <span>第六天（5月5日）</span>
-                    <span>包头离开</span>
+                    <span class="fold-indicator">▼</span> <!-- 新增：折叠指示符 -->
                 </div>
                 <div class="day-content">
                     <div class="itinerary-item">
@@ -1023,71 +1041,84 @@
     <script>
         // TAB切换和地图更新功能
         document.addEventListener('DOMContentLoaded', function() {
-            // 获取所有内容区域
-            const contents = document.querySelectorAll('.itinerary-content');
+            // 获取所有日程卡片
+            const dayCards = document.querySelectorAll('.day-card');
+
+            // 为每个卡片头部添加点击事件监听器
+            dayCards.forEach(card => {
+                const header = card.querySelector('.day-header');
+                if (header) {
+                    header.addEventListener('click', () => {
+                        card.classList.toggle('expanded');
+                    });
+                }
+            });
             
-            // 切换Tab函数，修改为仅切换内容
-            function switchTab(dayId) {
-                // 隐藏所有内容
-                contents.forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                // 激活当前Tab内容
-                document.getElementById(dayId).classList.add('active');
-                
-                // 滚动到该日内容顶部
-                document.getElementById(dayId).scrollIntoView({ behavior: 'smooth' });
-            }
-            
-            // 修改scrollToElement函数
+            // 修改scrollToElement函数，增加展开卡片逻辑
             window.scrollToElement = function(id) {
-                // 如果是天数 (day0, day1, day2...)，则切换到对应内容
-                if (id.startsWith('day')) { 
-                    switchTab(id);
-                } else {
-                    // 否则滚动到元素 (例如 'notes')
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
+                const element = document.getElementById(id);
+                if (element) {
+                     // 查找对应的 day-card
+                    const card = element.querySelector('.day-card');
+                    if (card && !card.classList.contains('expanded')) {
+                         card.classList.add('expanded'); // 展开卡片
                     }
+                    // 滚动到元素
+                    // 稍微延迟滚动，确保展开动画有机会开始
+                    setTimeout(() => {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100); 
                 }
             };
 
-            // 根据当前日期自动展开对应的行程
-            function autoSelectDayByDate() {
+            // 根据当前日期自动展开对应的行程卡片
+            function autoExpandDayByDate() {
                 const today = new Date();
-                // 获取旅行日期范围
-                const travelStartDate = new Date('2025-04-30'); // 旅行第一天，对应day1
-                const travelEndDate = new Date('2025-05-05');   // 旅行最后一天，对应day6
+                // 获取旅行日期范围 (注意月份是从0开始的，所以4月是3)
+                const travelStartDate = new Date(2025, 3, 30); // 2025年4月30日
+                const travelEndDate = new Date(2025, 4, 5);   // 2025年5月5日 (包含当天)
                 
-                // 如果今天在旅行日期范围内
-                if (today >= travelStartDate && today <= travelEndDate) {
-                    // 计算今天是旅行的第几天
+                let targetDayId = null;
+
+                if (today < travelStartDate) {
+                    // 旅行开始前，展开D0
+                    targetDayId = 'day0';
+                } else if (today >= travelStartDate && today <= travelEndDate) {
+                    // 旅行期间，计算天数
                     const diffTime = Math.abs(today - travelStartDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    
-                    // day0是行前准备，day1是第一天，所以实际天数要对应dayN
-                    let dayId = 'day' + diffDays;
-                    
-                    // 如果找到对应的dayId，则切换到该天
-                    if (document.getElementById(dayId)) {
-                        switchTab(dayId);
-                    } else {
-                        // 如果超出范围，默认显示第一天
-                        switchTab('day1');
-                    }
-                } else if (today < travelStartDate) {
-                    // 如果今天在旅行开始前，显示行前准备
-                    switchTab('day0');
+                    // 加1是因为第一天是day1
+                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+                    targetDayId = 'day' + diffDays;
                 } else {
-                    // 如果今天在旅行结束后，显示最后一天
-                    switchTab('day6');
+                     // 旅行结束后，展开D6
+                     targetDayId = 'day6';
+                }
+
+                // 折叠所有卡片，然后展开目标卡片
+                dayCards.forEach(card => {
+                    // 获取卡片所属的父容器ID (day0, day1, ...)
+                    const containerId = card.closest('.itinerary-content')?.id;
+                    if (containerId === targetDayId) {
+                        card.classList.add('expanded'); // 展开目标卡片
+                    } else {
+                         card.classList.remove('expanded'); // 折叠其他卡片
+                    }
+                });
+
+                // 页面加载完成后，如果需要，滚动到自动展开的卡片
+                if (targetDayId) {
+                    const targetElement = document.getElementById(targetDayId);
+                     if (targetElement && targetDayId !== 'day0') { // 如果不是D0，稍微向下滚动一点，让标题可见
+                         // 使用 requestAnimationFrame 确保在渲染后执行滚动
+                        requestAnimationFrame(() => {
+                            targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+                        });
+                    }
                 }
             }
             
-            // 执行自动选择
-            autoSelectDayByDate();
+            // 执行自动展开
+            autoExpandDayByDate();
 
             // 图片延迟加载功能
             if ('IntersectionObserver' in window) {
