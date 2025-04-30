@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>内蒙古-宁夏5天4晚自驾游规划</title>
+    <title>内蒙古-宁夏6天5晚自驾游规划</title>
     <style>
         /* 全局样式 */
         * {
@@ -411,14 +411,10 @@
     
     <div class="container">
         <header class="header">
-            <h1>内蒙古-宁夏5天4晚自驾游</h1>
-            <p>2023年4月30日 - 5月5日</p>
+            <h1>内蒙古-宁夏6天5晚自驾游</h1>
+            <p>2025年4月30日 - 5月5日</p>
         </header>
         
-        <!-- 费用总览（已隐藏） -->
-        <div class="cost-overview">
-            <!-- ... (内容不变) ... -->
-        </div>
         
         <!-- Day 0: 行前准备 -->
         <div id="day0" class="itinerary-content">
@@ -1058,6 +1054,41 @@
                 }
             };
 
+            // 根据当前日期自动展开对应的行程
+            function autoSelectDayByDate() {
+                const today = new Date();
+                // 获取旅行日期范围
+                const travelStartDate = new Date('2025-04-30'); // 旅行第一天，对应day1
+                const travelEndDate = new Date('2025-05-05');   // 旅行最后一天，对应day6
+                
+                // 如果今天在旅行日期范围内
+                if (today >= travelStartDate && today <= travelEndDate) {
+                    // 计算今天是旅行的第几天
+                    const diffTime = Math.abs(today - travelStartDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    // day0是行前准备，day1是第一天，所以实际天数要对应dayN
+                    let dayId = 'day' + diffDays;
+                    
+                    // 如果找到对应的dayId，则切换到该天
+                    if (document.getElementById(dayId)) {
+                        switchTab(dayId);
+                    } else {
+                        // 如果超出范围，默认显示第一天
+                        switchTab('day1');
+                    }
+                } else if (today < travelStartDate) {
+                    // 如果今天在旅行开始前，显示行前准备
+                    switchTab('day0');
+                } else {
+                    // 如果今天在旅行结束后，显示最后一天
+                    switchTab('day6');
+                }
+            }
+            
+            // 执行自动选择
+            autoSelectDayByDate();
+
             // 图片延迟加载功能
             if ('IntersectionObserver' in window) {
                 const imgObserver = new IntersectionObserver((entries, observer) => {
@@ -1182,7 +1213,7 @@
             // 构建当前设备的URL
             const amapUrl = isAndroid ? urls.amap.android : (isIOS ? urls.amap.ios : urls.amap.web);
             const baiduUrl = isAndroid ? urls.baidu.android : (isIOS ? urls.baidu.ios : urls.baidu.web);
-            const webUrl = urls.amap.web; // 默认使用高德地图网页版
+            const webUrl = urls.baidu.web; // 默认使用百度地图网页版
             
             // 非移动设备直接打开网页版
             if (!isMobile) {
@@ -1192,13 +1223,13 @@
             
             // iOS特殊处理：直接尝试打开地图应用
             if (isIOS) {
-                // 先尝试高德地图
-                window.location.href = amapUrl;
+                // 先尝试百度地图
+                window.location.href = baiduUrl;
                 
-                // 为了避免app未安装时页面不跳转，设置一个延时跳转到网页版或百度地图
+                // 为了避免app未安装时页面不跳转，设置一个延时跳转到网页版或高德地图
                 const fallbackTimeout = setTimeout(function() {
-                    // 尝试百度地图
-                    window.location.href = baiduUrl;
+                    // 尝试高德地图
+                    window.location.href = amapUrl;
                     
                     // 再设一个延时跳转到网页版
                     const webFallbackTimeout = setTimeout(function() {
@@ -1229,38 +1260,38 @@
                 return ifr;
             };
             
-            // 先尝试打开高德地图
-            const amapIframe = openApp(amapUrl);
+            // 先尝试打开百度地图
+            const baiduIframe = openApp(baiduUrl);
             
-            // 1.5秒后检测高德是否成功打开，如果没打开则尝试百度地图
-            const baiduTimeout = setTimeout(() => {
-                if (!document.hidden) { // 页面仍可见，说明高德没有打开
-                    const baiduIframe = openApp(baiduUrl);
+            // 1.5秒后检测百度是否成功打开，如果没打开则尝试高德地图
+            const amapTimeout = setTimeout(() => {
+                if (!document.hidden) { // 页面仍可见，说明百度没有打开
+                    const amapIframe = openApp(amapUrl);
                     
-                    // 再过1.5秒检测百度是否成功打开，如果没打开则使用网页版
+                    // 再过1.5秒检测高德是否成功打开，如果没打开则使用网页版
                     const webTimeout = setTimeout(() => {
                         if (!document.hidden) {
                             window.open(webUrl, '_blank');
                         }
                     }, 1500);
                     
-                    // 如果百度地图被成功打开，清除网页版超时
-                    window.addEventListener('blur', function onBaiduBlur() {
+                    // 如果高德地图被成功打开，清除网页版超时
+                    window.addEventListener('blur', function onAmapBlur() {
                         clearTimeout(webTimeout);
-                        window.removeEventListener('blur', onBaiduBlur);
+                        window.removeEventListener('blur', onAmapBlur);
                     });
                 }
             }, 1500);
             
-            // 如果高德地图被成功打开，清除百度地图超时
-            window.addEventListener('blur', function onAmapBlur() {
-                clearTimeout(baiduTimeout);
-                window.removeEventListener('blur', onAmapBlur);
+            // 如果百度地图被成功打开，清除高德地图超时
+            window.addEventListener('blur', function onBaiduBlur() {
+                clearTimeout(amapTimeout);
+                window.removeEventListener('blur', onBaiduBlur);
             });
             
             // 当页面隐藏时（应用可能已启动），清理超时
             window.addEventListener('pagehide', function onHide() {
-                clearTimeout(baiduTimeout);
+                clearTimeout(amapTimeout);
                 window.removeEventListener('pagehide', onHide);
             }, {once: true});
         }
