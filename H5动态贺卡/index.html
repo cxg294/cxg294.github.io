@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>H5动态贺卡</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/modal.css">
+</head>
+<body>
+    <!-- 舞台容器：核心展示区域 -->
+    <div id="stage-container">
+        <!-- 核心舞台包裹层 -->
+        <div id="stage-wrapper">
+            <!-- 全局关闭按钮 -->
+            <div id="close-btn" title="关闭"></div>
+
+            <!-- 背景层 -->
+            <div id="background-layer"></div>
+            
+            <!-- 漂浮挂件层 -->
+            <div id="floater-layer"></div>
+
+            <!-- 贺卡弹窗层 (移到 wrapper 内部) -->
+            <div id="card-modal" class="modal hidden">
+                <div class="modal-overlay"></div>
+                <div class="modal-content">
+                    <!-- 顶部提示条 -->
+                    <div class="notification-bar">
+                        恭喜你点亮天灯：“<span id="light-up-name"></span>”！
+                    </div>
+                    
+                    <!-- 卡片主体 -->
+                    <div class="card-body">
+                        <!-- 左侧：动态贺图区 -->
+                        <div class="card-left">
+                            <div class="frame-player-container">
+                                <canvas id="frame-canvas" width="360" height="480"></canvas>
+                                <!-- 进度条悬浮在贺图底部 -->
+                                <div class="slider-control floating-slider">
+                                    <input type="range" id="frame-slider" min="1" max="16" value="1" step="1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 右侧：明信片文本区 -->
+                        <div class="card-right">
+                            <div class="postcard-content">
+                                <div class="field-to">TO: <span id="card-recipient">妈妈</span> :</div>
+                                <div class="field-body" id="card-message">亲爱的妈妈，愿你诸事顺遂，活力满满，开心每一天~</div>
+                                <div class="field-from">From : <span id="card-sender">XXX</span></div>
+                            </div>
+                            <div class="postcard-action">
+                                <button id="accept-btn" class="btn-primary">接受祝福</button>
+                                <div class="mascot-illustration"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 调试面板容器 (Mock System) -->
+    <div id="debug-panel" class="debug-panel collapsed">
+        <!-- 内容由 mock.js 动态生成 -->
+    </div>
+
+    <!-- 脚本引入 -->
+    <script src="js/main.js"></script>
+    <script src="js/floater.js"></script>
+    <script src="js/card.js"></script>
+    <script src="js/mock.js"></script>
+</body>
+</html>
+

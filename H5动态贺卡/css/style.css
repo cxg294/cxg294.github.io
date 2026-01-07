@@ -1,0 +1,284 @@
+/* 全局重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: transparent; /* 背景交给 stage-container */
+}
+
+/* 舞台容器 */
+#stage-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明灰 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* 核心舞台包裹层 */
+#stage-wrapper {
+    position: absolute; /* 改为绝对定位 */
+    top: 50%;
+    left: 50%;
+    /* 宽高锁定 */
+    width: 1000px;
+    height: 750px;
+    /* 初始居中，缩放逻辑在 JS 中通过 transform 覆盖 */
+    transform: translate(-50%, -50%); 
+    
+    border: 0.04rem solid #444; 
+    border-radius: 0.08rem;     
+    box-shadow: 0 0 0.5rem rgba(0,0,0,0.8); 
+    overflow: hidden;
+    
+    image-rendering: -webkit-optimize-contrast; 
+    transform-origin: center center; 
+
+    /* 针对 Chrome 74 等老版本浏览器的优化 */
+    opacity: 0; /* 初始隐藏，防止加载时尺寸跳变 */
+    will-change: transform; /* 提示浏览器预优化 */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden; /* 强制触发硬件加速，解决缩放模糊 */
+    transform-style: preserve-3d;
+    transition: opacity 0.3s ease-in; /* 平滑淡入 */
+}
+
+/* 全局关闭按钮 */
+#close-btn {
+    position: absolute;
+    top: 0.15rem;
+    right: 0.15rem;
+    width: 0.4rem;
+    height: 0.4rem;
+    /* 简单的叉号图标 */
+    background: rgba(0, 0, 0, 0.4) url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiPjwvbGluZT48bGluZSB4MT0iNiIgeTE9IjYiIHgyPSIxOCIgeTI9IjE4Ij48L2xpbmU+PC9zdmc+') no-repeat center center;
+    background-size: 60%;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 200; /* 最高层级 */
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+#close-btn:hover {
+    background-color: #d32f2f;
+    transform: scale(1.1);
+}
+
+/* 锁定根字号基准：在 1200px 宽度下，1rem = 100px */
+/* 这样我们在 CSS 里写 0.16rem 就是 16px */
+html {
+    font-size: 100px; 
+}
+
+/* 核心展示区域 (1200x800) */
+#background-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 替换为图片背景，使用 cover 铺满 */
+    background: url('../assets/bg_stage.png') no-repeat center center;
+    background-size: cover;
+    z-index: 0;
+}
+
+/* 漂浮挂件层 */
+#floater-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none; /* 让点击事件穿透到具体的挂件上 */
+    overflow: hidden;
+}
+
+.floater {
+    position: absolute;
+    pointer-events: auto;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    bottom: -20%; /* 初始位置在视口外 */
+}
+
+/* 挂件主体：现在改为图片容器 */
+.floater-body {
+    width: 1.2rem;
+    height: 1.2rem;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background-size: contain;
+    box-shadow: none;
+    position: relative;
+    z-index: 2;
+    animation: hoverItem 3s ease-in-out infinite;
+}
+
+@keyframes hoverItem {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-0.05rem); } /* -5px -> -0.05rem */
+}
+
+.floater-string {
+    width: 2px; /* 线条粗细可以用 px，因为太细了 */
+    height: 0.3rem;
+    background-color: #d32f2f;
+    margin-top: -2px;
+    z-index: 1;
+}
+
+.floater-tag {
+    width: 0.4rem;
+    height: 1rem;
+    background-color: #d32f2f;
+    border-radius: 0.04rem; /* 4px -> 0.04rem */
+    color: #ffd700;
+    font-size: 0.14rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    box-shadow: 0 0.02rem 0.05rem rgba(0,0,0,0.3);
+    border: 1px solid #b71c1c;
+    margin-top: -2px;
+    /* 钟摆动画基点 */
+    transform-origin: top center;
+    animation: swing 3s ease-in-out infinite alternate;
+}
+
+@keyframes swing {
+    from { transform: rotate(-5deg); }
+    to { transform: rotate(5deg); }
+}
+
+/* 调试面板 (Mock System) - 保持 px，因为它独立于舞台缩放 */
+.debug-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 320px; 
+    background: rgba(255, 255, 255, 0.98);
+    border-top-right-radius: 12px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    z-index: 9999;
+    padding: 20px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 14px;
+}
+
+.debug-panel.collapsed {
+    /* 只露出 Header */
+    transform: translateY(calc(100% - 50px));
+}
+
+.debug-header {
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    user-select: none;
+}
+
+.debug-header:hover {
+    color: #1890ff;
+}
+
+.debug-content {
+    /* 防止折叠时内容溢出 */
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.debug-content .form-group {
+    margin-bottom: 15px;
+}
+
+.debug-content label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+}
+
+/* 多选框组样式优化 */
+#mock-greeting-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Chrome 59 不支持 Flex/Grid 的 gap 属性 */
+    /* gap: 8px; */
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+/* 使用 margin 模拟 gap */
+#mock-greeting-group label {
+    margin-bottom: 8px;
+    margin-right: 8px;
+    font-weight: normal;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+#mock-greeting-group input {
+    margin-right: 6px;
+}
+
+.debug-content select, .debug-content input[type=text] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.debug-content select:focus, .debug-content input[type=text]:focus {
+    border-color: #1890ff;
+}
+
+.debug-content button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.debug-content button:hover {
+    background-color: #096dd9;
+}
