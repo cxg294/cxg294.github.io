@@ -12,9 +12,6 @@
     <div id="stage-container">
         <!-- 核心舞台包裹层 -->
         <div id="stage-wrapper">
-            <!-- 全局关闭按钮 -->
-            <div id="close-btn" title="关闭"></div>
-
             <!-- 背景层 -->
             <div id="background-layer"></div>
             
@@ -25,17 +22,14 @@
             <div id="card-modal" class="modal hidden">
                 <div class="modal-overlay"></div>
                 <div class="modal-content">
-                    <!-- 顶部提示条 -->
-                    <div class="notification-bar">
-                        恭喜你点亮天灯：“<span id="light-up-name"></span>”！
-                    </div>
-                    
                     <!-- 卡片主体 -->
                     <div class="card-body">
                         <!-- 左侧：动态贺图区 -->
                         <div class="card-left">
                             <div class="frame-player-container">
                                 <canvas id="frame-canvas" width="360" height="480"></canvas>
+                                <!-- 提示词切换按钮 (!) -->
+                                <button id="info-btn" class="info-button" title="查看提示词">!</button>
                                 <!-- 进度条悬浮在贺图底部 -->
                                 <div class="slider-control floating-slider">
                                     <input type="range" id="frame-slider" min="1" max="16" value="1" step="1">
@@ -45,14 +39,49 @@
                         
                         <!-- 右侧：明信片文本区 -->
                         <div class="card-right">
-                            <div class="postcard-content">
-                                <div class="field-to">TO: <span id="card-recipient">妈妈</span> :</div>
-                                <div class="field-body" id="card-message">亲爱的妈妈，愿你诸事顺遂，活力满满，开心每一天~</div>
-                                <div class="field-from">From : <span id="card-sender">XXX</span></div>
+                            <!-- 祝福语视图 -->
+                            <div id="view-greeting" class="view-content">
+                                <div class="postcard-content">
+                                    <div class="field-to">祝 <span id="card-recipient">妈妈</span>：</div>
+                                    
+                                    <!-- 核心展示：拼音 + 大字标题 -->
+                                    <div class="blessing-title-box">
+                                        <div id="card-pinyin" class="field-pinyin">mèng qù nà fú</div>
+                                        <div id="card-title" class="field-title">萌趣纳福</div>
+                                    </div>
+
+                                    <div class="field-body" id="card-message">
+                                        亲爱的妈妈，愿你诸事顺遂，活力满满，开心每一天~
+                                    </div>
+                                </div>
+                                <div class="postcard-action">
+                                    <button id="accept-btn" class="btn-primary">接受祝福</button>
+                                    <div class="mascot-illustration"></div>
+                                </div>
                             </div>
-                            <div class="postcard-action">
-                                <button id="accept-btn" class="btn-primary">接受祝福</button>
-                                <div class="mascot-illustration"></div>
+
+                            <!-- 提示词视图 (初始隐藏) -->
+                            <div id="view-prompt" class="view-content view-hidden">
+                                <div class="prompt-header-grid">
+                                    <div class="info-item">
+                                        <label>输入祝福语</label>
+                                        <span id="prompt-info-text">萌趣纳福</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>风格模型</label>
+                                        <span id="prompt-info-style">毛毡卡通风格</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>输入收信人</label>
+                                        <span id="prompt-info-recipient">妈妈</span>
+                                    </div>
+                                </div>
+                                <div class="ai-prompt-container">
+                                    <div class="ai-label">AI优化后提示词：</div>
+                                    <div id="prompt-ai-content" class="ai-content-box">
+                                        画面中心是憨萌小黄人，抱着彩色糖果蹦跳玩耍...
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
