@@ -8,7 +8,7 @@ const AppState = {
     // 当前配置
     config: {
         greeting_words: ['burger', 'horse', 'banana'], // 默认多选
-        card_style: 'pixel_night', // 默认风格
+        card_style: 'pixel_world', // 默认风格更新为像素世界
         auto_play: true,
         recipient: '妈妈',
         message_body: '亲爱的妈妈，愿你诸事顺遂，活力满满，开心每一天~',
@@ -109,14 +109,7 @@ const AppState = {
 
     // 绑定全局事件
     setupGlobalEvents() {
-        const closeBtn = document.getElementById('close-btn');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                console.log('[H5] Close button clicked');
-                // 发送关闭指令给父级
-                window.postMessage({ cmd: 'result' }, '*');
-            });
-        }
+        // 全局关闭按钮已移除
     }
 };
 

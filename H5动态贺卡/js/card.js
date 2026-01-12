@@ -37,80 +37,69 @@ const CardSystem = {
     },
 
     // 预加载序列帧
-    preloadFrames(styleName) {
+    preloadFrames(styleName, textName) {
         this.frameImages = [];
         this.imagesLoaded = false;
         let loadedCount = 0;
         
-        // 假设文件名为 1.png, 2.png ... 16.png
-        // 路径：assets/frames/{styleName}/{i}.png
-        // 如果没有 styleName，默认用 'pixel_night'
-        const style = styleName || 'pixel_night';
+        const style = styleName || 'pixel_world';
+        const text = textName || '';
+        
+        // 保存当前加载的组合标识，用于缓存检查
+        this.currentStyleText = `${style}_${text}`;
+        
+        console.log(`[Card] Preloading frames for Style: ${style}, Text: ${text}`);
         
         for (let i = 1; i <= this.totalFrames; i++) {
             const img = new Image();
-            // 这里假设图片格式为 JPG
-            img.src = `assets/frames/${style}/${i}.jpg`;
+            // 序号补零，如 01, 02...
+            const frameIndex = i.toString().padStart(2, '0');
+            // 构造路径: assets/frames/{style}/{text}/{style}{text}_{index}.jpg
+            const path = `assets/frames/${style}/${text}/${style}${text}_${frameIndex}.jpg`;
+            
+            img.src = path;
             img.onload = () => {
                 loadedCount++;
                 if (loadedCount === this.totalFrames) {
                     this.imagesLoaded = true;
-                    console.log(`[Card] All ${this.totalFrames} frames loaded for style: ${style}`);
-                    // 如果正在打开状态，立即重绘当前帧以显示图片
-                    if (!this.modal.classList.contains('hidden')) {
+                    console.log(`[Card] All ${this.totalFrames} frames loaded successfully.`);
+                    if (this.modal && !this.modal.classList.contains('hidden')) {
                         this.renderFrame();
+                        if (window.AppState.config.auto_play) {
+                            this.play();
+                        }
                     }
                 }
             };
             img.onerror = () => {
-                console.warn(`[Card] Failed to load frame ${i} for style: ${style}`);
+                // 如果特定路径加载失败，尝试加载默认兜底图
+                // 这里可以使用一个统一的默认图，或者保持 Loading 状态
+                console.warn(`[Card] Failed to load frame: ${path}. Attempting fallback...`);
+                // 可以在这里设置一个兜底路径，或者直接在渲染时处理
             };
-            this.frameImages[i] = img; // 索引对应帧数
-        }
-    },
-
-    open(floaterConfig) {
-        if (!this.modal) return;
-        
-        // 1. 设置标题
-        document.getElementById('light-up-name').innerText = floaterConfig.text || '...';
-
-        // 2. 显示弹窗
-        this.modal.classList.remove('hidden');
-        this.modal.style.display = 'flex';
-        
-        // 3. 预加载图片 (根据配置的 style)
-        // 注意：每次打开都预加载可能有点慢，建议在 AppState 更新配置时预加载
-        // 这里为了确保一致性，先简单处理，如果 style 没变可以复用
-        const currentStyle = window.AppState.config.card_style;
-        if (!this.currentLoadedStyle || this.currentLoadedStyle !== currentStyle) {
-            this.preloadFrames(currentStyle);
-            this.currentLoadedStyle = currentStyle;
-        }
-
-        // 4. 开始播放序列帧
-        this.currentFrame = 1;
-        this.renderFrame();
-        this.updateSlider();
-        
-        if (window.AppState.config.auto_play) {
-            this.play();
+            this.frameImages[i] = img;
         }
     },
 
     bindEvents() {
         // 关闭/接受祝福
-        const acceptBtn = document.getElementById('accept-btn');
-        if (acceptBtn) {
-            acceptBtn.addEventListener('click', () => {
-                this.close();
-            });
-        }
+        document.getElementById('accept-btn').addEventListener('click', () => {
+            this.close();
+        });
+
+        // 提示词按钮
+        document.getElementById('info-btn').addEventListener('click', () => {
+            this.togglePrompt(true);
+        });
+
+        // 提示词区域点击自动关闭
+        document.getElementById('view-prompt').addEventListener('click', () => {
+            this.togglePrompt(false);
+        });
 
         // 进度条拖动
         if (this.slider) {
             this.slider.addEventListener('input', (e) => {
-                // 拖动时暂停自动播放
                 this.pause();
                 this.currentFrame = parseInt(e.target.value);
                 this.renderFrame();
@@ -119,31 +108,22 @@ const CardSystem = {
 
         // --- 贺图区域手势交互 ---
         if (this.container) {
-            // 鼠标按下 / 手指触摸
             const startDrag = (e) => {
                 this.isDragging = true;
-                this.pause(); // 暂停播放
+                this.pause();
                 this.startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
                 this.startFrame = this.currentFrame;
-                // 防止默认拖拽图片行为
                 e.preventDefault();
             };
 
-            // 移动
             const onDrag = (e) => {
                 if (!this.isDragging) return;
-                
                 const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
                 const deltaX = currentX - this.startX;
-                
-                // 灵敏度：每滑动 10px 切换 1 帧 (可调整)
                 const sensitivity = 10;
                 const frameDelta = Math.round(deltaX / sensitivity);
-                
                 let newFrame = this.startFrame + frameDelta;
                 
-                // 循环逻辑 (可选，或者限制在 1-16)
-                // 这里选择限制在 1-16，不循环，符合直觉
                 if (newFrame < 1) newFrame = 1;
                 if (newFrame > this.totalFrames) newFrame = this.totalFrames;
                 
@@ -154,28 +134,91 @@ const CardSystem = {
                 }
             };
 
-            // 结束
             const endDrag = () => {
                 this.isDragging = false;
             };
 
-            // 绑定 PC 事件
             this.container.addEventListener('mousedown', startDrag);
-            document.addEventListener('mousemove', onDrag); // 绑在 document 上防止拖出容器失效
+            document.addEventListener('mousemove', onDrag);
             document.addEventListener('mouseup', endDrag);
 
-            // 绑定 Mobile 事件
             this.container.addEventListener('touchstart', startDrag, { passive: false });
             document.addEventListener('touchmove', onDrag, { passive: false });
             document.addEventListener('touchend', endDrag);
         }
     },
 
+    // 切换提示词视图
+    togglePrompt(show) {
+        const greetingView = document.getElementById('view-greeting');
+        const promptView = document.getElementById('view-prompt');
+        if (show) {
+            greetingView.classList.add('view-hidden');
+            promptView.classList.remove('view-hidden');
+        } else {
+            greetingView.classList.remove('view-hidden');
+            promptView.classList.add('view-hidden');
+        }
+    },
+
+    // 风格友好名称映射
+    styleNames: {
+        'pixel_world': '像素世界风格',
+        'felt_doll': '毛毡玩偶风格',
+        'frosted_cartoon': '磨砂卡通风格',
+        'dreamy_crystal': '梦幻水晶风格'
+    },
+
     // 更新文本数据
     updateData(config) {
+        // 更新全局状态 (AppState) 已有的数据
         document.getElementById('card-recipient').innerText = config.recipient || '妈妈';
-        document.getElementById('card-message').innerText = config.message_body || '...';
-        document.getElementById('card-sender').innerText = config.sender || 'XXX';
+        
+        // 更新提示词信息窗的数据
+        document.getElementById('prompt-info-recipient').innerText = config.recipient || '妈妈';
+        const styleDisplayName = this.styleNames[config.card_style] || config.card_style;
+        document.getElementById('prompt-info-style').innerText = styleDisplayName;
+    },
+
+    open(floaterConfig) {
+        if (!this.modal) this.init();
+        
+        this.modal.classList.remove('hidden');
+        this.modal.style.display = 'flex';
+        
+        // 重置视图
+        this.togglePrompt(false);
+
+        // 绑定内容
+        document.getElementById('card-title').innerText = floaterConfig.text || '...';
+        document.getElementById('card-pinyin').innerText = floaterConfig.pinyin || '';
+        document.getElementById('card-message').innerText = floaterConfig.meaning || '';
+        
+        // 更新提示词详情
+        document.getElementById('prompt-info-text').innerText = floaterConfig.text || '...';
+        document.getElementById('prompt-ai-content').innerText = floaterConfig.ai_prompt || '';
+
+        // 更新提示词视图中的风格和收件人
+        this.updateData(window.AppState.config);
+
+        const currentStyle = window.AppState.config.card_style;
+        const currentText = floaterConfig.text || '';
+        const combinationId = `${currentStyle}_${currentText}`;
+
+        // 检查是否需要重新加载资源
+        if (!this.currentStyleText || this.currentStyleText !== combinationId) {
+            this.preloadFrames(currentStyle, currentText);
+        }
+
+        // 逻辑修改：起始帧设为第6张
+        this.currentFrame = 6;
+        this.renderFrame();
+        this.updateSlider();
+        
+        // 只有当图片已经加载完成时才立刻播放
+        if (this.imagesLoaded && window.AppState.config.auto_play) {
+            this.play();
+        }
     },
 
     // 回调钩子
@@ -186,13 +229,11 @@ const CardSystem = {
         this.modal.classList.add('hidden');
         this.pause();
         
-        // 触发回调
         if (this.onClose) {
             this.onClose();
-            this.onClose = null; // 只能触发一次，防止逻辑污染
+            this.onClose = null;
         }
         
-        // 动画结束后隐藏 display
         setTimeout(() => {
             this.modal.style.display = 'none';
         }, 300);
@@ -201,24 +242,29 @@ const CardSystem = {
     // 播放控制
     play() {
         if (this.isPlaying) return;
+        
+        // 逻辑修改：检查图片是否加载完成，未加载则不播放
+        if (!this.imagesLoaded) {
+            console.log('[Card] Images not loaded, waiting...');
+            return;
+        }
+
         this.isPlaying = true;
         
         if (this.playInterval) clearInterval(this.playInterval);
+        
+        // 逻辑修改：速度变慢 (100ms -> 150ms)
         this.playInterval = setInterval(() => {
             this.currentFrame++;
             
-            // 修改：播放一轮后停止
+            // 逻辑修改：播放到16帧后，从第1张开始循环
             if (this.currentFrame > this.totalFrames) {
-                this.currentFrame = this.totalFrames; // 停在最后一帧
-                this.pause(); // 停止播放
-                this.updateSlider();
-                this.renderFrame();
-                return;
+                this.currentFrame = 1;
             }
             
             this.updateSlider();
             this.renderFrame();
-        }, 100); // 10fps
+        }, 150); 
     },
 
     pause() {

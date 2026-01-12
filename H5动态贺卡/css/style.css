@@ -54,27 +54,6 @@ html, body {
     transition: opacity 0.3s ease-in; /* 平滑淡入 */
 }
 
-/* 全局关闭按钮 */
-#close-btn {
-    position: absolute;
-    top: 0.15rem;
-    right: 0.15rem;
-    width: 0.4rem;
-    height: 0.4rem;
-    /* 简单的叉号图标 */
-    background: rgba(0, 0, 0, 0.4) url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxsaW5lIHgxPSIxOCIgeTE9IjYiIHgyPSI2IiB5Mj0iMTgiPjwvbGluZT48bGluZSB4MT0iNiIgeTE9IjYiIHgyPSIxOCIgeTI9IjE4Ij48L2xpbmU+PC9zdmc+') no-repeat center center;
-    background-size: 60%;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 200; /* 最高层级 */
-    transition: background-color 0.2s, transform 0.2s;
-}
-
-#close-btn:hover {
-    background-color: #d32f2f;
-    transform: scale(1.1);
-}
-
 /* 锁定根字号基准：在 1200px 宽度下，1rem = 100px */
 /* 这样我们在 CSS 里写 0.16rem 就是 16px */
 html {
@@ -89,7 +68,7 @@ html {
     width: 100%;
     height: 100%;
     /* 替换为图片背景，使用 cover 铺满 */
-    background: url('../assets/bg_stage.png') no-repeat center center;
+    background: url('../assets/bg_stage.jpeg') no-repeat center center;
     background-size: cover;
     z-index: 0;
 }
@@ -114,6 +93,8 @@ html {
     flex-direction: column;
     align-items: center;
     bottom: -20%; /* 初始位置在视口外 */
+    /* 景别平滑过渡 */
+    transition: filter 0.8s ease-out, transform 0.8s ease-out;
 }
 
 /* 挂件主体：现在改为图片容器 */
@@ -127,7 +108,27 @@ html {
     box-shadow: none;
     position: relative;
     z-index: 2;
-    animation: hoverItem 3s ease-in-out infinite;
+    /* 组合动画：位移 + 呼吸光晕 */
+    animation: hoverItem 3s ease-in-out infinite, glowPulse 4s ease-in-out infinite;
+}
+
+/* 模拟挂件顶部的点亮光源感 */
+.floater-body::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 40%;
+    background: radial-gradient(circle, rgba(255, 230, 100, 0.4) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes glowPulse {
+    0%, 100% { filter: drop-shadow(0 0 0.08rem rgba(255, 215, 0, 0.3)); }
+    50% { filter: drop-shadow(0 0 0.18rem rgba(255, 215, 0, 0.6)); }
 }
 
 @keyframes hoverItem {
@@ -146,7 +147,8 @@ html {
 .floater-tag {
     width: 0.4rem;
     height: 1rem;
-    background-color: #d32f2f;
+    /* 渐变背景：从亮红到深红 */
+    background: linear-gradient(180deg, #e53935 0%, #b71c1c 100%);
     border-radius: 0.04rem; /* 4px -> 0.04rem */
     color: #ffd700;
     font-size: 0.14rem;
@@ -155,7 +157,8 @@ html {
     align-items: center;
     writing-mode: vertical-rl;
     text-orientation: upright;
-    box-shadow: 0 0.02rem 0.05rem rgba(0,0,0,0.3);
+    /* 增加内阴影模拟质感，外阴影增加浮动感 */
+    box-shadow: inset 0 0.02rem 0.05rem rgba(255, 255, 255, 0.2), 0 0.02rem 0.05rem rgba(0,0,0,0.3);
     border: 1px solid #b71c1c;
     margin-top: -2px;
     /* 钟摆动画基点 */
@@ -166,6 +169,34 @@ html {
 @keyframes swing {
     from { transform: rotate(-5deg); }
     to { transform: rotate(5deg); }
+}
+
+/* 点击特效样式 */
+.click-effect {
+    position: fixed;
+    width: 0.1rem;
+    height: 0.1rem;
+    border: 3px solid #ffd700;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 30; /* 调高，确保在近景挂件之上 */
+    transform: translate(-50%, -50%);
+    animation: burst 0.6s ease-out forwards;
+}
+
+@keyframes burst {
+    0% {
+        width: 0.1rem;
+        height: 0.1rem;
+        opacity: 1;
+        border-width: 6px;
+    }
+    100% {
+        width: 1.5rem;
+        height: 1.5rem;
+        opacity: 0;
+        border-width: 1px;
+    }
 }
 
 /* 调试面板 (Mock System) - 保持 px，因为它独立于舞台缩放 */

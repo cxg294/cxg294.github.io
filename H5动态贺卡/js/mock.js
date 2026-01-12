@@ -35,9 +35,10 @@ const MockSystem = {
                 <div class="form-group">
                     <label>贺卡风格 (card_style)</label>
                     <select id="mock-style">
-                        <option value="pixel_night">像素夜景</option>
-                        <option value="cyberpunk">赛博朋克</option>
-                        <option value="cartoon">卡通手绘</option>
+                        <option value="pixel_world">像素世界</option>
+                        <option value="felt_doll">毛毡玩偶</option>
+                        <option value="frosted_cartoon">磨砂卡通</option>
+                        <option value="dreamy_crystal">梦幻水晶</option>
                     </select>
                 </div>
 
