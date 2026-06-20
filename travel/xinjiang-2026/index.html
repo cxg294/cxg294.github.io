@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新疆北疆 7日 · 金秋喀纳斯禾木</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root {
+    --g950:#0d2818;--g900:#1b4332;--g800:#2d6a4f;--g700:#40916c;--g600:#52b788;
+    --g500:#74c69d;--g400:#95d5b2;--g300:#b7e4c7;--g200:#d8f3dc;--g100:#ecfdf5;
+    --gold:#d4a843;--warm:#e8833a;--dk:#111827;--gy:#6b7280;--gy2:#9ca3af;
+    --river:#0ea5e9;--fly:#8b5cf6;--taxi:#f59e0b;--walk:#10b981;
+    --sel:#059669;--exc:#dc2626;--radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--g100);
+    color:var(--dk);line-height:1.65;min-height:100vh;padding-bottom:120px;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* Topographic texture */
+  body::before{
+    content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cpath d='M0 50 Q50 30 100 60 T200 40' fill='none' stroke='%231b4332' stroke-width='0.5'/%3E%3Cpath d='M0 80 Q60 100 120 75 T200 90' fill='none' stroke='%231b4332' stroke-width='0.4'/%3E%3Cpath d='M0 120 Q40 140 100 115 T200 130' fill='none' stroke='%231b4332' stroke-width='0.3'/%3E%3Cpath d='M0 160 Q70 145 130 170 T200 155' fill='none' stroke='%231b4332' stroke-width='0.5'/%3E%3Cpath d='M0 30 Q60 15 110 40 T200 25' fill='none' stroke='%231b4332' stroke-width='0.35'/%3E%3C/svg%3E");
+    background-size:280px 280px;
+  }
+
+  /* ===== DAY NAV ===== */
+  .day-nav{position:fixed;left:8px;top:50%;transform:translateY(-50%);z-index:1000;display:flex;flex-direction:column;gap:6px;padding:10px 6px;background:rgba(255,255,255,.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:0 16px 16px 0;box-shadow:0 4px 24px rgba(27,67,50,.06);border:1px solid rgba(255,255,255,.5)}
+  .day-nav a{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:13px;text-decoration:none;font-size:12px;font-weight:700;color:var(--g700);transition:all .25s cubic-bezier(.4,0,.2,1);position:relative}
+  .day-nav a:hover{background:rgba(45,106,79,.08);color:var(--g900)}
+  .day-nav a.active{background:var(--g700);color:#fff;box-shadow:0 4px 12px rgba(45,106,79,.25);transform:scale(1.05)}
+  .day-nav a .tooltip{position:absolute;left:54px;background:var(--g950);color:#fff;font-size:11px;padding:5px 12px;border-radius:10px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;font-weight:500}
+  .day-nav a:hover .tooltip{opacity:1}
+
+  .day-nav-mobile{display:none;position:sticky;top:68px;z-index:998;background:rgba(255,255,255,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(45,106,79,.1);padding:8px 12px;overflow-x:auto}
+  .day-nav-mobile-inner{display:flex;gap:5px;min-width:max-content}
+  .day-nav-mobile a{flex-shrink:0;padding:6px 12px;border-radius:10px;text-decoration:none;font-size:11px;font-weight:700;color:var(--g700);background:rgba(45,106,79,.06);transition:all .2s;white-space:nowrap}
+  .day-nav-mobile a.active{background:var(--g700);color:#fff}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;width:100%;height:420px;overflow:hidden;border-radius:0 0 32px 32px;margin-bottom:0}
+  .hero-img{width:100%;height:100%;object-fit:cover;filter:brightness(0.85)}
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,40,24,.15) 0%,rgba(13,40,24,.45) 60%,rgba(13,40,24,.7) 100%)}
+  .hero-content{position:absolute;bottom:48px;left:0;right:0;z-index:2;text-align:center;padding:0 24px}
+  .hero-content .slogan{display:inline-block;background:rgba(255,255,255,.12);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:rgba(255,255,255,.9);font-size:13px;font-weight:500;padding:6px 18px;border-radius:20px;margin-bottom:12px;border:1px solid rgba(255,255,255,.15);letter-spacing:.04em}
+  .hero-content h1{font-size:2.6rem;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:-.02em}
+  .hero-content .sub{font-size:.95rem;color:rgba(255,255,255,.75);font-weight:400}
+
+  .container{max-width:960px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+  /* Stats bar */
+  /* Sidebar map panel */
+  .map-sidebar{position:fixed;right:calc(-100vw - 20px);top:50%;transform:translateY(-50%);z-index:1000;width:370px;height:480px;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:20px 0 0 20px;box-shadow:-4px 8px 32px rgba(0,0,0,.08);border:1px solid rgba(45,106,79,.1);transition:right .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
+  .map-sidebar.open{right:0}
+  .map-sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(45,106,79,.08)}
+  .map-sidebar-header .title{font-size:13px;font-weight:700;color:var(--g800)}
+  .map-sidebar-header .close-btn{width:28px;height:28px;border:none;border-radius:8px;background:rgba(45,106,79,.06);color:var(--g700);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .map-sidebar-header .close-btn:hover{background:rgba(45,106,79,.15)}
+  .map-sidebar-body{flex:1}
+  #dayMap{width:100%;height:100%}
+  .map-toggle{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:1001;width:36px;height:80px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(45,106,79,.1);border-right:none;border-radius:14px 0 0 14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--g700);transition:all .3s;box-shadow:-2px 4px 16px rgba(0,0,0,.04);writing-mode:vertical-rl;letter-spacing:.1em;font-weight:700;font-size:12px;gap:4px}
+  .map-toggle:hover{background:var(--g700);color:#fff}
+  .map-toggle.hidden{right:-40px}
+
+  /* ===== TAB BAR ===== */
+  .tab-bar{position:sticky;top:0;z-index:999;display:flex;gap:6px;padding:10px 0;margin:0 0 20px;background:rgba(236,253,245,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(45,106,79,.06)}
+  .tab-bar button{flex:1;padding:10px 14px;border:none;border-radius:14px;background:transparent;color:var(--gy);font-size:13.5px;font-weight:600;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.01em}
+  .tab-bar button:hover{background:rgba(45,106,79,.06);color:var(--g800)}
+  .tab-bar button.active{background:var(--g700);color:#fff;box-shadow:0 4px 16px rgba(45,106,79,.2)}
+  .tab-bar button .tab-badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;background:rgba(255,255,255,.2);border-radius:10px;font-size:10px;font-weight:700;padding:0 6px}
+
+  /* ===== PANELS ===== */
+  .tab-panel{display:none;animation:fadeSlide .3s ease}
+  .tab-panel.active{display:block}
+  @keyframes fadeSlide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ===== SELECTABLE CARDS ===== */
+  .select-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+  .sel-card{background:rgba(255,255,255,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:18px;overflow:hidden;border:1.5px solid rgba(45,106,79,.08);transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer;position:relative}
+  .sel-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(27,67,50,.08);border-color:rgba(45,106,79,.15)}
+  .sel-card.selected{border-color:var(--sel);box-shadow:0 0 0 3px rgba(5,150,105,.12)}
+  .sel-card.excluded{border-color:var(--exc);opacity:.5;box-shadow:0 0 0 3px rgba(220,38,38,.08)}
+  .sel-card.excluded .sel-card-body{text-decoration:line-through;text-decoration-color:var(--exc);text-decoration-thickness:1.5px}
+  .sel-card-img{height:155px;background-size:cover;background-position:center;position:relative}
+  .sel-card-img .card-badge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:600;padding:4px 10px;border-radius:8px}
+  .sel-card-img .level-badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:600;padding:4px 10px;border-radius:8px}
+  .sel-indicator{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;display:none;font-size:12px;font-weight:700;padding:5px 14px;border-radius:12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .sel-card.selected .sel-indicator.sel-yes{display:block;background:rgba(5,150,105,.85);color:#fff}
+  .sel-card.excluded .sel-indicator.sel-no{display:block;background:rgba(220,38,38,.85);color:#fff}
+  .sel-card-body{padding:16px 18px}
+  .sel-card-body h4{font-size:.95rem;font-weight:700;color:var(--g900);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .sel-card-body .meta{display:flex;gap:10px;align-items:center;margin-bottom:3px}
+  .sel-card-body .meta .rating{color:var(--gold);font-size:11px;font-weight:700}
+  .sel-card-body .meta .price{color:var(--warm);font-size:11px;font-weight:600}
+  .sel-card-body .desc{font-size:12.5px;color:var(--gy);line-height:1.5}
+  .sel-card-body .extra{font-size:11px;color:var(--g600);margin-top:4px}
+
+  .nav-btn{display:inline-flex;align-items:center;gap:2px;padding:3px 8px;background:rgba(14,165,233,.08);color:var(--river);border:1px solid rgba(14,165,233,.15);border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .2s;margin-left:auto}
+  .nav-btn:hover{background:var(--river);color:#fff}
+
+  /* ===== ITINERARY - COLLAPSIBLE DAYS ===== */
+  .day-card{background:rgba(255,255,255,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:20px;overflow:hidden;margin-bottom:16px;border:1px solid rgba(45,106,79,.08);box-shadow:0 4px 20px rgba(27,67,50,.04);transition:all .3s cubic-bezier(.4,0,.2,1)}
+  .day-card:hover{border-color:rgba(45,106,79,.15);box-shadow:0 8px 28px rgba(27,67,50,.07)}
+
+  .day-card-header{cursor:pointer;padding:16px 22px;display:flex;align-items:center;gap:14px;user-select:none;transition:background .2s}
+  .day-card-header:hover{background:rgba(45,106,79,.03)}
+  .day-card-header .day-dot{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--g700),var(--g600));color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;box-shadow:0 4px 12px rgba(45,106,79,.2)}
+  .day-card-header .day-info{flex:1;min-width:0}
+  .day-card-header .day-date{font-size:12px;color:var(--gy);font-weight:500;margin-bottom:1px}
+  .day-card-header .day-label{font-size:1rem;font-weight:700;color:var(--g900)}
+  .day-card-header .day-theme{font-size:12.5px;color:var(--g600);margin-top:1px}
+  .day-card-header .day-chevron{font-size:14px;color:var(--g400);transition:transform .3s cubic-bezier(.4,0,.2,1);flex-shrink:0}
+  .day-card.open .day-card-header .day-chevron{transform:rotate(180deg)}
+
+  .day-card-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+  .day-card.open .day-card-body{max-height:3000px}
+  .day-card-body-inner{padding:0 22px 20px}
+
+  .collapse-actions{display:flex;gap:8px;margin-bottom:18px}
+  .collapse-actions button{padding:6px 14px;border:1px solid rgba(45,106,79,.12);border-radius:10px;background:rgba(255,255,255,.5);color:var(--g700);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+  .collapse-actions button:hover{background:var(--g700);color:#fff;border-color:var(--g700)}
+
+  /* Timeline inside day card */
+  .stops{position:relative;padding-left:32px}
+  .stops::before{content:'';position:absolute;left:11px;top:16px;bottom:16px;width:1.5px;background:linear-gradient(to bottom,var(--g300),var(--g500),var(--g300));border-radius:1px}
+
+  .stop{background:rgba(255,255,255,.6);border-radius:14px;overflow:hidden;border:1px solid rgba(45,106,79,.06);position:relative;display:flex;transition:all .2s;min-height:75px;margin-bottom:0}
+  .stop:hover{transform:translateX(3px);border-color:rgba(45,106,79,.12);box-shadow:0 4px 16px rgba(27,67,50,.05)}
+  .stop::before{content:'';position:absolute;left:-25px;top:20px;width:7px;height:7px;background:var(--g500);border-radius:50%;box-shadow:0 0 0 4px rgba(116,198,157,.15)}
+  .stop.food::before{background:var(--gold);box-shadow:0 0 0 4px rgba(212,168,67,.15)}
+  .stop.hotel::before{background:var(--river);box-shadow:0 0 0 4px rgba(14,165,233,.12)}
+  .stop-img{width:110px;min-height:75px;flex-shrink:0;background-size:cover;background-position:center;position:relative}
+  .stop-img::after{content:'';position:absolute;right:0;top:0;bottom:0;width:18px;background:linear-gradient(to right,transparent,rgba(255,255,255,.6))}
+  .stop-img .img-tag{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.45);color:#fff;font-size:9px;font-weight:600;padding:2px 6px;border-radius:5px}
+  .stop-body{flex:1;padding:12px 14px;min-width:0}
+  .stop-header{display:flex;align-items:center;gap:4px;margin-bottom:2px;flex-wrap:wrap}
+  .stop-name{font-weight:700;font-size:.88rem;color:var(--g900)}
+  .stop-tag{font-size:9px;font-weight:600;padding:2px 6px;border-radius:6px}
+  .tag-scenic{background:rgba(5,150,105,.1);color:#065f46}.tag-food{background:rgba(212,168,67,.12);color:#92400e}
+  .tag-hotel{background:rgba(14,165,233,.1);color:#0369a1}.tag-night{background:rgba(139,92,246,.1);color:#6d28d9}
+  .tag-flight{background:rgba(139,92,246,.1);color:#6d28d9}.tag-must{background:rgba(190,24,93,.08);color:#9d174d}
+  .stop-desc{color:var(--gy);font-size:12px}
+  .stop-detail{font-size:10.5px;color:var(--g600);margin-top:2px}
+
+  .connector{display:flex;align-items:center;gap:4px;padding:5px 0 5px 16px;margin:-1px 0;position:relative;z-index:1}
+  .connector .mode{display:inline-flex;align-items:center;gap:2px;padding:2px 8px;border-radius:10px;font-size:10.5px;font-weight:600}
+  .connector .mode.taxi{background:rgba(245,158,11,.1);color:#92400e}
+  .connector .mode.walk{background:rgba(16,185,129,.1);color:#065f46}
+  .connector .mode.flight{background:rgba(139,92,246,.1);color:#6d28d9}
+  .connector .mode.bus{background:rgba(14,165,233,.1);color:#0369a1}
+  .connector .detail{font-size:10.5px;color:var(--gy2)}
+
+  .highlight-inline{background:linear-gradient(135deg,rgba(254,243,199,.6),rgba(254,249,231,.6));border-radius:10px;padding:10px 14px;margin:6px 0 6px 16px;border:1px solid rgba(253,230,138,.4);font-size:12px}
+  .highlight-inline .hl-title{font-weight:700;color:#92400e;margin-bottom:2px}
+
+  /* ===== TIPS ===== */
+  .tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tip-card{background:rgba(255,255,255,.65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:16px;padding:18px;border:1px solid rgba(45,106,79,.06)}
+  .tip-card .tip-icon{font-size:1.5rem;margin-bottom:4px}
+  .tip-card h4{font-size:.9rem;font-weight:700;color:var(--g900)}
+  .tip-card p{font-size:12px;color:var(--gy);line-height:1.5}
+
+  .budget{background:rgba(255,255,255,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:18px;padding:22px;margin-top:16px;border:1px solid rgba(45,106,79,.08)}
+  .budget h2{font-size:1rem;color:var(--g900);margin-bottom:12px}
+  .budget-table{width:100%;border-collapse:collapse}
+  .budget-table td{padding:7px 0;font-size:13px;border-bottom:1px solid rgba(45,106,79,.06)}
+  .budget-table td:last-child{text-align:right;font-weight:600;color:var(--g800)}
+  .budget-table .total td{border-top:2px solid rgba(45,106,79,.15);font-size:1rem;font-weight:800;color:var(--g900);padding-top:12px}
+
+  .footer{text-align:center;margin-top:40px;font-size:11px;color:var(--gy2);opacity:.7}
+
+  /* Phase badge */
+  .phase-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:14px}
+  .phase-badge.scenic{background:rgba(5,150,105,.08);color:var(--g800)}
+  .phase-badge.food{background:rgba(212,168,67,.1);color:#92400e}
+  .phase-note{font-size:12px;color:var(--gy);margin-bottom:14px;line-height:1.6}
+
+  /* Action bar */
+  .action-bar{position:fixed;bottom:0;left:0;right:0;z-index:1001;background:rgba(255,255,255,.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(45,106,79,.08);padding:12px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 -8px 32px rgba(0,0,0,.04)}
+  .action-bar .summary{flex:1;font-size:13px;color:var(--gy)}
+  .action-bar button{padding:10px 22px;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+  .action-bar .btn-copy{background:var(--g700);color:#fff;box-shadow:0 4px 12px rgba(45,106,79,.2)}
+  .action-bar .btn-copy:hover{background:var(--g900);transform:translateY(-1px)}
+  .action-bar .btn-reset{background:rgba(45,106,79,.06);color:var(--g700)}
+  .action-bar .btn-reset:hover{background:rgba(45,106,79,.12)}
+  .action-bar .toast{position:absolute;top:-44px;left:50%;transform:translateX(-50%);background:var(--g950);color:#fff;padding:8px 18px;border-radius:12px;font-size:12px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none}
+  .action-bar .toast.show{opacity:1}
+
+  @media(max-width:900px){.day-nav{display:none}.day-nav-mobile{display:block}}
+  @media(max-width:768px){.map-sidebar.open{width:calc(100vw - 32px);right:16px;border-radius:20px}.map-toggle{width:28px;height:56px;font-size:10px}
+    .select-grid{grid-template-columns:1fr}
+    .stop{flex-direction:column}.stop-img{width:100%;height:100px}
+    .stop-img::after{right:auto;bottom:0;top:auto;width:100%;height:16px;background:linear-gradient(to top,rgba(255,255,255,.6),transparent)}
+    .hero{height:300px}.hero-content h1{font-size:1.8rem}
+    .tips-grid{grid-template-columns:1fr}
+    .tab-bar button{font-size:12px;padding:8px 10px}
+    .stats-bar .stat .val{font-size:1.2rem}
+  }
+
+  /* ===== EDITORIAL LUXE THEME ===== */
+  :root{
+    --paper:#f5efe5;--paper-soft:#fffaf2;--paper-deep:#ebe1d1;
+    --ink:#14211b;--muted:#687064;--hairline:rgba(32,45,37,.14);
+    --moss:#17261d;--moss-2:#274735;--sage:#7a907c;--clay:#b87945;
+    --shadow-soft:0 18px 55px rgba(35,45,36,.12);
+    --shadow-tight:0 10px 28px rgba(35,45,36,.09);
+  }
+  body{
+    background:
+      radial-gradient(circle at 15% 7%,rgba(184,121,69,.16),transparent 32%),
+      radial-gradient(circle at 86% 12%,rgba(65,105,75,.12),transparent 30%),
+      linear-gradient(180deg,var(--paper),#faf4ea 44%,var(--paper-deep));
+    color:var(--ink);
+  }
+  body::before{
+    opacity:.055;
+    background-image:
+      linear-gradient(90deg,rgba(20,33,27,.16) 1px,transparent 1px),
+      linear-gradient(rgba(20,33,27,.13) 1px,transparent 1px);
+    background-size:44px 44px;
+    mask-image:linear-gradient(180deg,#000,transparent 82%);
+  }
+  .hero{
+    height:min(76vh,640px);
+    min-height:520px;
+    margin-bottom:-70px;
+    border-radius:0;
+    background:#111b15;
+  }
+  .hero-img{
+    filter:brightness(.65) saturate(.88) contrast(1.08);
+    transform:scale(1.02);
+  }
+  .hero-overlay{
+    background:
+      linear-gradient(90deg,rgba(8,18,13,.84),rgba(8,18,13,.66) 38%,rgba(8,18,13,.12)),
+      linear-gradient(180deg,rgba(8,18,13,.08),rgba(8,18,13,.36) 68%,rgba(245,239,229,.98));
+  }
+  .hero-content{
+    left:50%;
+    right:auto;
+    bottom:126px;
+    width:100%;
+    max-width:1180px;
+    transform:translateX(-50%);
+    text-align:left;
+    padding:0 32px;
+  }
+  .hero-content .slogan{
+    background:rgba(255,250,242,.12);
+    border:1px solid rgba(255,250,242,.22);
+    color:rgba(255,250,242,.82);
+    border-radius:999px;
+    padding:7px 15px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+  }
+  .hero-content h1{
+    max-width:760px;
+    margin:4px 0 14px;
+    font-size:clamp(3rem,7.4vw,5.9rem);
+    line-height:.93;
+    letter-spacing:-.055em;
+  }
+  .hero-content .sub{
+    max-width:650px;
+    color:rgba(255,250,242,.74);
+    font-size:16px;
+    line-height:1.75;
+  }
+  .container{max-width:1180px;padding:0 32px}
+  .trip-overview{
+    position:relative;
+    z-index:4;
+    display:grid;
+    grid-template-columns:1.35fr repeat(3,1fr);
+    gap:12px;
+    margin:0 0 20px;
+  }
+  .overview-card{
+    min-height:112px;
+    padding:18px;
+    border:1px solid var(--hairline);
+    border-radius:18px;
+    background:rgba(255,250,242,.88);
+    box-shadow:var(--shadow-tight);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+  }
+  .overview-card.feature{
+    background:linear-gradient(135deg,#17251d,#243b2c);
+    color:var(--paper-soft);
+  }
+  .overview-kicker{
+    display:block;
+    margin-bottom:12px;
+    color:var(--sage);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+  .overview-card.feature .overview-kicker{color:rgba(255,250,242,.6)}
+  .overview-value{
+    display:block;
+    color:var(--ink);
+    font-size:1.06rem;
+    font-weight:800;
+    line-height:1.25;
+    letter-spacing:-.015em;
+  }
+  .overview-card.feature .overview-value{color:var(--paper-soft);font-size:1.28rem}
+  .overview-note{
+    margin-top:8px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.55;
+  }
+  .overview-card.feature .overview-note{color:rgba(255,250,242,.68)}
+  .route-timeline{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(7,minmax(120px,1fr));
+    gap:0;
+    margin:0 0 18px;
+    padding:18px 18px 16px;
+    overflow-x:auto;
+    border:1px solid var(--hairline);
+    border-radius:18px;
+    background:rgba(255,250,242,.76);
+    box-shadow:var(--shadow-tight);
+  }
+  .route-timeline::before{
+    content:'';
+    position:absolute;
+    left:48px;
+    right:48px;
+    top:51px;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(23,38,29,.34),transparent);
+  }
+  .route-step{
+    position:relative;
+    min-width:120px;
+    padding:0 12px 0 0;
+  }
+  .route-step::before{
+    content:'';
+    display:block;
+    width:13px;
+    height:13px;
+    margin:26px 0 12px;
+    border:3px solid var(--paper-soft);
+    border-radius:999px;
+    background:var(--moss);
+    box-shadow:0 0 0 1px rgba(23,38,29,.18);
+  }
+  .route-step:first-child::before,.route-step:last-child::before{background:var(--clay)}
+  .route-day{
+    display:block;
+    color:var(--sage);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+  .route-city{
+    display:block;
+    margin-top:6px;
+    color:var(--ink);
+    font-size:15px;
+    font-weight:800;
+    line-height:1.25;
+  }
+  .route-note{
+    display:block;
+    margin-top:5px;
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.45;
+  }
+  .route-tag{
+    display:inline-flex;
+    margin-top:9px;
+    padding:3px 8px;
+    border:1px solid rgba(23,38,29,.1);
+    border-radius:999px;
+    background:rgba(23,38,29,.05);
+    color:var(--moss-2);
+    font-size:10px;
+    font-weight:700;
+  }
+  .tab-bar{
+    top:12px;
+    gap:4px;
+    margin:10px 0 22px;
+    padding:6px;
+    border:1px solid var(--hairline);
+    border-radius:999px;
+    background:rgba(255,250,242,.8);
+    box-shadow:var(--shadow-tight);
+  }
+  .tab-bar button{
+    border-radius:999px;
+    color:var(--muted);
+    font-size:13px;
+    padding:11px 14px;
+  }
+  .tab-bar button:hover{background:rgba(23,38,29,.07);color:var(--moss)}
+  .tab-bar button.active{background:var(--moss);color:var(--paper-soft);box-shadow:none}
+  .phase-badge{
+    border:1px solid var(--hairline);
+    border-radius:999px;
+    background:rgba(255,250,242,.62)!important;
+    color:var(--moss)!important;
+    letter-spacing:.04em;
+  }
+  .phase-note{
+    max-width:760px;
+    padding:12px 14px;
+    border:1px solid rgba(32,45,37,.08);
+    border-radius:14px;
+    background:rgba(255,250,242,.48);
+    color:var(--muted);
+  }
+  .select-grid{
+    grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+    gap:18px;
+  }
+  .sel-card{
+    border:1px solid var(--hairline);
+    border-radius:18px;
+    background:rgba(255,250,242,.88);
+    box-shadow:none;
+  }
+  .sel-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(32,45,37,.22);
+    box-shadow:var(--shadow-soft);
+  }
+  .sel-card.selected{border-color:rgba(39,73,54,.9);box-shadow:0 0 0 3px rgba(39,73,54,.12)}
+  .sel-card.excluded{border-color:rgba(184,80,59,.65);box-shadow:0 0 0 3px rgba(184,80,59,.08)}
+  .sel-card-img{height:176px}
+  .sel-card-img::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg,rgba(0,0,0,.06),rgba(0,0,0,.3));
+  }
+  .sel-card-img .card-badge,.sel-card-img .level-badge{
+    z-index:1;
+    background:rgba(20,33,27,.68);
+    border:1px solid rgba(255,250,242,.18);
+    border-radius:999px;
+    color:var(--paper-soft);
+  }
+  .sel-card-body{padding:17px 18px 18px}
+  .sel-card-body h4{color:var(--ink);font-size:1rem;letter-spacing:-.01em}
+  .sel-card-body .desc{color:var(--muted);font-size:12.8px}
+  .sel-card-body .extra{color:var(--moss-2)}
+  .nav-btn{
+    border-color:rgba(23,38,29,.12);
+    border-radius:999px;
+    background:rgba(23,38,29,.06);
+    color:var(--moss-2);
+  }
+  .nav-btn:hover{background:var(--moss);color:var(--paper-soft)}
+  .day-card,.tip-card,.budget{
+    border:1px solid var(--hairline);
+    border-radius:18px;
+    background:rgba(255,250,242,.82);
+    box-shadow:none;
+  }
+  .day-card:hover,.tip-card:hover{border-color:rgba(32,45,37,.18);box-shadow:var(--shadow-tight)}
+  .day-card-header{padding:19px 22px}
+  .day-card-header .day-dot{
+    width:42px;
+    height:42px;
+    border-radius:999px;
+    background:var(--moss);
+    box-shadow:none;
+  }
+  .day-card-header .day-label,.tip-card h4,.budget h2{color:var(--ink)}
+  .day-card-header .day-theme,.sel-card-body .meta .rating{color:var(--moss-2)}
+  .stop{
+    min-height:88px;
+    border:1px solid rgba(32,45,37,.09);
+    border-radius:16px;
+    background:rgba(250,245,236,.78);
+  }
+  .stop:hover{transform:translateX(2px);box-shadow:var(--shadow-tight)}
+  .stop-img{width:126px}
+  .stop-name{color:var(--ink);font-size:.92rem}
+  .stop-desc,.tip-card p{color:var(--muted)}
+  .highlight-inline{
+    border-color:rgba(184,121,69,.22);
+    border-radius:14px;
+    background:rgba(255,250,242,.76);
+  }
+  .tips-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .day-nav,.map-toggle,.map-sidebar,.action-bar{
+    border-color:var(--hairline);
+    background:rgba(255,250,242,.86);
+    box-shadow:var(--shadow-tight);
+  }
+  .day-nav a,.map-toggle{color:var(--moss-2)}
+  .day-nav a.active,.map-toggle:hover,.action-bar .btn-copy{
+    background:var(--moss);
+    color:var(--paper-soft);
+    box-shadow:none;
+  }
+  .action-bar{
+    left:50%;
+    right:auto;
+    bottom:18px;
+    width:min(960px,calc(100% - 32px));
+    transform:translate(-50%,calc(100% + 32px));
+    opacity:0;
+    pointer-events:none;
+    border:1px solid var(--hairline);
+    border-radius:999px;
+    padding:10px;
+    box-shadow:var(--shadow-soft);
+  }
+  .action-bar.has-picks{
+    transform:translateX(-50%);
+    opacity:1;
+    pointer-events:auto;
+  }
+  .action-bar .btn-reset{background:rgba(23,38,29,.07);color:var(--moss-2)}
+  @media(max-width:900px){
+    .hero{min-height:480px;height:64vh;margin-bottom:-46px}
+    .hero-content{bottom:84px;padding:0 22px}
+    .trip-overview{grid-template-columns:1fr 1fr}
+    .overview-card.feature{grid-column:1/-1}
+  }
+  @media(max-width:768px){
+    body{padding-bottom:142px}
+    .container{padding:0 16px}
+    .hero{min-height:440px;height:62vh}
+    .hero-content h1{font-size:2.85rem}
+    .hero-content .sub{font-size:14px}
+    .trip-overview{grid-template-columns:1fr;gap:10px}
+    .overview-card{min-height:0}
+    .route-timeline{grid-template-columns:repeat(7,132px);padding:16px}
+    .tab-bar{
+      top:0;
+      justify-content:flex-start;
+      overflow-x:auto;
+      border-radius:18px;
+    }
+    .tab-bar button{flex:0 0 auto;min-width:max-content}
+    .action-bar{
+      align-items:stretch;
+      flex-wrap:wrap;
+      border-radius:20px;
+    }
+    .action-bar .summary{flex-basis:100%;padding:2px 6px}
+    .action-bar button{flex:1;padding:10px 12px}
+  }
+</style>
+</head>
+<body>
+
+<!-- DAY NAV -->
+<nav class="day-nav" id="dayNav" style="display:none">
+  <a href="#day1" class="active"><span class="tooltip">Day 1 · 大盘鸡开局</span>1</a>
+  <a href="#day2"><span class="tooltip">Day 2 · 天山天池</span>2</a>
+  <a href="#day3"><span class="tooltip">Day 3 · 布尔津五彩滩</span>3</a>
+  <a href="#day4"><span class="tooltip">Day 4 · 禾木村</span>4</a>
+  <a href="#day5"><span class="tooltip">Day 5 · 喀纳斯</span>5</a>
+  <a href="#day6"><span class="tooltip">Day 6 · 收官大餐</span>6</a>
+  <a href="#day7"><span class="tooltip">Day 7 · 回家</span>7</a>
+</nav>
+<nav class="day-nav-mobile" id="dayNavMobile" style="display:none"><div class="day-nav-mobile-inner">
+  <a href="#day1" class="active">D1</a><a href="#day2">D2</a><a href="#day3">D3</a><a href="#day4">D4</a><a href="#day5">D5</a><a href="#day6">D6</a><a href="#day7">D7</a>
+</div></nav>
+
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-img" src="assets/gemini_gemini_3.1_flash_image_preview_20260619_235533_612a266d.jpg" alt="北疆金秋" onerror="this.parentElement.style.background='linear-gradient(135deg,#1b4332,#2d6a4f,#40916c)'">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="slogan">Northern Xinjiang Autumn Route</div>
+    <h1>北疆金秋七日</h1>
+    <div class="sub">喀纳斯 · 禾木 · 天山天池 | 9.26—10.2 | 天津出发。把路程写成一页地图，把吃的安排得更像度假。</div>
+  </div>
+</div>
+
+<div class="container">
+
+<section class="trip-overview" aria-label="行程概览">
+  <div class="overview-card feature">
+    <span class="overview-kicker">Route</span>
+    <span class="overview-value">乌鲁木齐 → 布尔津 → 禾木 → 喀纳斯</span>
+    <div class="overview-note">7天压缩北疆秋色核心，节奏以晨雾、白桦、湖湾和舒服吃饭为主。</div>
+  </div>
+  <div class="overview-card">
+    <span class="overview-kicker">Dates</span>
+    <span class="overview-value">9.26—10.2</span>
+    <div class="overview-note">跨国庆前半段，住宿与景区交通要提前锁定。</div>
+  </div>
+  <div class="overview-card">
+    <span class="overview-kicker">Pace</span>
+    <span class="overview-value">2个早起点</span>
+    <div class="overview-note">禾木晨雾、喀纳斯三湾；其余尽量留弹性。</div>
+  </div>
+  <div class="overview-card">
+    <span class="overview-kicker">Budget</span>
+    <span class="overview-value">¥8.5k—14k</span>
+    <div class="overview-note">中端单人参考，包车按同行人数分摊。</div>
+  </div>
+</section>
+
+<!-- ===== TAB BAR (moved up) ===== -->
+<div class="tab-bar" id="tabBar">
+  <button class="active" data-tab="scenic">🏔️ 景点选择<span class="tab-badge" id="scenicCount">0</span></button>
+  <button data-tab="food">🍖 美食选择<span class="tab-badge" id="foodCount">0</span></button>
+  <button data-tab="itinerary">📅 每日行程</button>
+  <button data-tab="tips">⚠️ 注意事项</button>
+</div>
+
+<!-- ===== SCENIC TAB (same data, restyled) ===== -->
+<div class="tab-panel active" id="panel-scenic">
+  <div class="phase-badge scenic">🔵 阶段一 · 景点选择</div>
+  <div class="phase-note">👆 <strong>点击卡片</strong>切换：未选 → 🟢想去 → 🔴排除 → 未选。选好后点底部「复制选择」发给我。</div>
+  <div class="select-grid" id="scenicGrid">
+    <div class="sel-card" data-id="tianchi" data-name="天山天池" data-cost="155"><div class="sel-card-img" style="background-image:url(https://store.is.autonavi.com/showpic/88fc405ea55a9935ab1818fdb5473086)"><span class="level-badge">5A · ¥155</span><span class="card-badge">Day 2</span><span class="sel-indicator sel-yes">✓ 想去</span><span class="sel-indicator sel-no">✗ 排除</span></div><div class="sel-card-body"><h4>🏔️ 天山天池<a class="nav-btn" href="https://uri.amap.com/navigation?to=88.067,44.103,天山天池&mode=car&callnative=1" target="_blank" onclick="event.stopPropagation()">🧭</a></h4><div class="meta"><span class="rating">⭐4.8</span></div><div class="desc">博格达峰雪山倒映碧蓝湖面。9月底秋色初染，山顶已积雪。距乌市仅1h车程。</div><div class="extra">📷 天池全景、雪山倒影、云杉林</div></div></div>
+    <div class="sel-card" data-id="bazha" data-name="国际大巴扎" data-cost="0"><div class="sel-card-img" style="background-image:url(https://store.is.autonavi.com/showpic/4bc1665549a3b69ba0551208004eda2f)"><span class="level-badge">4A · 免费</span><span class="card-badge">Day 1</span><span class="sel-indicator sel-yes">✓ 想去</span><span class="sel-indicator sel-no">✗ 排除</span></div><div class="sel-card-body"><h4>🕌 国际大巴扎<a class="nav-btn" href="https://uri.amap.com/navigation?to=87.615,43.779,国际大巴扎&mode=car&callnative=1" target="_blank" onclick="event.stopPropagation()">🧭</a></h4><div class="meta"><span class="rating">⭐4.8</span></div><div class="desc">世界规模最大巴扎，2000+商铺。伊斯兰风格建筑，营业至24:00。</div><div class="extra">📷 穹顶全景、民族乐器、干果山</div></div></div>
+    <div class="sel-card" data-id="hongshan" data-name="红山公园" data-cost="0"><div class="sel-card-img" style="background-image:url(https://store.is.autonavi.com/showpic/d6780a28eb0a58ceb88f4866eb256e4c)"><span class="level-badge">城市公园</span><span class="card-badge">Day 1</span><span class="sel-indicator sel-yes">✓ 想去</span><span class="sel-indicator sel-no">✗ 排除</span></div><div class="sel-card-body"><h4>🌃 红山公园夜景<a class="nav-btn" href="https://uri.amap.com/navigation?to=87.605,43.808,红山公园&mode=car&callnative=1" target="_blank" onclick="event.stopPropagation()">🧭</a></h4><div class="meta"><span class="rating">⭐4.5</span></div><div class="desc">乌市制高点，登顶俯瞰天际线，远眺博格达峰。</div></div></div>
+    <div class="sel-card" data-id="wucaitan" data-name="五彩滩" data-cost="45"><div class="sel-card-img" style="background-image:url(https://aos-comment.amap.com/B038A007HY/comment/content_media_external_file_26375_ss__1769071005650_93174856.jpg)"><span class="level-badge">4A · ¥45</span><span class="card-badge">Day 3</span><span class="sel-indicator sel-yes">✓ 想去</span><span class="sel-indicator sel-no">✗ 排除</span></div><div class="sel-card-body"><h4>🌅 五彩滩<a class="nav-btn" href="https://uri.amap.com/navigation?to=86.681,47.838,五彩滩&mode=car&callnative=1" target="_blank" onclick="event.stopPropagation()">🧭</a></h4><div class="meta"><span class="rating">⭐4.7</span></div><div class="desc">额尔齐斯河畔雅丹，夕阳下五色斑斓，对岸金色胡杨林。</div><div class="extra">📷 彩色岩层、胡杨林、额河落日</div></div></div>
+    <div class="sel-card" data-id="hemu" data-name="禾木村" data-cost="102"><div class="sel-card-img" style="background-image:url(https://store.is.autonavi.com/showpic/39c128305ba14391c32efb64cf5c73e2)"><span class="level-badge">必去 · ¥102</span><span class="card-badge">Day 4-5</span><span class="sel-indicator sel-yes">✓ 想去</span><span class="sel-indicator sel-no">✗ 排除</span></div><div class="sel-card-body"><h4>🏡 禾木村<a class="nav-btn" href="https://uri.amap.com/navigation?to=87.433,48.569,禾木村&mode=car&callnative=1" target="_blank" onclick="event.stopPropagation()">🧭</a></h4><div class="meta"><span class="rating">⭐4.8</span></div><div class="desc">中国最美村落，图瓦木屋散落白桦林。9月底白桦全黄，晨雾是北疆秋色的灵魂。</div><div class="extra">📷 晨雾木屋、白桦隧道、哈登全景</div></div></div>
+    <div class="sel-card" data-id="kanas" data-name="喀纳斯景区" data-cost="230"><div class="sel-card-img" style="background-image:url(https://store.is.autonavi.com/showpic/4105142028b50b44168aebb0e638604a)"><span class="level-badge">5A · ¥230</span><span class="card-badge">Day 5-6</span><span class="sel-indicator sel-yes">✓ 想去</span><span class="sel-indicator sel-no">✗ 排除</span></div><div class="sel-card-body"><h4>🏞️ 喀纳斯景区<a class="nav-btn" href="https://uri.amap.com/navigation?to=86.999,48.607,喀纳斯&mode=car&callnative=1" target="_blank" onclick="event.stopPropagation()">🧭</a></h4><div class="meta"><span class="rating">⭐4.8</span></div><div class="desc">北疆秋色天花板。三湾各有神韵，观鱼台俯瞰全景。金黄白桦环绕碧蓝湖水。</div><div class="extra">📷 月亮湾全景、神仙湾晨雾、观鱼台</div></div></div>
+    <div class="sel-card" data-id="bowuguan" data-name="新疆博物馆" data-cost="0"><div class="sel-card-img" style="background-image:url(https://store.is.autonavi.com/showpic/4bc1665549a3b69ba0551208004eda2f)"><span class="level-badge">免费·需预约</span><span class="card-badge">Day 7</span><span class="sel-indicator sel-yes">✓ 想去</span><span class="sel-indicator sel-no">✗ 排除</span></div><div class="sel-card-body"><h4>🏛️ 新疆博物馆</h4><div class="meta"><span class="rating">⭐4.6</span></div><div class="desc">楼兰干尸、丝绸之路文物。了解新疆历史的最佳窗口。</div></div></div>
+  </div>
+</div>
+
+<!-- ===== FOOD TAB ===== -->
+<div class="tab-panel" id="panel-food">
+  <div class="phase-badge food">🟡 阶段二 · 美食选择</div>
+  <div class="phase-note">👆 <strong>点击卡片</strong>选想去/排除。标签 <span style="display:inline-block;background:rgba(212,168,67,.15);color:#92400e;font-size:10px;font-weight:600;padding:1px 6px;border-radius:5px;margin:0 2px">菜品</span> 按吃啥浏览，<span style="display:inline-block;background:rgba(14,165,233,.1);color:#0369a1;font-size:10px;font-weight:600;padding:1px 6px;border-radius:5px;margin:0 2px">餐馆</span> 按去哪儿浏览。选好后「复制选择」发给我。</div>
+  <div class="select-grid" id="foodGrid">
+    <!-- Day 1 乌市 -->
+    <div class="sel-card" data-id="dapanji" data-name="大盘鸡"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_144841_ca31c079.jpg)"><span class="card-badge">Day 1·午餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🍖 大盘鸡 <span style="font-size:10px;font-weight:600;background:rgba(212,168,67,.15);color:#92400e;padding:1px 6px;border-radius:5px;vertical-align:middle">菜品</span></h4><div class="meta"><span class="rating">新疆第一名菜</span><span class="price">人均~60</span></div><div class="desc">鸡肉+土豆+皮带面，汤汁浓郁拌面一绝。落地第一顿必须是它。</div><div class="extra">📍 马风花⭐4.7 · 血站大盘鸡⭐4.6 · 金柱⭐4.6</div></div></div>
+    <div class="sel-card" data-id="kaobaozi" data-name="烤包子"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_144854_2d9ecd07.jpg)"><span class="card-badge">Day 1·小吃</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🥟 烤包子 <span style="font-size:10px;font-weight:600;background:rgba(212,168,67,.15);color:#92400e;padding:1px 6px;border-radius:5px;vertical-align:middle">菜品</span></h4><div class="meta"><span class="rating">街头灵魂</span><span class="price">人均~15-30</span></div><div class="desc">馕坑现烤，羊肉馅外酥里嫩，汁水滚烫。逛巴扎前后随手买两个。</div><div class="extra">📍 恺撒⭐4.7 · 烤包子王⭐4.5 · 米吉提⭐4.5</div></div></div>
+    <div class="sel-card" data-id="silucai" data-name="丝路有约/海尔巴格"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_144936_3f8b3d4d.jpg)"><span class="card-badge">Day 1/6·晚餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🍽️ 丝路有约 / 海尔巴格 <span style="font-size:10px;font-weight:600;background:rgba(14,165,233,.1);color:#0369a1;padding:1px 6px;border-radius:5px;vertical-align:middle">餐馆</span></h4><div class="meta"><span class="rating">⭐4.7</span><span class="price">人均~90-120</span></div><div class="desc">环境好的新疆正餐馆子，品类最全。手抓饭、烤羊排、酸奶、椒麻鸡一站吃遍。</div><div class="extra">招牌：手抓饭 · 烤羊排 · 自制酸奶</div></div></div>
+    <!-- Day 2 -->
+    <div class="sel-card" data-id="zhuafan" data-name="手抓饭"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_144906_71abb6fa.jpg)"><span class="card-badge">Day 2·午餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🍛 手抓饭 <span style="font-size:10px;font-weight:600;background:rgba(212,168,67,.15);color:#92400e;padding:1px 6px;border-radius:5px;vertical-align:middle">菜品</span></h4><div class="meta"><span class="rating">新疆灵魂主食</span><span class="price">人均~35</span></div><div class="desc">黄萝卜+羊肉+葡萄干焖出的金黄米饭，油润香甜。天池上山前垫一顿刚好。</div><div class="extra">📍 开帝锐抓饭⭐4.5</div></div></div>
+    <!-- Day 3 布尔津 -->
+    <div class="sel-card" data-id="nazaocan" data-name="哈萨克早餐"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_145026_ede33bb4.jpg)"><span class="card-badge">Day 3·早餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🥛 哈萨克早餐 <span style="font-size:10px;font-weight:600;background:rgba(212,168,67,.15);color:#92400e;padding:1px 6px;border-radius:5px;vertical-align:middle">菜品</span></h4><div class="meta"><span class="rating">地道北疆味</span><span class="price">人均~20</span></div><div class="desc">奶茶+包尔萨克（油炸小面饼）+果酱。热乎乎的北疆早餐，暖胃上路。</div><div class="extra">📍 娜尔香早餐⭐4.6</div></div></div>
+    <div class="sel-card" data-id="lengshuiyu" data-name="冷水鱼宴"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_145013_f8b90b83.jpg)"><span class="card-badge">Day 3·午餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🐟 冷水鱼宴 <span style="font-size:10px;font-weight:600;background:rgba(212,168,67,.15);color:#92400e;padding:1px 6px;border-radius:5px;vertical-align:middle">菜品</span></h4><div class="meta"><span class="rating">北疆独家</span><span class="price">人均~80</span></div><div class="desc">额尔齐斯河的狗鱼（乔尔泰）和五道黑，肉质紧实鲜美。离开北疆吃不到。</div><div class="extra">📍 阿凡提冷水鱼庄⭐4.7</div></div></div>
+    <div class="sel-card" data-id="banmian" data-name="辣皮子拌面"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_145003_08b37c15.jpg)"><span class="card-badge">Day 3·备选</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🍜 辣皮子拌面 <span style="font-size:10px;font-weight:600;background:rgba(212,168,67,.15);color:#92400e;padding:1px 6px;border-radius:5px;vertical-align:middle">菜品</span></h4><div class="meta"><span class="rating">本地人日常</span><span class="price">人均~35</span></div><div class="desc">筋道拉条子拌上辣皮子肉酱，简单过瘾。不吃鱼选这个。</div><div class="extra">📍 歹歹的辣皮子拌面⭐4.5</div></div></div>
+    <div class="sel-card" data-id="shaokao" data-name="河堤夜市"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_144947_79d5a432.jpg)"><span class="card-badge">Day 3·晚餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🔥 河堤夜市 <span style="font-size:10px;font-weight:600;background:rgba(14,165,233,.1);color:#0369a1;padding:1px 6px;border-radius:5px;vertical-align:middle">餐馆</span></h4><div class="meta"><span class="rating">布尔津必去</span><span class="price">人均~60</span></div><div class="desc">额河边的夜市，秋夜微凉围着炭火。烤狗鱼+卡瓦斯+烤羊肉串+烤馕，烟火气满分。</div><div class="extra">招牌：烤狗鱼60元/条 · 卡瓦斯 · 红柳烤肉</div></div></div>
+    <!-- Day 4 禾木 -->
+    <div class="sel-card" data-id="hemucai" data-name="禾木家常菜"><div class="sel-card-img" style="background-image:url(https://store.is.autonavi.com/showpic/016421b11328c7675995ee13c38ea8c5)"><span class="card-badge">Day 4·午餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🍖 禾木家常菜 <span style="font-size:10px;font-weight:600;background:rgba(14,165,233,.1);color:#0369a1;padding:1px 6px;border-radius:5px;vertical-align:middle">餐馆</span></h4><div class="meta"><span class="rating">⭐4.6</span><span class="price">人均~70</span></div><div class="desc">抵达禾木后的第一顿，拌面、抓饭、炒菜都有，吃饱了去逛白桦林。禾木桥旁仅90m。</div><div class="extra">招牌：拌面 · 抓饭 · 家常炒菜</div></div></div>
+    <div class="sel-card" data-id="huoguo" data-name="土火锅"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_144924_c7a2beb6.jpg)"><span class="card-badge">Day 4·晚餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🍲 土火锅 <span style="font-size:10px;font-weight:600;background:rgba(212,168,67,.15);color:#92400e;padding:1px 6px;border-radius:5px;vertical-align:middle">菜品</span></h4><div class="meta"><span class="rating">禾木必吃</span><span class="price">中锅260-398</span></div><div class="desc">铜锅炖羊肉+野蘑菇+酸菜，秋天的小木屋里围着吃，暖到心底。3-4人刚好。</div><div class="extra">📍 娜菲尔⭐4.4 · 羊羔子肉⭐4.3</div></div></div>
+    <!-- Day 5 喀纳斯 -->
+    <div class="sel-card" data-id="jingquyang" data-name="景区羊肉"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_144936_3f8b3d4d.jpg)"><span class="card-badge">Day 5·午餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🐑 景区羊肉 <span style="font-size:10px;font-weight:600;background:rgba(212,168,67,.15);color:#92400e;padding:1px 6px;border-radius:5px;vertical-align:middle">菜品</span></h4><div class="meta"><span class="rating">喀纳斯吃羊</span><span class="price">人均~90</span></div><div class="desc">景区内专门的羊肉馆子，手抓肉、羊肉串、清炖都有。三湾逛累了来一顿。</div><div class="extra">📍 九月·吃羊⭐4.3 · 宾虹餐厅⭐4.5</div></div></div>
+    <div class="sel-card" data-id="songshu" data-name="一窝松鼠餐厅"><div class="sel-card-img" style="background-image:url(https://store.is.autonavi.com/showpic/4105142028b50b44168aebb0e638604a)"><span class="card-badge">Day 5·晚餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🐿️ 一窝松鼠餐厅 <span style="font-size:10px;font-weight:600;background:rgba(14,165,233,.1);color:#0369a1;padding:1px 6px;border-radius:5px;vertical-align:middle">餐馆</span></h4><div class="meta"><span class="rating">⭐4.4</span><span class="price">人均~80</span></div><div class="desc">喀纳斯新村148号，比老村安静。烤狗鱼、椒麻鸡都不错，晚上抬头就是银河。</div><div class="extra">招牌：烤狗鱼 · 椒麻鸡 · 格瓦斯</div></div></div>
+    <!-- Day 6 -->
+    <div class="sel-card" data-id="kaoquanyang" data-name="烤全羊"><div class="sel-card-img" style="background-image:url(assets/gemini_gemini_3.1_flash_image_preview_20260620_144936_3f8b3d4d.jpg)"><span class="card-badge">Day 6·收官大餐</span><span class="sel-indicator sel-yes">✓</span><span class="sel-indicator sel-no">✗</span></div><div class="sel-card-body"><h4>🐑 烤全羊 <span style="font-size:10px;font-weight:600;background:rgba(212,168,67,.15);color:#92400e;padding:1px 6px;border-radius:5px;vertical-align:middle">菜品</span></h4><div class="meta"><span class="rating">7天终极体验</span><span class="price">人均266</span></div><div class="desc">7天旅程的完美句号。一整只烤全羊配大乌苏，不枉此行🍻</div><div class="extra">📍 回坊阁宴会厅⭐4.5 · 新华南路</div></div></div>
+  </div>
+</div>
+
+<!-- ===== ITINERARY TAB (collapsible) ===== -->
+<div class="tab-panel" id="panel-itinerary">
+  <div class="route-timeline" aria-label="7日路线时间轴">
+    <div class="route-step"><span class="route-day">Day 1</span><span class="route-city">天津 → 乌市</span><span class="route-note">落地缓冲 · 大巴扎</span><span class="route-tag">住乌市</span></div>
+    <div class="route-step"><span class="route-day">Day 2</span><span class="route-city">天山天池</span><span class="route-note">雪山湖面 · 回城补给</span><span class="route-tag">住乌市</span></div>
+    <div class="route-step"><span class="route-day">Day 3</span><span class="route-city">布尔津</span><span class="route-note">冷水鱼 · 五彩滩日落</span><span class="route-tag">住布尔津</span></div>
+    <div class="route-step"><span class="route-day">Day 4</span><span class="route-city">禾木</span><span class="route-note">白桦林 · 图瓦木屋</span><span class="route-tag">住小木屋</span></div>
+    <div class="route-step"><span class="route-day">Day 5</span><span class="route-city">喀纳斯</span><span class="route-note">晨雾 · 三湾 · 观鱼台</span><span class="route-tag">住景区</span></div>
+    <div class="route-step"><span class="route-day">Day 6</span><span class="route-city">返乌市</span><span class="route-note">KJI优先 · 收官餐</span><span class="route-tag">住乌市</span></div>
+    <div class="route-step"><span class="route-day">Day 7</span><span class="route-city">乌市 → 天津</span><span class="route-note">博物馆 · 干果采购</span><span class="route-tag">返程</span></div>
+  </div>
+  <div class="collapse-actions">
+    <button onclick="document.querySelectorAll('.day-card').forEach(function(c){c.classList.add('open')})">📖 全部展开</button>
+    <button onclick="document.querySelectorAll('.day-card').forEach(function(c){c.classList.remove('open')})">📕 全部收起</button>
+  </div>
+
+  <!-- Day 1 -->
+  <div class="day-card open" id="day1">
+    <div class="day-card-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="day-dot">1</div>
+      <div class="day-info"><div class="day-date">9/26 周六</div><div class="day-label">天津 → 乌鲁木齐</div><div class="day-theme">🍖 大盘鸡开局 + 🕌 大巴扎 + 🌃 红山夜景</div></div>
+      <div class="day-chevron">▼</div>
+    </div>
+    <div class="day-card-body"><div class="day-card-body-inner"><div class="stops">
+      <div class="stop"><div class="stop-img" style="background-image:url(https://aos-comment.amap.com/B0IRYA95BZ/comment/17293D0D_0075_4F23_8875_B48464349762_L0_001_1179_152_1749723296178_37357563.jpg)"><span class="img-tag">✈️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">天津 → 乌鲁木齐</span><span class="stop-tag tag-flight">飞行</span></div><div class="stop-desc">天津滨海机场✈️地窝堡机场，约4h</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗 打车</span><span class="detail">24.1km · 29min · ~46元</span></div>
+      <div class="stop food"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/0fbaa36d8ce8de891efb62590c367603)"><span class="img-tag">🍖</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">马风花大盘鸡</span><span class="stop-tag tag-food">午餐·已选</span><a class="nav-btn" href="https://uri.amap.com/navigation?to=87.616,43.826,马风花大盘鸡&mode=car&callnative=1" target="_blank">🧭</a></div><div class="stop-desc">⭐4.7 · 大盘鸡+皮带面 · 建设路234号</div></div></div>
+      <div class="connector"><span class="mode walk">🚶 消食</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/4bc1665549a3b69ba0551208004eda2f)"><span class="img-tag">🕌</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">国际大巴扎</span><span class="stop-tag tag-scenic">4A·已选</span><a class="nav-btn" href="https://uri.amap.com/navigation?to=87.615,43.779,国际大巴扎&mode=car&callnative=1" target="_blank">🧭</a></div><div class="stop-desc">⭐4.8 · 营业至24:00 · 干果/地毯/乐器</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">6.0km · 13min</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/d6780a28eb0a58ceb88f4866eb256e4c)"><span class="img-tag">🌃</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">红山公园夜景</span><span class="stop-tag tag-night">穿插</span><a class="nav-btn" href="https://uri.amap.com/navigation?to=87.605,43.808,红山公园&mode=car&callnative=1" target="_blank">🧭</a></div><div class="stop-desc">⭐4.5 · 俯瞰天际线+博格达峰</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span></div>
+      <div class="stop food"><div class="stop-body"><div class="stop-header"><span class="stop-name">🍖 大巴扎周边烤羊肉串</span><span class="stop-tag tag-food">晚餐</span></div></div></div>
+    </div></div></div>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="day-card" id="day2">
+    <div class="day-card-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="day-dot">2</div><div class="day-info"><div class="day-date">9/27 周日</div><div class="day-label">天山天池</div><div class="day-theme">🏔️ 雪山倒映 · 秋色初染</div></div><div class="day-chevron">▼</div>
+    </div>
+    <div class="day-card-body"><div class="day-card-body-inner"><div class="stops">
+      <div class="connector" style="margin-top:0;padding-top:0"><span class="mode walk" style="background:rgba(16,185,129,.06);color:var(--g600)">📍 乌市出发</span></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">71.5km · 61min · 过路费15元 · ~139元</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/88fc405ea55a9935ab1818fdb5473086)"><span class="img-tag">🏔️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">天山天池风景区</span><span class="stop-tag tag-scenic">5A·已选</span><span class="stop-tag tag-must">必去</span><a class="nav-btn" href="https://uri.amap.com/navigation?to=88.067,44.103,天山天池&mode=car&callnative=1" target="_blank">🧭</a></div><div class="stop-desc">⭐4.8 · 博格达峰雪山倒映 · 9月底秋色初染山顶积雪</div><div class="stop-detail">💰 门票+区间车~155元 · 📷 天池全景、雪山倒影</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">68.1km · 58min · ~124元</span></div>
+      <div class="stop hotel"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/80ffbe56e08ce441cbb0eaf8942b02c0)"><span class="img-tag">🏨</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">返回乌鲁木齐</span><span class="stop-tag tag-hotel">住宿</span></div><div class="stop-desc">傍晚回城，采购进山补给。次日早班机去阿勒泰。</div></div></div>
+    </div></div></div>
+  </div>
+
+  <!-- Day 3 -->
+  <div class="day-card" id="day3">
+    <div class="day-card-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="day-dot">3</div><div class="day-info"><div class="day-date">9/28 周一</div><div class="day-label">乌市 → 布尔津 → 五彩滩</div><div class="day-theme">🐟 冷水鱼宴 + 🌅 雅丹日落 + 🌃 河堤夜市</div></div><div class="day-chevron">▼</div>
+    </div>
+    <div class="day-card-body"><div class="day-card-body-inner"><div class="stops">
+      <div class="connector" style="margin-top:0;padding-top:0"><span class="mode walk" style="background:rgba(16,185,129,.06);color:var(--g600)">📍 乌市出发</span></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">21.5km · 21min · ~41元（→机场）</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/4105142028b50b44168aebb0e638604a)"><span class="img-tag">✈️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">乌鲁木齐 → 阿勒泰</span><span class="stop-tag tag-flight">飞行</span></div><div class="stop-desc">早班机约1h，俯瞰天山</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">105.8km · 77min · ~229元</span></div>
+      <div class="stop food"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/83805a7e820919c6ca9ece8d5bc7b83f)"><span class="img-tag">🐟</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">阿凡提冷水鱼庄</span><span class="stop-tag tag-food">午餐·已选</span></div><div class="stop-desc">⭐4.7 · 狗鱼（乔尔泰）+五道黑 · 四季美食街</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">22.7km · 25min · ~46元</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://aos-comment.amap.com/B038A007HY/comment/content_media_external_file_26375_ss__1769071005650_93174856.jpg)"><span class="img-tag">🌅</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">五彩滩</span><span class="stop-tag tag-scenic">4A·穿插</span><a class="nav-btn" href="https://uri.amap.com/navigation?to=86.681,47.838,五彩滩&mode=car&callnative=1" target="_blank">🧭</a></div><div class="stop-desc">⭐4.7 · 夕阳下五色斑斓 · 📷 彩色岩层+胡杨落日</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">22.1km · 23min · ~45元</span></div>
+      <div class="stop food"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/83805a7e820919c6ca9ece8d5bc7b83f)"><span class="img-tag">🌃</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">河堤夜市</span><span class="stop-tag tag-food">晚餐·已选</span></div><div class="stop-desc">烤狗鱼+卡瓦斯+烤羊肉串·布尔津烟火气</div></div></div>
+    </div></div></div>
+  </div>
+
+  <!-- Day 4 -->
+  <div class="day-card" id="day4">
+    <div class="day-card-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="day-dot">4</div><div class="day-info"><div class="day-date">9/29 周二</div><div class="day-label">布尔津 → 禾木村</div><div class="day-theme">🍲 土火锅 + 🏡 图瓦木屋 + 🌫️ 次日晨雾</div></div><div class="day-chevron">▼</div>
+    </div>
+    <div class="day-card-body"><div class="day-card-body-inner"><div class="stops">
+      <div class="connector" style="margin-top:0;padding-top:0"><span class="mode walk" style="background:rgba(16,185,129,.06);color:var(--g600)">📍 布尔津出发</span></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">155.6km · 2.9h · 过路费33元 · ~338元</span></div>
+      <div class="stop hotel"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/39c128305ba14391c32efb64cf5c73e2)"><span class="img-tag">🏡</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">禾木村·小木屋</span><span class="stop-tag tag-hotel">住宿·已选</span><a class="nav-btn" href="https://uri.amap.com/navigation?to=87.433,48.569,禾木村&mode=car&callnative=1" target="_blank">🧭</a></div><div class="stop-desc">中国最美村落·沿途金黄白桦一路相伴🍂</div><div class="stop-detail">⚠️ 9月底最旺季！小木屋500-1500元/晚</div></div></div>
+      <div class="connector"><span class="mode walk">🚶</span></div>
+      <div class="stop food"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/016421b11328c7675995ee13c38ea8c5)"><span class="img-tag">🍖</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">桃源风味餐厅</span><span class="stop-tag tag-food">午餐·已选</span></div><div class="stop-desc">⭐4.6 · 禾木桥旁仅90m</div></div></div>
+      <div class="connector"><span class="mode walk">🚶 消食</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/b3013de6e2bc113e1dca8918afdb24bb)"><span class="img-tag">🌲</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">禾木村漫步</span><span class="stop-tag tag-scenic">全天</span></div><div class="stop-desc">白桦林隧道·禾木河·图瓦木屋群·骑马（可选）</div><div class="stop-detail">📷 白桦隧道、禾木河木桥、木屋群</div></div></div>
+      <div class="connector"><span class="mode walk">🚶</span></div>
+      <div class="stop food"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/016421b11328c7675995ee13c38ea8c5)"><span class="img-tag">🍲</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">娜菲尔土火锅</span><span class="stop-tag tag-food">晚餐·已选</span></div><div class="stop-desc">⭐4.4 · 中锅260-398·羊肉+野蘑菇+酸菜</div></div></div>
+      <div class="highlight-inline"><div class="hl-title">⭐ 次日晨：禾木晨雾</div>6:30哈登观景台。晨雾弥漫白桦林，日出金光——北疆秋色的灵魂画面。</div>
+    </div></div></div>
+  </div>
+
+  <!-- Day 5 -->
+  <div class="day-card" id="day5">
+    <div class="day-card-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="day-dot">5</div><div class="day-info"><div class="day-date">9/30 周三</div><div class="day-label">禾木 → 喀纳斯</div><div class="day-theme">🌫️ 晨雾 + 🏞️ 三湾 + 🏔️ 观鱼台</div></div><div class="day-chevron">▼</div>
+    </div>
+    <div class="day-card-body"><div class="day-card-body-inner"><div class="stops">
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/39c128305ba14391c32efb64cf5c73e2)"><span class="img-tag">🌫️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">禾木晨雾</span><span class="stop-tag tag-must">精华</span></div><div class="stop-desc">6:30哈登观景台。晨雾弥漫白桦林，日出金光穿透雾气。</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">85.1km · 117min · ~183元</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/4105142028b50b44168aebb0e638604a)"><span class="img-tag">🏞️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">喀纳斯景区</span><span class="stop-tag tag-scenic">5A·已选</span><span class="stop-tag tag-must">核心</span><a class="nav-btn" href="https://uri.amap.com/navigation?to=86.999,48.607,喀纳斯&mode=car&callnative=1" target="_blank">🧭</a></div><div class="stop-desc">⭐4.8 · 金黄白桦环绕碧蓝湖水·门票+区间车~230元</div></div></div>
+      <div class="connector"><span class="mode bus">🚌</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/af4b9956ce2aa2ee6f4c28fd87ff0de6)"><span class="img-tag">🏞️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">三湾：神仙湾→月亮湾→卧龙湾</span><span class="stop-tag tag-scenic">核心</span></div><div class="stop-desc">神仙湾晨雾·月亮湾S河湾·卧龙湾如卧龙</div></div></div>
+      <div class="connector"><span class="mode bus">🚌</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/babd44a3038e8f0efefba7702b325bd7)"><span class="img-tag">🏔️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">观鱼台</span><span class="stop-tag tag-scenic">俯瞰</span></div><div class="stop-desc">1068级台阶登顶，喀纳斯湖全景，远眺友谊峰冰川</div></div></div>
+    </div></div></div>
+  </div>
+
+  <!-- Day 6 -->
+  <div class="day-card" id="day6">
+    <div class="day-card-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="day-dot">6</div><div class="day-info"><div class="day-date">10/1 周四</div><div class="day-label">喀纳斯 → 乌鲁木齐</div><div class="day-theme">✈️ 返程 + 🐑 收官烤全羊</div></div><div class="day-chevron">▼</div>
+    </div>
+    <div class="day-card-body"><div class="day-card-body-inner"><div class="stops">
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/af4b9956ce2aa2ee6f4c28fd87ff0de6)"><span class="img-tag">☀️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">喀纳斯最后巡礼</span></div><div class="stop-desc">补拍三湾晨雾，说再见👋</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">67.2km · 92min · ~144元</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/4105142028b50b44168aebb0e638604a)"><span class="img-tag">✈️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">喀纳斯机场(KJI)→乌市</span><span class="stop-tag tag-flight">推荐</span></div><div class="stop-desc">仅67km/1.5h到机场，比阿勒泰近180km省2h+400元</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">24.1km · 29min · ~46元</span></div>
+      <div class="stop food"><div class="stop-body" style="background:linear-gradient(135deg,rgba(254,243,199,.4),rgba(254,249,231,.4))"><div class="stop-header"><span class="stop-name">🐑 回坊阁·收官烤全羊</span><span class="stop-tag tag-food">大餐·已选</span></div><div class="stop-desc">⭐4.5 · 人均266元 · 7天完美句号！烤全羊+大乌苏🍻</div></div></div>
+    </div></div></div>
+  </div>
+
+  <!-- Day 7 -->
+  <div class="day-card" id="day7">
+    <div class="day-card-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="day-dot">7</div><div class="day-info"><div class="day-date">10/2 周五</div><div class="day-label">乌鲁木齐 → 天津</div><div class="day-theme">🏛️ 博物馆 + 🛍️ 干果 + ✈️ 回家</div></div><div class="day-chevron">▼</div>
+    </div>
+    <div class="day-card-body"><div class="day-card-body-inner"><div class="stops">
+      <div class="connector" style="margin-top:0;padding-top:0"><span class="mode walk" style="background:rgba(16,185,129,.06);color:var(--g600)">📍 乌市出发</span></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">4.0km · 16min</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/4bc1665549a3b69ba0551208004eda2f)"><span class="img-tag">🏛️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">新疆博物馆</span><span class="stop-tag tag-scenic">已选</span></div><div class="stop-desc">⭐4.6 · 楼兰干尸·丝绸之路文物·免费需预约</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">8.4km · 17min</span></div>
+      <div class="stop"><div class="stop-img" style="background-image:url(https://store.is.autonavi.com/showpic/0fbaa36d8ce8de891efb62590c367603)"><span class="img-tag">🛍️</span></div><div class="stop-body"><div class="stop-header"><span class="stop-name">干果采购</span></div><div class="stop-desc">红枣核桃葡萄干巴旦木·比内地便宜50%+</div></div></div>
+      <div class="connector"><span class="mode taxi">🚗</span><span class="detail">21.5km · 21min · ~41元</span></div>
+      <div class="stop"><div class="stop-body"><div class="stop-header"><span class="stop-name">乌鲁木齐 → 天津</span><span class="stop-tag tag-flight">回家</span></div><div class="stop-desc">✈️ 约4h · 带着干果和7天金秋回忆</div></div></div>
+    </div></div></div>
+  </div>
+</div><!-- /itinerary -->
+
+<!-- ===== TIPS TAB ===== -->
+<div class="tab-panel" id="panel-tips">
+  <div class="tips-grid">
+    <div class="tip-card"><div class="tip-icon">🔴</div><h4>提前预订</h4><p>9月底最旺季，机票住宿提前1个月。禾木小木屋现在就该关注。</p></div>
+    <div class="tip-card"><div class="tip-icon">🎫</div><h4>喀纳斯限流</h4><p>每天限流，门票需在公众号提前10天预约。</p></div>
+    <div class="tip-card"><div class="tip-icon">✈️</div><h4>优先KJI机场</h4><p>喀纳斯机场距景区仅67km/1.5h，比阿勒泰近180km省2h+400元。</p></div>
+    <div class="tip-card"><div class="tip-icon">🧥</div><h4>带够衣服</h4><p>禾木/喀纳斯清晨0-5°C，冲锋衣+薄羽绒必备。乌市10-22°C。</p></div>
+    <div class="tip-card"><div class="tip-icon">📱</div><h4>离线地图</h4><p>景区信号极差，提前下载高德离线地图。</p></div>
+    <div class="tip-card"><div class="tip-icon">💵</div><h4>带现金</h4><p>~1000元，景区小店只收现金。</p></div>
+    <div class="tip-card"><div class="tip-icon">🆔</div><h4>身份证随身</h4><p>安检频繁，加油站酒店景区都要刷。</p></div>
+    <div class="tip-card"><div class="tip-icon">🚗</div><h4>包SUV</h4><p>Day3-6建议包SUV约800-1200元/天，比分段打车灵活。</p></div>
+  </div>
+  <div class="budget"><h2>💰 预算参考（单人·中端）</h2><table class="budget-table">
+    <tr><td>✈️ 大交通（4程）</td><td>3,000-5,000</td></tr>
+    <tr><td>🏨 住宿6晚</td><td>2,500-4,000</td></tr>
+    <tr><td>🎫 门票</td><td>600-800</td></tr>
+    <tr><td>🚗 当地交通</td><td>1,000-1,500</td></tr>
+    <tr><td>🍖 餐饮7天</td><td>700-1,200</td></tr>
+    <tr><td>🛍️ 其他</td><td>500-1,000</td></tr>
+    <tr class="total"><td>🎯 合计</td><td>8,500-14,000</td></tr>
+  </table></div>
+</div>
+
+<div class="footer">底图：高德 &nbsp;|&nbsp; 路线：高德API实时计算 &nbsp;|&nbsp; 照片：高德POI &nbsp;|&nbsp; 2026</div>
+</div>
+
+<!-- ===== MAP SIDEBAR ===== -->
+<div class="map-toggle" id="mapToggle" onclick="toggleMap()" title="打开路线图">🗺️ 地图</div>
+<div class="map-sidebar" id="mapSidebar">
+  <div class="map-sidebar-header">
+    <span class="title">📍 Day <span id="activeDayNum">1</span> 路线图</span>
+    <button class="close-btn" onclick="toggleMap()">✕</button>
+  </div>
+  <div class="map-sidebar-body"><div id="dayMap"></div></div>
+</div>
+
+<!-- ACTION BAR -->
+<div class="action-bar" id="actionBar">
+  <div class="toast" id="toast">✅ 已复制，粘贴给我即可</div>
+  <div class="summary" id="actionSummary">已选 <strong>0</strong> 景点 · <strong>0</strong> 美食</div>
+  <button class="btn-reset" onclick="resetAll()">↺ 重置</button>
+  <button class="btn-copy" onclick="copySelections()">📋 复制选择</button>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// === PER-DAY MAP ===
+var dayMap=null,gI=null,rI=null,bI=null;
+if(window.L){
+  dayMap=L.map('dayMap',{scrollWheelZoom:false,zoomControl:true}).setView([44.5,87.5],7);
+  L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',{subdomains:['1','2','3','4'],maxZoom:18}).addTo(dayMap);
+  gI=L.divIcon({html:'<div style="background:#2d6a4f;color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;border:2px solid #fff">●</div>',iconSize:[18,18],iconAnchor:[9,9]});
+  rI=L.divIcon({html:'<div style="background:#dc2626;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;border:2px solid #fff">★</div>',iconSize:[20,20],iconAnchor:[10,10]});
+  bI=L.divIcon({html:'<div style="background:#0ea5e9;color:#fff;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:800;border:2px solid #fff">✈</div>',iconSize:[16,16],iconAnchor:[8,8]});
+}
+
+var dayData={
+  1:{pois:[{name:'乌市',lat:43.8256,lng:87.616,icon:gI},{name:'大巴扎',lat:43.779,lng:87.615,icon:gI},{name:'红山',lat:43.808,lng:87.605,icon:gI}],routes:[],center:[43.80,87.61],zoom:12},
+  2:{pois:[{name:'乌市',lat:43.8256,lng:87.616,icon:gI},{name:'天池',lat:44.103,lng:88.067,icon:rI}],routes:[[[43.8256,87.616],[44.103,88.067]]],center:[43.96,87.84],zoom:10},
+  3:{pois:[{name:'阿勒泰',lat:47.752,lng:88.09,icon:bI},{name:'布尔津',lat:47.702,lng:86.875,icon:gI},{name:'五彩滩',lat:47.838,lng:86.681,icon:rI}],routes:[[[47.752,88.09],[47.702,86.875]],[[47.702,86.875],[47.838,86.681]]],center:[47.78,87.4],zoom:10},
+  4:{pois:[{name:'布尔津',lat:47.702,lng:86.875,icon:gI},{name:'禾木',lat:48.569,lng:87.433,icon:rI}],routes:[[[47.702,86.875],[48.569,87.433]]],center:[48.14,87.15],zoom:9},
+  5:{pois:[{name:'禾木',lat:48.569,lng:87.433,icon:rI},{name:'喀纳斯',lat:48.607,lng:86.999,icon:rI}],routes:[[[48.569,87.433],[48.607,86.999]]],center:[48.59,87.22],zoom:10},
+  6:{pois:[{name:'喀纳斯',lat:48.607,lng:86.999,icon:rI},{name:'KJI',lat:48.223,lng:87.001,icon:bI},{name:'乌市',lat:43.8256,lng:87.616,icon:gI}],routes:[[[48.607,86.999],[48.223,87.001]]],center:[46.2,87.3],zoom:6},
+  7:{pois:[{name:'博物馆',lat:43.817,lng:87.585,icon:gI},{name:'大巴扎',lat:43.779,lng:87.615,icon:gI},{name:'机场',lat:43.906,lng:87.475,icon:bI}],routes:[[[43.817,87.585],[43.779,87.615]],[[43.779,87.615],[43.906,87.475]]],center:[43.84,87.56],zoom:11}
+};
+
+var curDay=1,markers=[],polylines=[];
+function showDay(d){
+  if(d===curDay&&markers.length)return;
+  document.getElementById('activeDayNum').textContent=d;
+  if(!dayMap)return;
+  curDay=d;markers.forEach(function(m){if(dayMap)dayMap.removeLayer(m)});polylines.forEach(function(p){if(dayMap)dayMap.removeLayer(p)});
+  markers=[];polylines=[];
+  var dd=dayData[d];if(!dd)return;
+  if(dayMap)dayMap.setView(dd.center,dd.zoom,{animate:true});
+  dd.pois.forEach(function(p){var m=L.marker([p.lat,p.lng],{icon:p.icon}).addTo(dayMap).bindTooltip(p.name,{permanent:true,direction:'top',offset:[0,-4],className:'maptip'});markers.push(m)});
+  dd.routes.forEach(function(r){var p=L.polyline(r,{color:'#2d6a4f',weight:2.5,opacity:.5,dashArray:'5,3'}).addTo(dayMap);polylines.push(p)});
+  document.getElementById('activeDayNum').textContent=d;
+}
+showDay(1);
+
+// Track which day is in view
+function updateActiveDay(){
+  var cards=document.querySelectorAll('#panel-itinerary .day-card'),best=1,minDist=Infinity;
+  cards.forEach(function(c){
+    var r=c.getBoundingClientRect(),mid=r.top+r.height/2,dist=Math.abs(mid-window.innerHeight*0.35);
+    if(dist<minDist){minDist=dist;best=parseInt(c.id.replace('day',''))}
+  });
+  if(best!==curDay)showDay(best);
+}
+window.addEventListener('scroll',updateActiveDay);
+
+var ms=document.createElement('style');ms.textContent='.maptip{background:rgba(45,106,79,.85);color:#fff;border:none;border-radius:6px;padding:2px 6px;font-size:10px;font-weight:600;font-family:-apple-system,"PingFang SC",sans-serif}.leaflet-tooltip{border:none!important;background:transparent!important}';document.head.appendChild(ms);
+
+// Sidebar toggle
+function toggleMap(){var s=document.getElementById('mapSidebar'),t=document.getElementById('mapToggle');s.classList.toggle('open');t.classList.toggle('hidden',s.classList.contains('open'));if(s.classList.contains('open')){if(dayMap)dayMap.invalidateSize();showDay(curDay)}}
+// Close sidebar when clicking day cards (gives user more room)
+document.querySelectorAll('.day-card-header').forEach(function(h){h.addEventListener('click',function(){var s=document.getElementById('mapSidebar');if(s.classList.contains('open')){setTimeout(function(){if(dayMap)dayMap.invalidateSize()},400)}})});
+
+// === TABS ===
+var tb=document.querySelectorAll('.tab-bar button'),tp=document.querySelectorAll('.tab-panel');
+tb.forEach(function(b){b.addEventListener('click',function(){var t=this.getAttribute('data-tab');tb.forEach(function(x){x.classList.remove('active')});this.classList.add('active');tp.forEach(function(p){p.classList.remove('active')});document.getElementById('panel-'+t).classList.add('active');var dn=document.getElementById('dayNav'),dnm=document.getElementById('dayNavMobile');(t==='itinerary')?(dn&&(dn.style.display=''),dnm&&(dnm.style.display='')):(dn&&(dn.style.display='none'),dnm&&(dnm.style.display='none'))})});
+
+// Selection
+var cs={};
+document.querySelectorAll('.sel-card').forEach(function(c){cs[c.getAttribute('data-id')]=0;c.addEventListener('click',function(e){if(e.target.closest('a'))return;var id=this.getAttribute('data-id');cs[id]=cs[id]===0?1:cs[id]===1?-1:0;this.className='sel-card'+(cs[id]===1?' selected':cs[id]===-1?' excluded':'');updateCounts()})});
+function getSel(){var sS=[],eS=[],sF=[],eF=[];document.querySelectorAll('#scenicGrid .sel-card').forEach(function(c){var n=c.getAttribute('data-name');cs[c.getAttribute('data-id')]===1?sS.push(n):cs[c.getAttribute('data-id')]===-1&&eS.push(n)});document.querySelectorAll('#foodGrid .sel-card').forEach(function(c){var n=c.getAttribute('data-name');cs[c.getAttribute('data-id')]===1?sF.push(n):cs[c.getAttribute('data-id')]===-1&&eF.push(n)});return{sS:sS,eS:eS,sF:sF,eF:eF}}
+function updateCounts(){var s=getSel(),picked=s.sS.length+s.sF.length+s.eS.length+s.eF.length;document.getElementById('scenicCount').textContent=s.sS.length;document.getElementById('foodCount').textContent=s.sF.length;document.getElementById('actionSummary').innerHTML='已选 <strong>'+s.sS.length+'</strong> 景点 · <strong>'+s.sF.length+'</strong> 美食'+(s.eS.length+s.eF.length?' | 排除 '+(s.eS.length+s.eF.length)+' 个':'');document.getElementById('actionBar').classList.toggle('has-picks',picked>0)}
+function copySelections(){var s=getSel(),t='=== 我的选择 ===\n\n【景点-想去】\n';s.sS.forEach(function(n,i){t+='  '+(i+1)+'. '+n+'\n'});t+=s.sS.length?'':'\n（未选）\n';t+='\n【景点-排除】\n';s.eS.forEach(function(n,i){t+='  '+(i+1)+'. ✗ '+n+'\n'});t+=s.eS.length?'':'\n（无）\n';t+='\n【美食-想去】\n';s.sF.forEach(function(n,i){t+='  '+(i+1)+'. '+n+'\n'});t+=s.sF.length?'':'\n（未选）\n';t+='\n【美食-排除】\n';s.eF.forEach(function(n,i){t+='  '+(i+1)+'. ✗ '+n+'\n'});t+=s.eF.length?'':'\n（无）\n';navigator.clipboard.writeText(t).then(function(){var x=document.getElementById('toast');x.classList.add('show');setTimeout(function(){x.classList.remove('show')},2500)}).catch(function(){var ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;top:10%;left:50%;transform:translateX(-50%);width:80%;max-width:500px;height:200px;z-index:9999;padding:12px;border-radius:12px;border:2px solid var(--g700);font-size:13px';document.body.appendChild(ta);ta.select();ta.focus();setTimeout(function(){document.body.removeChild(ta)},30000)})}
+function resetAll(){document.querySelectorAll('.sel-card').forEach(function(c){cs[c.getAttribute('data-id')]=0;c.className='sel-card'});updateCounts()}
+
+// Day nav
+function una(){var secs=document.querySelectorAll('#panel-itinerary .day-card');if(!secs.length)return;var nl=document.querySelectorAll('.day-nav a'),ml=document.querySelectorAll('.day-nav-mobile a'),p=window.scrollY+160,cur=secs[0]?.id||'';secs.forEach(function(s){if(s.offsetTop<=p)cur=s.id});nl.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur)});ml.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur)})}
+window.addEventListener('scroll',una);
+document.querySelectorAll('.day-nav a,.day-nav-mobile a').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();tb.forEach(function(b){b.classList.remove('active')});tp.forEach(function(p){p.classList.remove('active')});document.querySelector('[data-tab="itinerary"]').classList.add('active');document.getElementById('panel-itinerary').classList.add('active');var dn=document.getElementById('dayNav'),dnm=document.getElementById('dayNavMobile');dn&&(dn.style.display='');dnm&&(dnm.style.display='');var t=document.querySelector(this.getAttribute('href'));if(t){t.classList.add('open');setTimeout(function(){t.scrollIntoView({behavior:'smooth',block:'start'})},150)}})})</script>
+</body>
+</html>
