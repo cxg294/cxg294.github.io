@@ -165,10 +165,25 @@
 
   .budget{background:rgba(255,255,255,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:18px;padding:22px;margin-top:16px;border:1px solid rgba(45,106,79,.08)}
   .budget h2{font-size:1rem;color:var(--g900);margin-bottom:12px}
+  .budget-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}
+  .budget-title h2{margin-bottom:4px}
+  .budget-title p{font-size:12px;color:var(--gy);line-height:1.6}
+  .people-control{min-width:260px;border:1px solid rgba(45,106,79,.1);border-radius:16px;padding:14px;background:rgba(255,250,242,.72)}
+  .people-control-top{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--gy);margin-bottom:10px}
+  .people-control-top strong{font-size:1.2rem;color:var(--g900)}
+  .people-control input{width:100%;height:6px;border-radius:999px;appearance:none;-webkit-appearance:none;background:linear-gradient(90deg,var(--g700) 0 var(--range-progress,42.86%),rgba(45,106,79,.14) var(--range-progress,42.86%) 100%);outline:none}
+  .people-control input::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--g900);border:3px solid #fff;box-shadow:0 4px 12px rgba(27,67,50,.24);cursor:pointer}
+  .people-control input::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--g900);border:3px solid #fff;box-shadow:0 4px 12px rgba(27,67,50,.24);cursor:pointer}
+  .people-scale{display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--gy2)}
+  .budget-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .budget-stat{border:1px solid rgba(45,106,79,.08);border-radius:14px;padding:12px;background:rgba(255,250,242,.66)}
+  .budget-stat .label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gy2);margin-bottom:6px}
+  .budget-stat .value{display:block;font-size:.96rem;font-weight:800;color:var(--g900);line-height:1.25}
   .budget-table{width:100%;border-collapse:collapse}
   .budget-table td{padding:7px 0;font-size:13px;border-bottom:1px solid rgba(45,106,79,.06)}
   .budget-table td:last-child{text-align:right;font-weight:600;color:var(--g800)}
   .budget-table .total td{border-top:2px solid rgba(45,106,79,.15);font-size:1rem;font-weight:800;color:var(--g900);padding-top:12px}
+  .budget-assumption{font-size:11px;color:var(--gy2);line-height:1.6;margin-top:12px}
 
   .footer{text-align:center;margin-top:40px;font-size:11px;color:var(--gy2);opacity:.7}
 
@@ -555,6 +570,9 @@
       border-radius:18px;
     }
     .tab-bar button{flex:0 0 auto;min-width:max-content}
+    .budget-head{display:block}
+    .people-control{min-width:0;margin-top:14px}
+    .budget-summary{grid-template-columns:1fr 1fr}
     .action-bar{
       align-items:stretch;
       flex-wrap:wrap;
@@ -612,8 +630,8 @@
   </div>
   <div class="overview-card">
     <span class="overview-kicker">Budget</span>
-    <span class="overview-value">¥8.5k—14k</span>
-    <div class="overview-note">中端单人参考，包车按同行人数分摊。</div>
+    <span class="overview-value">4人 ¥8.5k—13.6k/人</span>
+    <div class="overview-note">预算区可拖动人数，实时看住宿与包车分摊后的变化。</div>
   </div>
 </section>
 
@@ -813,15 +831,35 @@
     <div class="tip-card"><div class="tip-icon">🆔</div><h4>身份证随身</h4><p>安检频繁，加油站酒店景区都要刷。</p></div>
     <div class="tip-card"><div class="tip-icon">🚗</div><h4>包SUV</h4><p>Day3-6建议包SUV约800-1200元/天，比分段打车灵活。</p></div>
   </div>
-  <div class="budget"><h2>💰 预算参考（单人·中端）</h2><table class="budget-table">
-    <tr><td>✈️ 大交通（4程）</td><td>3,000-5,000</td></tr>
-    <tr><td>🏨 住宿6晚</td><td>2,500-4,000</td></tr>
-    <tr><td>🎫 门票</td><td>600-800</td></tr>
-    <tr><td>🚗 当地交通</td><td>1,000-1,500</td></tr>
-    <tr><td>🍖 餐饮7天</td><td>700-1,200</td></tr>
-    <tr><td>🛍️ 其他</td><td>500-1,000</td></tr>
-    <tr class="total"><td>🎯 合计</td><td>8,500-14,000</td></tr>
-  </table></div>
+  <div class="budget" id="budgetCalc">
+    <div class="budget-head">
+      <div class="budget-title">
+        <h2>💰 预算试算（中端）</h2>
+        <p>拖动同行人数，实时估算人均与团队总预算。住宿按2人/间，当地交通按包车总价分摊。</p>
+      </div>
+      <label class="people-control" for="peopleRange">
+        <span class="people-control-top"><span>同行人数</span><strong id="peopleCount">4人</strong></span>
+        <input id="peopleRange" type="range" min="1" max="8" value="4" step="1">
+        <span class="people-scale"><span>1人</span><span>4人</span><span>8人</span></span>
+      </label>
+    </div>
+    <div class="budget-summary">
+      <div class="budget-stat"><span class="label">Per Person</span><span class="value" id="budgetPerPerson">¥8,450-13,550</span></div>
+      <div class="budget-stat"><span class="label">Group Total</span><span class="value" id="budgetGroupTotal">¥33,800-54,200</span></div>
+      <div class="budget-stat"><span class="label">Rooms</span><span class="value" id="budgetRooms">2间</span></div>
+      <div class="budget-stat"><span class="label">Car Share</span><span class="value" id="budgetSharedTransport">¥1,050-1,550/人</span></div>
+    </div>
+    <table class="budget-table">
+      <tr><td>✈️ 大交通（4程/人）</td><td id="budgetFlight">¥3,000-5,000/人</td></tr>
+      <tr><td>🏨 住宿6晚（2人/间）</td><td id="budgetHotel">¥2,600-4,000/人</td></tr>
+      <tr><td>🎫 门票与区间车</td><td id="budgetTicket">¥600-800/人</td></tr>
+      <tr><td>🚗 当地交通（包车/打车分摊）</td><td id="budgetLocalTraffic">¥1,050-1,550/人</td></tr>
+      <tr><td>🍖 餐饮7天</td><td id="budgetFood">¥700-1,200/人</td></tr>
+      <tr><td>🛍️ 其他与购物弹性</td><td id="budgetOther">¥500-1,000/人</td></tr>
+      <tr class="total"><td>🎯 人均合计</td><td id="budgetTotal">¥8,450-13,550/人</td></tr>
+    </table>
+    <p class="budget-assumption">估算口径：机票、门票、餐饮、其他按人头计算；住宿按每间房6晚约¥5,200-8,000估算；Day3-6包车/城际接驳按团队总额约¥4,200-6,200估算。实际价格会随航班、房型和国庆前后浮动。</p>
+  </div>
 </div>
 
 <div class="footer">底图：高德 &nbsp;|&nbsp; 路线：高德API实时计算 &nbsp;|&nbsp; 照片：高德POI &nbsp;|&nbsp; 2026</div>
@@ -911,6 +949,53 @@ function getSel(){var sS=[],eS=[],sF=[],eF=[];document.querySelectorAll('#scenic
 function updateCounts(){var s=getSel(),picked=s.sS.length+s.sF.length+s.eS.length+s.eF.length;document.getElementById('scenicCount').textContent=s.sS.length;document.getElementById('foodCount').textContent=s.sF.length;document.getElementById('actionSummary').innerHTML='已选 <strong>'+s.sS.length+'</strong> 景点 · <strong>'+s.sF.length+'</strong> 美食'+(s.eS.length+s.eF.length?' | 排除 '+(s.eS.length+s.eF.length)+' 个':'');document.getElementById('actionBar').classList.toggle('has-picks',picked>0)}
 function copySelections(){var s=getSel(),t='=== 我的选择 ===\n\n【景点-想去】\n';s.sS.forEach(function(n,i){t+='  '+(i+1)+'. '+n+'\n'});t+=s.sS.length?'':'\n（未选）\n';t+='\n【景点-排除】\n';s.eS.forEach(function(n,i){t+='  '+(i+1)+'. ✗ '+n+'\n'});t+=s.eS.length?'':'\n（无）\n';t+='\n【美食-想去】\n';s.sF.forEach(function(n,i){t+='  '+(i+1)+'. '+n+'\n'});t+=s.sF.length?'':'\n（未选）\n';t+='\n【美食-排除】\n';s.eF.forEach(function(n,i){t+='  '+(i+1)+'. ✗ '+n+'\n'});t+=s.eF.length?'':'\n（无）\n';navigator.clipboard.writeText(t).then(function(){var x=document.getElementById('toast');x.classList.add('show');setTimeout(function(){x.classList.remove('show')},2500)}).catch(function(){var ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;top:10%;left:50%;transform:translateX(-50%);width:80%;max-width:500px;height:200px;z-index:9999;padding:12px;border-radius:12px;border:2px solid var(--g700);font-size:13px';document.body.appendChild(ta);ta.select();ta.focus();setTimeout(function(){document.body.removeChild(ta)},30000)})}
 function resetAll(){document.querySelectorAll('.sel-card').forEach(function(c){cs[c.getAttribute('data-id')]=0;c.className='sel-card'});updateCounts()}
+
+// Budget calculator
+var budgetRanges={
+  flight:[3000,5000],
+  hotelRoom:[5200,8000],
+  ticket:[600,800],
+  localTraffic:[4200,6200],
+  food:[700,1200],
+  other:[500,1000]
+};
+function money(n){return '¥'+(Math.round(n/50)*50).toLocaleString('zh-CN')}
+function moneyRange(a,b){return money(a)+'-'+money(b)}
+function setBudgetText(id,text){var el=document.getElementById(id);if(el)el.textContent=text}
+function updateBudget(){
+  var input=document.getElementById('peopleRange');
+  if(!input)return;
+  var people=parseInt(input.value,10)||4;
+  var rooms=Math.ceil(people/2);
+  var progress=(people-parseInt(input.min,10))/(parseInt(input.max,10)-parseInt(input.min,10))*100;
+  input.style.setProperty('--range-progress',progress+'%');
+  setBudgetText('peopleCount',people+'人');
+
+  var flight=[budgetRanges.flight[0]*people,budgetRanges.flight[1]*people];
+  var hotel=[budgetRanges.hotelRoom[0]*rooms,budgetRanges.hotelRoom[1]*rooms];
+  var ticket=[budgetRanges.ticket[0]*people,budgetRanges.ticket[1]*people];
+  var traffic=budgetRanges.localTraffic;
+  var food=[budgetRanges.food[0]*people,budgetRanges.food[1]*people];
+  var other=[budgetRanges.other[0]*people,budgetRanges.other[1]*people];
+  var groupLow=flight[0]+hotel[0]+ticket[0]+traffic[0]+food[0]+other[0];
+  var groupHigh=flight[1]+hotel[1]+ticket[1]+traffic[1]+food[1]+other[1];
+  var perLow=groupLow/people;
+  var perHigh=groupHigh/people;
+
+  setBudgetText('budgetPerPerson',moneyRange(perLow,perHigh));
+  setBudgetText('budgetGroupTotal',moneyRange(groupLow,groupHigh));
+  setBudgetText('budgetRooms',rooms+'间');
+  setBudgetText('budgetSharedTransport',moneyRange(traffic[0]/people,traffic[1]/people)+'/人');
+  setBudgetText('budgetFlight',moneyRange(flight[0]/people,flight[1]/people)+'/人');
+  setBudgetText('budgetHotel',moneyRange(hotel[0]/people,hotel[1]/people)+'/人');
+  setBudgetText('budgetTicket',moneyRange(ticket[0]/people,ticket[1]/people)+'/人');
+  setBudgetText('budgetLocalTraffic',moneyRange(traffic[0]/people,traffic[1]/people)+'/人');
+  setBudgetText('budgetFood',moneyRange(food[0]/people,food[1]/people)+'/人');
+  setBudgetText('budgetOther',moneyRange(other[0]/people,other[1]/people)+'/人');
+  setBudgetText('budgetTotal',moneyRange(perLow,perHigh)+'/人');
+}
+var peopleRange=document.getElementById('peopleRange');
+if(peopleRange){peopleRange.addEventListener('input',updateBudget);updateBudget()}
 
 // Day nav
 function una(){var secs=document.querySelectorAll('#panel-itinerary .day-card');if(!secs.length)return;var nl=document.querySelectorAll('.day-nav a'),ml=document.querySelectorAll('.day-nav-mobile a'),p=window.scrollY+160,cur=secs[0]?.id||'';secs.forEach(function(s){if(s.offsetTop<=p)cur=s.id});nl.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur)});ml.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur)})}
